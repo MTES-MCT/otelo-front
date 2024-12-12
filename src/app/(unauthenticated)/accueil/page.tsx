@@ -1,36 +1,48 @@
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import { Tile } from '@codegouvfr/react-dsfr/Tile'
-import Link from 'next/link'
 import { SignInButton } from '~/components/sign-in-button'
 import { auth } from '~/lib/auth/auth'
 import styles from './accueil.module.css'
+import heroImage from '@assets/img/home-background.png'
+import Image from 'next/image'
+import { fr } from '@codegouvfr/react-dsfr'
 
 export default async function AccueilPage() {
   const session = await auth()
 
   const ctaComponent = session ? (
-    <Link href="/simulation/choix-du-territoire">
-      <Button>Démarrer une simulation</Button>
-    </Link>
+    <Button
+      linkProps={{
+        href: '/simulation/choix-du-territoire',
+      }}
+    >
+      Démarrer une simulation
+    </Button>
   ) : (
     <SignInButton />
   )
 
   return (
-    <main>
-      <section className={styles.heroSection}>
-        <div className={`fr-container ${styles.heroContent}`}>
-          <div>
-            <h1 className={styles.heroTitle}>
-              Otelo, votre allié pour une stratégie habitat réussie. <br />
-              Anticipez et optimisez vos besoins en logements
-            </h1>
-            <p className={`fr-text--bold ${styles.heroText}`}>
-              Otelo vous guide pas à pas pour calculer les besoins en logements et en stock de votre territoire en prenant en compte vos
-              contraintes, problématiques et vos objectifs.
-            </p>
+    <>
+      <section>
+        <div className={styles.heroSection}>
+          <div className={styles.heroImageContainer}>
+            <Image src={heroImage} className={styles.heroImage} priority alt="hero-image" />
+            <div className={styles.heroGradient} />
           </div>
-          {ctaComponent}
+          <div className={fr.cx('fr-container')} style={{ minHeight: '30rem' }}>
+            <div className={styles.heroContent}>
+              <h1 className={styles.heroTitle}>
+                Otelo, votre allié pour une stratégie habitat réussie. <br />
+                Anticipez et optimisez vos besoins en logements
+              </h1>
+              <p className={`fr-text--bold ${styles.heroText}`}>
+                Otelo vous guide pas à pas pour calculer les besoins en logements et en stock de votre territoire en prenant en compte vos
+                contraintes, problématiques et vos objectifs.
+              </p>
+              <div className={styles.heroButtonContainer}>{ctaComponent}</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -107,6 +119,6 @@ export default async function AccueilPage() {
           <Button priority="secondary">Demander votre accès</Button>
         </div>
       </section>
-    </main>
+    </>
   )
 }

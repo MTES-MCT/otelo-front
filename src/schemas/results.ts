@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const ZDemographicEvolutionOmphale = z.object({
+export const ZDemographicEvolution = z.object({
   data: z.array(
     z.object({
       value: z.number(),
@@ -19,13 +19,16 @@ export const ZDemographicEvolutionOmphale = z.object({
   }),
 })
 
-export type TDemographicEvolutionOmphale = z.infer<typeof ZDemographicEvolutionOmphale>
+export type TDemographicEvolutionOmphale = z.infer<typeof ZDemographicEvolution>
 
 export const ZResults = z.object({
   demographicEvolution: z.object({
     currentProjection: z.number(),
-    futureProjections: ZDemographicEvolutionOmphale,
+    futureProjections: ZDemographicEvolution.optional(),
   }),
+  total: z.number(),
+  totalFlux: z.number(),
+  totalStock: z.number(),
 })
 
 export type TResults = z.infer<typeof ZResults>

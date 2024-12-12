@@ -40,3 +40,12 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
+.epci {
+  margin-left: 0.5rem;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+}

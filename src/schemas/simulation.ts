@@ -27,7 +27,7 @@ export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
   epci: z.object({ code: z.string(), name: z.string(), region: z.string() }),
-  scenario: z.object({ b2_scenario_omphale: z.string(), projection: z.number() }),
+  scenario: z.object({ b2_scenario: z.string(), projection: z.number() }),
 })
 
 export type TInitSimulationDto = z.infer<typeof ZInitSimulationDto>

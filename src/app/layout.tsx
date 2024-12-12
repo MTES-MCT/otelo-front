@@ -6,7 +6,7 @@ import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAtt
 import Link from 'next/link'
 import { StartDsfr, defaultColorScheme } from '~/app/start-dsfr'
 import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
-import { Footer } from '@codegouvfr/react-dsfr/Footer'
+import { Footer, FooterProps } from '@codegouvfr/react-dsfr/Footer'
 import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
 import classes from './layout.module.css'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
@@ -24,6 +24,37 @@ export default async function RootLayout({ children }: { children: JSX.Element }
   const lang = 'fr'
   const session = await auth()
 
+  const linkList: NonNullable<FooterProps['linkList']> = [
+    {
+      links: [
+        {
+          linkProps: {
+            href: '/accueil',
+          },
+          text: 'Accueil',
+        },
+        {
+          linkProps: {
+            href: '/ressources',
+          },
+          text: 'Ressources',
+        },
+        {
+          linkProps: {
+            href: '/en-savoir-plus',
+          },
+          text: 'En savoir plus',
+        },
+        {
+          linkProps: {
+            href: '/contact',
+          },
+          text: 'Nous contacter',
+        },
+      ],
+    },
+  ]
+
   return (
     <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
       <head>
@@ -40,16 +71,22 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                     <HeaderComponent />
                     <div className={classes.main}>{children}</div>
                     <Footer
-                      accessibility="fully compliant"
+                      accessibility="partially compliant"
                       homeLinkProps={{
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
+                      linkList={linkList}
                       bottomItems={[headerFooterDisplayItem]}
                       brandTop="République Française"
-                      style={{ height: '245px', maxHeight: '245px' }}
                     />
-                    <Toaster />
+                    <Toaster
+                      toastOptions={{
+                        style: {
+                          paddingBottom: '1rem',
+                        },
+                      }}
+                    />
                   </NextAuthProvider>
                 </NuqsAdapter>
               </TanstackQueryClientProvider>

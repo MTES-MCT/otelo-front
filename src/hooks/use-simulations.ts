@@ -21,7 +21,7 @@ export const useSimulations = () => {
   const { data, isLoading } = useQuery<TSimulationWithRelations[]>({
     enabled: !!session,
     queryFn: fetchSimulations,
-    queryKey: ['simulations', session?.user?.email],
+    queryKey: ['simulations'],
   })
 
   return { data, isLoading }

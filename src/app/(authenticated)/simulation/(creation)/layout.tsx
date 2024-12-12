@@ -1,6 +1,6 @@
 import { fr } from '@codegouvfr/react-dsfr'
-import SimulationSideMenu from '~/components/simulations/simulation-side-menu'
-import { SimulationStepper } from '~/components/simulations/simulation-stepper'
+import SimulationSideMenu from '~/components/simulations/settings/simulation-side-menu'
+import { SimulationStepper } from '~/components/simulations/settings/simulation-stepper'
 
 export default async function SimulationLayout({ children }: { children: React.ReactNode }) {
   return (

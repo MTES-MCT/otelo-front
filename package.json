@@ -33,6 +33,7 @@
     "react-leaflet": "^4.2.1",
     "recharts": "^2.13.3",
     "sass": "^1.79.4",
+    "sharp": "^0.33.5",
     "sonner": "^1.7.0",
     "tss-react": "^4.9.13",
     "use-debounce": "^10.0.4",

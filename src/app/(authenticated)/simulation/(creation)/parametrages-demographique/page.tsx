@@ -2,9 +2,11 @@ import { fr } from '@codegouvfr/react-dsfr'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
 import { OmphaleScenariosChart } from '~/components/charts/omphale-scenarios-chart'
-import { NextStepLink } from '~/components/simulations/next-step-link'
-import { SelectOmphale } from '~/components/simulations/select-omphale'
-import { getDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-demographic-evolution-by-epci'
+import { PopulationScenariosChart } from '~/components/charts/population-scenarios-chart'
+import { DemographicSettingsHeader } from '~/components/simulations/settings/demographic-settings-header'
+import { NextStepLink } from '~/components/simulations/settings/next-step-link'
+import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
+import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
 
 type PageProps = {
   searchParams: Promise<SearchParams>
@@ -12,16 +14,19 @@ type PageProps = {
 
 export default async function DemographicSettingsPage({ searchParams }: PageProps) {
   const { epci } = await searchParamsCache.parse(searchParams)
-  const demographicEvolution = await getDemographicEvolutionByEpci(epci)
+  const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epci)
+  const populationEvolution = await getPopulationDemographicEvolutionByEpci(epci)
+
   const href = `/simulation/validation-parametrage`
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <h5>Évolution du nombre de ménages annuel par projections Omphale</h5>
-      <OmphaleScenariosChart demographicEvolution={demographicEvolution} />
-      <SelectOmphale />
+      <DemographicSettingsHeader>
+        <PopulationScenariosChart demographicEvolution={populationEvolution} />
+        <OmphaleScenariosChart demographicEvolution={omphaleEvolution} />
+      </DemographicSettingsHeader>
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLink href={href} query="q" />
+        <NextStepLink href={href} query="omphale" />
       </div>
     </div>
   )

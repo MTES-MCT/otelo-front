@@ -5,7 +5,7 @@ const ZMetadata = z.object({
   min: z.number(),
 })
 
-export const ZDemographicEvolution = z.object({
+export const ZOmphaleDemographicEvolution = z.object({
   data: z.array(
     z.object({
       centralB: z.number(),
@@ -23,4 +23,18 @@ export const ZDemographicEvolution = z.object({
   metadata: ZMetadata,
 })
 
-export type TDemographicEvolution = z.infer<typeof ZDemographicEvolution>
+export type TOmphaleDemographicEvolution = z.infer<typeof ZOmphaleDemographicEvolution>
+
+export const ZPopulationDemographicEvolution = z.object({
+  data: z.array(
+    z.object({
+      basse: z.number(),
+      central: z.number(),
+      haute: z.number(),
+      year: z.number(),
+    }),
+  ),
+  metadata: ZMetadata,
+})
+
+export type TPopulationDemographicEvolution = z.infer<typeof ZPopulationDemographicEvolution>

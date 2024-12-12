@@ -1,9 +1,9 @@
-import { fr } from '@codegouvfr/react-dsfr'
 import { Button } from '@codegouvfr/react-dsfr/Button'
+import { Tile } from '@codegouvfr/react-dsfr/Tile'
 import Link from 'next/link'
 import { SignInButton } from '~/components/sign-in-button'
-import CustomHighlight from '~/components/ui/custom-highlight'
 import { auth } from '~/lib/auth/auth'
+import styles from './accueil.module.css'
 
 export default async function AccueilPage() {
   const session = await auth()
@@ -18,20 +18,14 @@ export default async function AccueilPage() {
 
   return (
     <main>
-      <section
-        style={{
-          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/assets/img/home-background.jpg")',
-          backgroundPosition: '0% 50%',
-          backgroundSize: 'cover',
-        }}
-        className="fr-p-10v"
-      >
-        <div className="fr-container">
-          <div className="fr-col-md-10">
-            <h1 className="fr-my-8v" style={{ color: fr.colors.decisions.background.default.grey.default }}>
-              Otelo, votre allié pour une stratégie habitat réussie. Anticipez et optimisez vos besoins en logements
+      <section className={styles.heroSection}>
+        <div className={`fr-container ${styles.heroContent}`}>
+          <div>
+            <h1 className={styles.heroTitle}>
+              Otelo, votre allié pour une stratégie habitat réussie. <br />
+              Anticipez et optimisez vos besoins en logements
             </h1>
-            <p className="fr-text--bold" style={{ color: fr.colors.decisions.background.default.grey.default }}>
+            <p className={`fr-text--bold ${styles.heroText}`}>
               Otelo vous guide pas à pas pour calculer les besoins en logements et en stock de votre territoire en prenant en compte vos
               contraintes, problématiques et vos objectifs.
             </p>
@@ -39,39 +33,80 @@ export default async function AccueilPage() {
           {ctaComponent}
         </div>
       </section>
-      <div className={fr.cx('fr-container')}>
-        <section className={fr.cx('fr-py-10v')}>
-          <CustomHighlight>
-            <h1>Faire une demande d&apos;accès à Otelo</h1>
-            Les ayants-droit d&apos;Otelo sont :
-            <ul>
-              <li>
-                les <strong>collectivités locales</strong>
-              </li>
-              <li>
-                les <strong>services déconcentrés de l&apos;Etat</strong>
-              </li>
-              <li>
-                les <strong>organismes publics et parapublics</strong> (agences d&apos;urbanisme, établissements publics fonciers, bailleurs
-                sociaux, etc.)
-              </li>
-            </ul>
-            Condition d&apos;accès des bureaux d&apos;études
-            <br />
-            <br />
-            Les <strong>bureaux d&apos;études</strong> peuvent y accéder dans le cadre d&apos;une mission nécessitant une estimation des
-            besoins en logements pour le compte d&apos;un ayant-droit. Dans ce cas, deux conditions :
-            <ul>
-              <li>l&apos;ayant-droit doit avoir effectué sa demande d&apos;accès</li>
-              <li>
-                l&apos;ayant-droit doit écrire à otelo@developpement-durable.gouv.fr, en indiquant dans le corps du mail la liste des
-                personnes concernées au sein du bureau d&apos;études (nom + adresse mail) ainsi que l&apos;acte d&apos;engagement spécifique
-                prévu à cet effet (cliquez ici pour le télécharger)
-              </li>
-            </ul>
-          </CustomHighlight>
-        </section>
-      </div>
+
+      <section className={styles.featureSection}>
+        <div className={`fr-container ${styles.featureContent}`}>
+          <div>
+            <h1 className={styles.featureNumber}>01</h1>
+            <h2>Une estimation rigoureuse et accessible</h2>
+            <p>
+              Otelo suit une méthodologie d&apos;estimation des besoins en logement élaborée par Direction Générale de l&apos;Aménagement,
+              du Logement et de la Nature du ministère de la transition écologique (DGALN), en partenariat avec le Cerema.
+            </p>
+          </div>
+        </div>
+        <div className={`fr-container ${styles.featureGrid}`}>
+          <Tile
+            classes={{ start: styles.start, title: styles.title }}
+            start="01"
+            orientation="vertical"
+            title="Choississez l'échelle géographique sur laquelle vous travaillez"
+            titleAs="h3"
+          />
+          <Tile
+            classes={{ root: styles.tile, start: styles.start, title: styles.title }}
+            start="02"
+            orientation="vertical"
+            title="Définissez les problématiques de votre territoire"
+            titleAs="h3"
+          />
+          <Tile
+            classes={{ root: styles.tile, start: styles.start, title: styles.title }}
+            start="03"
+            orientation="vertical"
+            title="Mobilisez une base de données nationale riche"
+            titleAs="h3"
+          />
+          <Tile
+            classes={{ root: styles.tile, start: styles.start, title: styles.title }}
+            start="04"
+            orientation="vertical"
+            title="Option: enrichissez l'analyse avec vos jeux de données"
+            titleAs="h3"
+          />
+          <Tile
+            classes={{ root: styles.tile, start: styles.start, title: styles.title }}
+            start="05"
+            orientation="vertical"
+            title="Affinez les paramètres pour s'adapter à vos enjeux territoriaux"
+            titleAs="h3"
+          />
+          <Tile
+            classes={{ root: styles.tile, start: styles.start, title: styles.title }}
+            start="06"
+            orientation="vertical"
+            title="Comparez les scénarios de construction de logement neufs"
+            titleAs="h3"
+          />
+        </div>
+      </section>
+
+      <section className={styles.accessSection}>
+        <div className={`fr-container fr-my-10v ${styles.accessContent}`}>
+          <div>
+            <h1 className={styles.featureNumber}>02</h1>
+            <h2>Demandez votre accès à l&apos;application</h2>
+            <p>
+              Les ayants droit sont les collectivités locales, les services déconcentrés de l&apos;Etat et les organismes publics et
+              parapublics (agences d&apos;urbanisme, établissements publics fonciers, bailleurs sociaux, etc.). Les bureaux d&apos;études
+              peuvent y accéder dans le cadre d&apos;une mission nécessitant une estimation des besoins en logements d&apos;un ayant-droit.
+            </p>
+          </div>
+        </div>
+        <div className={styles.accessButtonContainer}>
+          <Button priority="secondary">Demander votre accès</Button>
+        </div>
+      </section>
     </main>
   )
 }

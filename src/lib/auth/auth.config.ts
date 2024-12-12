@@ -36,7 +36,6 @@ export default {
         return token
       } else {
         if (!token.refreshToken) throw new TypeError('Missing refresh_token')
-        console.log('Authorization Bearer', `Bearer ${token.refreshToken}`)
         try {
           const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/refresh`, {
             headers: {

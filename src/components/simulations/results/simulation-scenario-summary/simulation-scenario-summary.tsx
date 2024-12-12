@@ -19,7 +19,7 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       label: 'Territoire en étude',
       tags: [
         <Tag key="epci-name">{epci.name}</Tag>,
-        <Tag key="epci-code" style={{ marginLeft: '0.5rem' }}>
+        <Tag key="epci-code" className={styles.epci}>
           {epci.code}
         </Tag>,
       ],
@@ -34,12 +34,12 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       iconId: 'ri-line-chart-line',
       key: 'omphale',
       label: "Scénario de l'évolution démographique",
-      tags: [<Tag key="omphale">{scenario.b2_scenario_omphale}</Tag>],
+      tags: [<Tag key="omphale">{scenario.b2_scenario}</Tag>],
     },
   ]
   return (
     <nav style={{ borderRight: '0.5px solid var(--background-alt-grey-active)', paddingRight: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className={styles.headerContainer}>
         <h5>Votre paramétrage</h5>
         <Button iconId="fr-icon-edit-line" priority="tertiary" title="Label button" />
       </div>

@@ -12,7 +12,7 @@ export const getSimulationWithResults = async (id: string) => {
     },
   })
   if (!res.ok) {
-    throw new Error('Failed to create simulation')
+    throw new Error('Failed to get simulation with results')
   }
   return res.json()
 }

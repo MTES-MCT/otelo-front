@@ -1,6 +1,6 @@
 import { fr } from '@codegouvfr/react-dsfr'
-import { NextStepLink } from '~/components/simulations/next-step-link'
-import { SelectHorizonPeriod } from '~/components/simulations/select-horizon-period'
+import { NextStepLink } from '~/components/simulations/settings/next-step-link'
+import { SelectHorizonPeriod } from '~/components/simulations/settings/select-horizon-period'
 
 export default async function TemporalChoicePage() {
   const href = `/simulation/parametrages-demographique`

@@ -3,7 +3,7 @@ import { ContactForm } from '~/components/contact/contact-form'
 
 export default function ContactPage() {
   return (
-    <div className={fr.cx('fr-p-md-4w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>
+    <div className={fr.cx('fr-container', 'fr-p-md-4w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>
       <h1>Contactez-nous</h1>
 
       <div className={fr.cx('fr-mb-4w')}>

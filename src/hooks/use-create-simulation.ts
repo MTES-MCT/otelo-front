@@ -1,10 +1,11 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { TInitSimulationDto } from '~/schemas/simulation'
 
 export const useCreateSimulation = () => {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const postSimulation = async (initSimulationDto: TInitSimulationDto) => {
     try {
       const response = await fetch('/api/simulations', {
@@ -28,6 +29,7 @@ export const useCreateSimulation = () => {
       toast.success('Simulation créée avec succès.', {
         description: 'Redirection en cours vers votre résultat.',
       })
+      queryClient.invalidateQueries({ queryKey: ['simulations'] })
       router.push(`/simulation/${data.id}/resultats`)
     },
   })

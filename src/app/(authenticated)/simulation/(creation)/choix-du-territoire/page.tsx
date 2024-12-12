@@ -1,7 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { AutocompleteInput } from '~/components/simulations/autocomplete/autocomplete-input'
 import { CallOut } from '@codegouvfr/react-dsfr/CallOut'
-import { NextStepLink } from '~/components/simulations/next-step-link'
+import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 
 export default async function TerritorialChoicePage() {
   const href = `/simulation/cadrage-temporel`

@@ -22,10 +22,16 @@ export const ZDemographicEvolution = z.object({
 export type TDemographicEvolutionOmphale = z.infer<typeof ZDemographicEvolution>
 
 export const ZResults = z.object({
+  badQuality: z.number(),
   demographicEvolution: z.object({
     currentProjection: z.number(),
-    futureProjections: ZDemographicEvolution.optional(),
+    futureProjections: ZDemographicEvolution,
   }),
+  financialInadequation: z.number(),
+  hosted: z.number(),
+  noAccomodation: z.number(),
+  physicalInadequation: z.number(),
+  socialParc: z.number(),
   total: z.number(),
   totalFlux: z.number(),
   totalStock: z.number(),

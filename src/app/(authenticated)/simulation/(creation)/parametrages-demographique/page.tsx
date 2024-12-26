@@ -16,7 +16,6 @@ export default async function DemographicSettingsPage({ searchParams }: PageProp
   const { epci } = await searchParamsCache.parse(searchParams)
   const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epci)
   const populationEvolution = await getPopulationDemographicEvolutionByEpci(epci)
-
   const href = `/simulation/validation-parametrage`
 
   return (

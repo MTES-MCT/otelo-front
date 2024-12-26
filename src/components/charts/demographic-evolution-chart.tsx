@@ -13,9 +13,10 @@ export const DemographicEvolutionChart: FC<DemographicEvolutionChartProps> = ({ 
   const { classes } = useStyles()
   const omphaleData = data.results.demographicEvolution.futureProjections?.data
   const { max, min } = data.results.demographicEvolution.futureProjections?.metadata.data ?? { max: 0, min: 0 }
+
   return (
     <div className={classes.container}>
-      <h5>Evolution du besoin en logements année par année</h5>
+      <h5>Besoin en flux - Evolution du besoin en logements année par année</h5>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
@@ -45,8 +46,15 @@ export const DemographicEvolutionChart: FC<DemographicEvolutionChartProps> = ({ 
 
 const useStyles = tss.create({
   chartContainer: {
+    borderBottom: '1px solid var(--border-default-grey)',
     height: '600px',
     width: '100%',
   },
-  container: { display: 'flex', flexDirection: 'column', gap: '1rem', paddingLeft: '2rem', paddingTop: '2rem' },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    paddingLeft: '2rem',
+    paddingTop: '2rem',
+  },
 })

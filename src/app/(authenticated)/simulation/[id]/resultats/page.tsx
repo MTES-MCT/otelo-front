@@ -1,10 +1,10 @@
 import { DemographicEvolutionChart } from '~/components/charts/demographic-evolution-chart'
+import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
-
   return (
     <>
       <SimulationNeedsSummary
@@ -14,6 +14,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
         totalFlux={simulation.results.totalFlux}
       />
       <DemographicEvolutionChart data={simulation} />
+      <StockEvolutionChart data={simulation} />
     </>
   )
 }

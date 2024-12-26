@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import styles from './simulation-scenario-summary.module.css'
-import Button from '@codegouvfr/react-dsfr/Button'
 import { fr, FrCxArg } from '@codegouvfr/react-dsfr'
 import { TScenario } from '~/schemas/scenario'
 import { TEpci } from '~/schemas/epci'
@@ -28,7 +27,7 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       iconId: 'fr-icon-calendar-line',
       key: 'projection',
       label: 'Horizon de temps',
-      tags: [<Tag key="projection">{scenario.projection}</Tag>],
+      tags: [<Tag key="projection">2021 - {scenario.projection}</Tag>],
     },
     {
       iconId: 'ri-line-chart-line',
@@ -41,7 +40,6 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
     <nav style={{ borderRight: '0.5px solid var(--background-alt-grey-active)', paddingRight: '1rem' }}>
       <div className={styles.headerContainer}>
         <h5>Votre paramétrage</h5>
-        <Button iconId="fr-icon-edit-line" priority="tertiary" title="Label button" />
       </div>
       <div className={styles.container}>
         {settings.map((setting) => (

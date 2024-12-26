@@ -31,10 +31,13 @@ export const ZResults = z.object({
   hosted: z.number(),
   noAccomodation: z.number(),
   physicalInadequation: z.number(),
+  renewalNeeds: z.number(),
+  secondaryResidenceAccomodationEvolution: z.number(),
   socialParc: z.number(),
   total: z.number(),
   totalFlux: z.number(),
   totalStock: z.number(),
+  vacantAccomodationEvolution: z.number(),
 })
 
 export type TResults = z.infer<typeof ZResults>

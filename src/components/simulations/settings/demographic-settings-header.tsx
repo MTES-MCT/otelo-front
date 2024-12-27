@@ -2,6 +2,7 @@
 
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { parseAsString, useQueryStates } from 'nuqs'
+import { tss } from 'tss-react'
 
 type DemographicSettingsHeaderProps = {
   children: React.ReactNode[]
@@ -9,9 +10,10 @@ type DemographicSettingsHeaderProps = {
 
 export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeaderProps) => {
   const [queryState, setQueryState] = useQueryStates({
-    omphale: parseAsString,
+    population: parseAsString,
     scenario: parseAsString,
   })
+  const { classes } = useStyles({ population: queryState.population })
   const selectedTabId = queryState.scenario ?? 'population'
 
   const title =
@@ -24,8 +26,9 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
   return (
     <Tabs
       label="Scénario de projection démographique"
+      classes={{ tab: classes.tab }}
       selectedTabId={selectedTabId}
-      onTabChange={(tabId: string) => setQueryState({ omphale: null, scenario: tabId === 'population' ? 'population' : 'menages' })}
+      onTabChange={(tabId: string) => setQueryState({ scenario: tabId === 'population' ? 'population' : 'menages' })}
       tabs={[
         {
           iconId: 'ri-group-3-line',
@@ -44,3 +47,13 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
     </Tabs>
   )
 }
+
+const useStyles = tss.withParams<{ population: string | null }>().create(({ population }) => ({
+  tab: {
+    '&[class*="ri-home-2-line"]': {
+      cursor: !population ? 'not-allowed' : 'pointer',
+      opacity: !population ? 0.5 : 1,
+      pointerEvents: !population ? 'none' : 'auto',
+    },
+  },
+}))

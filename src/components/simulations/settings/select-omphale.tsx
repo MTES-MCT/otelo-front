@@ -14,47 +14,47 @@ export const SelectOmphale = () => {
   const scenarios = [
     {
       id: 'central',
-      label: 'Population: Central | Décohabitation: Décélération',
+      label: 'Scénario de Décohabitation: Décélération',
       value: 'Central_B',
     },
     {
       id: 'central',
-      label: 'Population: Central | Décohabitation: Tendanciel',
+      label: 'Scénario de Décohabitation: Tendanciel',
       value: 'Central_C',
     },
     {
       id: 'central',
-      label: 'Population: Central | Décohabitation: Accélération',
+      label: 'Scénario de Décohabitation: Accélération',
       value: 'Central_H',
     },
     {
       id: 'basse',
-      label: 'Population: Basse | Décohabitation: Décélération',
+      label: 'Scénario de Décohabitation: Décélération',
       value: 'PB_B',
     },
     {
       id: 'basse',
-      label: 'Population: Basse | Décohabitation: Tendanciel',
+      label: 'Scénario de Décohabitation: Tendanciel',
       value: 'PB_C',
     },
     {
       id: 'basse',
-      label: 'Population: Basse | Décohabitation: Accélération',
+      label: 'Scénario de Décohabitation: Accélération',
       value: 'PB_H',
     },
     {
       id: 'haute',
-      label: 'Population: Haute | Décohabitation: Décélération',
+      label: 'Scénario de Décohabitation: Décélération',
       value: 'PH_B',
     },
     {
       id: 'haute',
-      label: 'Population: Haute | Décohabitation: Tendanciel',
+      label: 'Scénario de Décohabitation: Tendanciel',
       value: 'PH_C',
     },
     {
       id: 'haute',
-      label: 'Population: Haute | Décohabitation: Accélération',
+      label: 'Scénario de Décohabitation: Accélération',
       value: 'PH_H',
     },
   ]

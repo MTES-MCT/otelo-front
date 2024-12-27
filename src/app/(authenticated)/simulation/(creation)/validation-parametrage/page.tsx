@@ -4,11 +4,16 @@ import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
 import { CreateSimulationForm } from '~/components/simulations/settings/create-simulation-form'
 import styles from './validation-parametrage.module.css'
+import { getAccommodationRatesByEpci } from '~/server-only/accomodation-rates/get-accommodation-rate-by-epci'
+
 type PageProps = {
   searchParams: Promise<SearchParams>
 }
+
 export default async function ValidationParametragePage({ searchParams }: PageProps) {
-  const { epci, omphale, projection, q } = await searchParamsCache.parse(searchParams)
+  const { epci, omphale, projection, q, tauxLV, tauxRS } = await searchParamsCache.parse(searchParams)
+  const accommodationRates = await getAccommodationRatesByEpci(epci)
+
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>
@@ -25,7 +30,28 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
       </div>
       <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
         <h4>Horizon temporel de la simulation</h4>
-        <Input disabled label="" hintText="Année de projection" nativeInputProps={{ value: projection }} />
+        <Input disabled label="" iconId="ri-calendar-line" hintText="Année de projection" nativeInputProps={{ value: projection }} />
+      </div>
+      <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
+        <h4>Taux cible de résidences secondaires et logements vacants</h4>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <Input
+            disabled
+            label=""
+            iconId="ri-percent-line"
+            hintText="Taux cible de résidences secondaires"
+            nativeInputProps={{ value: tauxRS ?? Number(accommodationRates.txRs * 100).toFixed(2) }}
+            style={{ flex: 1 }}
+          />
+          <Input
+            disabled
+            label=""
+            iconId="ri-percent-line"
+            hintText="Taux cible de logements vacants"
+            nativeInputProps={{ value: tauxLV ?? Number(accommodationRates.txLv * 100).toFixed(2) }}
+            style={{ flex: 1 }}
+          />
+        </div>
       </div>
       <CreateSimulationForm />
     </div>

@@ -6,4 +6,6 @@ export const searchParamsCache = createSearchParamsCache({
   projection: parseAsString.withDefault(''),
   q: parseAsString.withDefault(''),
   region: parseAsString.withDefault(''),
+  tauxLV: parseAsString,
+  tauxRS: parseAsString,
 })

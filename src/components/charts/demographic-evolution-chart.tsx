@@ -21,7 +21,7 @@ export const DemographicEvolutionChart: FC<DemographicEvolutionChartProps> = ({ 
   return (
     <div className={classes.container}>
       <h5>Besoin en flux - Evolution du besoin démographique en logements année par année</h5>
-      <div style={{ borderBottom: '1px solid var(--border-default-grey)', display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+      <div className={classes.rowContainer}>
         <div className={classes.chartContainer}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -43,7 +43,7 @@ export const DemographicEvolutionChart: FC<DemographicEvolutionChartProps> = ({ 
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '50%' }}>
+        <div className={classes.tableContainer}>
           <Table
             noCaption
             caption="Résumé des besoins en flux"
@@ -83,5 +83,17 @@ const useStyles = tss.create({
     gap: '1rem',
     paddingLeft: '2rem',
     paddingTop: '2rem',
+  },
+  rowContainer: {
+    borderBottom: '1px solid var(--border-default-grey)',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '2rem',
+  },
+  tableContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '50%',
   },
 })

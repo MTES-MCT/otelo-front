@@ -11,33 +11,29 @@ export default function SimulationSideMenu() {
       label: 'Territoire à étudier',
       path: '/simulation/choix-du-territoire',
       queryKey: 'q',
-      title: 'Choix du territoire',
+      title: <span>Choix du territoire</span>,
     },
     {
       label: 'Cadrage temporel de la simulation',
       path: '/simulation/cadrage-temporel',
       queryKey: 'projection',
-      title: "Déterminer l'horizon de temps",
+      title: <span>Déterminer l&apos;horizon de temps</span>,
     },
     {
       label: "Scénario de l'évolution démographique",
       path: '/simulation/parametrages-demographique',
       queryKey: 'omphale',
-      title: 'Paramétrage évolution démographique',
+      title: <span>Paramétrage évolution démographique</span>,
     },
     {
-      disabled: true,
-      label: 'Taux de résidences secondaires',
-      path: '/simulation/parametrages-demographique',
-      queryKey: 'parametrage',
-      title: 'Paramétrage résidences secondaires',
-    },
-    {
-      disabled: true,
-      label: 'Taux de logements vacants',
-      path: '/simulation/parametrages-demographique',
-      queryKey: 'parametrage',
-      title: 'Paramétrage vacance',
+      label: 'Taux de résidences secondaires / logements vacants',
+      path: '/simulation/taux-cibles-logements',
+      queryKey: 'tauxRS',
+      title: (
+        <span>
+          Paramétrage résidences secondaires et logements vacants <span className={styles.optional}>(optionnel)</span>
+        </span>
+      ),
     },
   ]
 

@@ -45,3 +45,8 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
+.optional {
+  font-style: italic;
+  font-size: 0.8rem;
+}

@@ -4,7 +4,7 @@ import Button from '@codegouvfr/react-dsfr/Button'
 import { FC } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
+import { parseAsFloat, parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
 import { ZInitSimulationDto } from '~/schemas/simulation'
 import { TInitSimulationDto } from '~/schemas/simulation'
@@ -19,6 +19,8 @@ export const CreateSimulationForm: FC = () => {
     projection: parseAsInteger,
     q: parseAsString,
     region: parseAsString,
+    tauxLV: parseAsFloat,
+    tauxRS: parseAsFloat,
   })
 
   const {
@@ -29,7 +31,12 @@ export const CreateSimulationForm: FC = () => {
     resolver: zodResolver(ZInitSimulationDto),
     values: {
       epci: { code: queryStates.epci as string, name: queryStates.q as string, region: queryStates.region as string },
-      scenario: { b2_scenario: queryStates.omphale as string, projection: queryStates.projection as number },
+      scenario: {
+        b2_scenario: queryStates.omphale as string,
+        b2_tx_rs: queryStates.tauxRS ?? undefined,
+        b2_tx_vacance: queryStates.tauxLV ?? undefined,
+        projection: queryStates.projection as number,
+      },
     },
   })
 

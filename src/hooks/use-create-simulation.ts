@@ -12,7 +12,6 @@ export const useCreateSimulation = () => {
         body: JSON.stringify(initSimulationDto),
         method: 'POST',
       })
-
       if (!response.ok) {
         throw new Error('Failed to create simulation')
       }

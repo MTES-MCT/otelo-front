@@ -27,15 +27,22 @@ export const SimulationStepper: FC = () => {
       case '/simulation/parametrages-demographique':
         return {
           currentStep: 3,
-          nextTitle: 'Validation de votre paramétrage',
+          nextTitle: 'Cibler les taux de résidences secondaires et logements vacants',
           stepCount: 4,
           title: 'Affinage du paramétrage démographique',
         }
-      case '/simulation/validation-parametrage':
+      case '/simulation/taux-cibles-logements':
         return {
           currentStep: 4,
+          nextTitle: 'Validation de votre paramétrage',
+          stepCount: 5,
+          title: 'Cibler les taux de résidences secondaires et logements vacants',
+        }
+      case '/simulation/validation-parametrage':
+        return {
+          currentStep: 5,
           nextTitle: 'Résultat de la simulation',
-          stepCount: 4,
+          stepCount: 5,
           title: 'Validation de votre paramétrage',
         }
       default:

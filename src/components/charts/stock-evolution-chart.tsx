@@ -79,7 +79,7 @@ export const StockEvolutionChart: FC<{ data: TSimulationWithResults }> = ({ data
   return (
     <div className={classes.container}>
       <h5>Besoin en stock - Evolution du besoin en stock</h5>
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+      <div className={classes.rowContainer}>
         <div className={classes.chartContainer}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -102,7 +102,7 @@ export const StockEvolutionChart: FC<{ data: TSimulationWithResults }> = ({ data
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '50%' }}>
+        <div className={classes.tableContainer}>
           <Table
             noCaption
             caption="Résumé des besoins en stock"
@@ -136,5 +136,16 @@ const useStyles = tss.create({
     gap: '1rem',
     paddingLeft: '2rem',
     paddingTop: '2rem',
+  },
+  rowContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '2rem',
+  },
+  tableContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '50%',
   },
 })

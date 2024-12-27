@@ -7,6 +7,7 @@ import { DemographicSettingsHeader } from '~/components/simulations/settings/dem
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
+import classes from './parametrages-demographique.module.css'
 
 type PageProps = {
   searchParams: Promise<SearchParams>
@@ -16,10 +17,10 @@ export default async function DemographicSettingsPage({ searchParams }: PageProp
   const { epci } = await searchParamsCache.parse(searchParams)
   const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epci)
   const populationEvolution = await getPopulationDemographicEvolutionByEpci(epci)
-  const href = `/simulation/validation-parametrage`
+  const href = `/simulation/taux-cibles-logements`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className={classes.container}>
       <DemographicSettingsHeader>
         <PopulationScenariosChart demographicEvolution={populationEvolution} />
         <OmphaleScenariosChart demographicEvolution={omphaleEvolution} />

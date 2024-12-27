@@ -36,12 +36,12 @@ const SCENARIOS = [
 
 const selectOptions = [
   {
-    label: 'Population: Central',
-    value: 'central',
-  },
-  {
     label: 'Population: Haute',
     value: 'haute',
+  },
+  {
+    label: 'Population: Central',
+    value: 'central',
   },
   {
     label: 'Population: Basse',
@@ -107,7 +107,7 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
       </div>
       <div className={classes.buttonContainer}>
         <Button disabled={!queryStates.population} onClick={() => setQueryStates({ scenario: 'menages' })}>
-          Étape suivante
+          Choix du scénario de décohabitation
         </Button>
       </div>
     </>

@@ -76,6 +76,7 @@ export default {
   providers: [
     {
       authorization: { params: { scope: 'openid email profile' } },
+      checks: ['none'],
       clientId: process.env.NEXT_PRIVATE_OAUTH_CEREMA_CLIENT_ID,
       clientSecret: process.env.NEXT_PRIVATE_OAUTH_CEREMA_CLIENT_SECRET,
       id: 'cerema-oidc',

@@ -9,7 +9,7 @@ export default async function TemporalChoicePage() {
     <div className={classes.container}>
       <SelectHorizonPeriod />
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLink href={href} query="projection" />
+        <NextStepLink href={href} query="projection" defaultValue="2030" />
       </div>
     </div>
   )

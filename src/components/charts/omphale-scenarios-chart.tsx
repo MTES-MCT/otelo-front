@@ -1,12 +1,15 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
+import Alert from '@codegouvfr/react-dsfr/Alert'
 import { parseAsString, useQueryStates } from 'nuqs'
 import React, { FC } from 'react'
-import { LineChart, Line, YAxis, XAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, YAxis, XAxis, CartesianGrid, ResponsiveContainer, Tooltip, TooltipProps } from 'recharts'
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
-import { TOmphaleDemographicEvolution } from '~/schemas/demographic-evolution'
+import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
+import { roundPopulation } from '~/utils/round-chart-axis'
 
 interface DemographicEvolutionChartProps {
   demographicEvolution: TOmphaleDemographicEvolution
@@ -14,69 +17,135 @@ interface DemographicEvolutionChartProps {
 
 const SCENARIOS = [
   {
-    dataKey: 'centralB',
-    id: 'central',
-    name: 'Population : Central | Ménages : Décélération',
-    queryValue: 'Central_B',
-    stroke: '#000091',
-  },
-  {
-    dataKey: 'centralC',
-    id: 'central',
-    name: 'Population : Central | Ménages : Tendanciel',
-    queryValue: 'Central_C',
-    stroke: '#666666',
+    dataKey: 'phH',
+    id: 'haute',
+    name: 'Ménages - Accélération',
+    queryValue: 'PH_H',
+    stroke: '#E4794A',
   },
   {
     dataKey: 'centralH',
     id: 'central',
-    name: 'Population : Central | Ménages : Accélération',
+    name: 'Ménages - Accélération',
     queryValue: 'Central_H',
     stroke: '#161616',
   },
   {
-    dataKey: 'pbB',
-    id: 'basse',
-    name: 'Population : Basse | Ménages : Décélération',
-    queryValue: 'PB_B',
-    stroke: '#CE614A',
-  },
-  {
-    dataKey: 'pbC',
-    id: 'basse',
-    name: 'Population : Basse | Ménages : Tendanciel',
-    queryValue: 'PB_C',
-    stroke: '#A558A0',
-  },
-  {
     dataKey: 'pbH',
     id: 'basse',
-    name: 'Population : Basse | Ménages : Accélération',
+    name: 'Ménages - Accélération',
     queryValue: 'PB_H',
     stroke: '#FF9940',
   },
   {
+    dataKey: 'centralC',
+    id: 'central',
+    name: 'Ménages - Tendanciel',
+    queryValue: 'Central_C',
+    stroke: '#666666',
+  },
+  {
+    dataKey: 'pbC',
+    id: 'basse',
+    name: 'Ménages - Tendanciel',
+    queryValue: 'PB_C',
+    stroke: '#A558A0',
+  },
+  {
+    dataKey: 'pbB',
+    id: 'basse',
+    name: 'Ménages - Décélération',
+    queryValue: 'PB_B',
+    stroke: '#CE614A',
+  },
+  {
+    dataKey: 'centralB',
+    id: 'central',
+    name: 'Ménages - Décélération',
+    queryValue: 'Central_B',
+    stroke: '#000091',
+  },
+  {
     dataKey: 'phB',
     id: 'haute',
-    name: 'Population : Haute | Ménages : Décélération',
+    name: 'Ménages - Décélération',
     queryValue: 'PH_B',
     stroke: '#91A7D0',
   },
   {
     dataKey: 'phC',
     id: 'haute',
-    name: 'Population : Haute | Ménages : Tendanciel',
+    name: 'Ménages - Tendanciel',
     queryValue: 'PH_C',
     stroke: '#169B62',
   },
-  {
-    dataKey: 'phH',
-    id: 'haute',
-    name: 'Population : Haute | Ménages : Accélération',
-    queryValue: 'PH_H',
-    stroke: '#E4794A',
-  },
 ]
+
+const CustomizedDot = (props: { cx: number; cy: number; period: string; stroke: string; year: string }) => {
+  const { cx, cy, period, stroke, year } = props
+  if (Number(period) === Number(year)) {
+    return <circle cx={cx} cy={cy} r={5} stroke={stroke} strokeWidth={2} fill={stroke} />
+  }
+
+  return <circle cx={cx} cy={cy} r={3} stroke={stroke} strokeWidth={1} fill="white" />
+}
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  basePopulation,
+}: TooltipProps<ValueType, NameType> & { basePopulation: TOmphaleEvolution }) => {
+  if (!active || !payload?.length) return null
+  return (
+    <div
+      style={{
+        backgroundColor: 'white',
+        border: '1px solid var(--border-default-grey)',
+        borderRadius: '4px',
+        padding: '1rem',
+      }}
+    >
+      <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{`Année ${label}`}</p>
+      {payload.map((item: any) => {
+        const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
+        return (
+          <div
+            key={item.dataKey}
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              gap: '0.5rem',
+              marginTop: '0.25rem',
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: item.stroke,
+                borderRadius: '50%',
+                height: '8px',
+                width: '8px',
+              }}
+            />
+            <span>{item.name}:</span>
+            <span style={{ fontWeight: 'bold' }}>{item.value} habitants</span>
+            <span style={{ fontSize: '10px' }}>({evol > 0 ? `+${evol}` : evol} habitants par rapport à 2021)</span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+const findMaxValueYear = (data: TOmphaleEvolution[], scenarioKey?: string) => {
+  if (!scenarioKey) return null
+  return data.reduce((maxItem, currentItem) => {
+    const currentValue = currentItem[scenarioKey as keyof TOmphaleEvolution] as number
+    const maxValue = maxItem[scenarioKey as keyof TOmphaleEvolution] as number
+
+    return currentValue > maxValue ? currentItem : maxItem
+  }, data[0]).year
+}
 
 export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution }) => {
   const { classes } = useStyles()
@@ -84,9 +153,11 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
 
   const [queryStates, setQueryStates] = useQueryStates({
     omphale: parseAsString,
+    periode: parseAsString,
     population: parseAsString,
   })
 
+  const period = queryStates.periode ? queryStates.periode : '2030'
   const displayedScenarios = SCENARIOS.filter((scenario) => scenario.id === queryStates.population).map((scenario) => ({
     ...scenario,
     stroke: queryStates.omphale
@@ -96,13 +167,26 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
       : scenario.stroke,
     strokeWidth: queryStates.omphale && scenario.queryValue === queryStates.omphale ? 2 : 1,
   }))
+  const basePopulation = data.find((item) => item.year === 2021) as TOmphaleEvolution
+  const popEvolution = data.find((item) => item.year === Number(period)) as TOmphaleEvolution
+  const formattedOmphale = queryStates.omphale?.replace('Central_', 'central').replace('PB_', 'pb').replace('PH_', 'ph')
+  const evol = popEvolution[formattedOmphale as keyof typeof popEvolution] - basePopulation[formattedOmphale as keyof typeof basePopulation]
+  const maxYear = findMaxValueYear(data, formattedOmphale)
 
   return (
     <>
+      <Alert
+        description="Les scénarios d'évolution proposés sont basés sur votre choix de projection par population à l'étape précédente.
+        Vous avez la possibilité de revenir à l'étape précèdente pour modifier votre choix de projection par population."
+        severity="info"
+        small
+        style={{ marginBottom: '1rem' }}
+      />
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={300} data={data}>
             <CartesianGrid strokeDasharray="3 3" />
+
             {displayedScenarios.map(({ dataKey, name, queryValue, stroke, strokeWidth }) => (
               <React.Fragment key={dataKey}>
                 <Line
@@ -112,19 +196,38 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
                   dataKey={dataKey}
                   stroke={stroke}
                   strokeWidth={strokeWidth}
+                  dot={(props) => (
+                    <CustomizedDot
+                      {...props}
+                      stroke={stroke}
+                      period={period}
+                      year={props.payload.year}
+                      key={`${dataKey}-${props.payload.year}`}
+                    />
+                  )}
                   onClick={() => setQueryStates({ omphale: queryValue })}
                 />
               </React.Fragment>
             ))}
 
             <XAxis dataKey="year" />
-            <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => Math.round(value).toString()} />
+            <Tooltip content={<CustomTooltip basePopulation={basePopulation} />} />
+
+            <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
           </LineChart>
         </ResponsiveContainer>
       </div>
       <div className={fr.cx('fr-py-2w')}>
         <SelectOmphale />
       </div>
+      {queryStates.omphale && (
+        <Alert
+          description={`Votre scénario anticipe une évolution du nombre de ménages de ${evol > 0 ? `+${evol}` : evol} sur la période 2021 - ${period}.`}
+          severity="warning"
+          small
+        />
+      )}
+      {maxYear && <Alert description={`Le pic de ménages sera atteint en ${maxYear}.`} severity="info" small />}
     </>
   )
 }

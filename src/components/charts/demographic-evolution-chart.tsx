@@ -2,7 +2,7 @@
 
 import { Table } from '@codegouvfr/react-dsfr/Table'
 import { FC } from 'react'
-import { LineChart, Line, YAxis, XAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, YAxis, XAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
 import { tss } from 'tss-react'
 import { TSimulationWithResults } from '~/schemas/simulation'
 
@@ -39,7 +39,6 @@ export const DemographicEvolutionChart: FC<DemographicEvolutionChartProps> = ({ 
               <Line name="Besoin en flux" type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
               <XAxis dataKey="year" />
               <YAxis domain={[min, max]} tickFormatter={(value) => Math.round(value).toString()} />
-              <Tooltip />
             </LineChart>
           </ResponsiveContainer>
         </div>

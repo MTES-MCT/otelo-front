@@ -5,7 +5,9 @@ import { FC } from 'react'
 import { Range } from '@codegouvfr/react-dsfr/Range'
 
 export const SelectHorizonPeriod: FC = () => {
-  const [projection, setProjection] = useQueryState('projection')
+  const [projection, setProjection] = useQueryState('projection', {
+    defaultValue: '2030',
+  })
   return (
     <Range
       hintText="Faites glisser le curseur pour définir l'horizon de temps de la simulation."

@@ -45,7 +45,7 @@ export const StockEvolutionChart: FC<{ data: TSimulationWithResults }> = ({ data
 
     return (
       <g>
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontSize: '24px' }}>
           {payload.name}
         </text>
         <Sector
@@ -90,10 +90,10 @@ export const StockEvolutionChart: FC<{ data: TSimulationWithResults }> = ({ data
                 activeShape={renderActiveShape}
                 cx="50%"
                 cy="50%"
-                outerRadius={220}
+                outerRadius={150}
                 fill="#8884d8"
                 dataKey="value"
-                innerRadius={180}
+                innerRadius={130}
               >
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

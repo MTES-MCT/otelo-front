@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
@@ -7,6 +8,7 @@ import React, { FC } from 'react'
 import { LineChart, Line, YAxis, XAxis, CartesianGrid, ResponsiveContainer, Tooltip, TooltipProps } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
+import { CustomizedDot } from '~/components/charts/customized-dot'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
 import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
 import { roundPopulation } from '~/utils/round-chart-axis'
@@ -81,20 +83,11 @@ const SCENARIOS = [
   },
 ]
 
-const CustomizedDot = (props: { cx: number; cy: number; period: string; stroke: string; year: string }) => {
-  const { cx, cy, period, stroke, year } = props
-  if (Number(period) === Number(year)) {
-    return <circle cx={cx} cy={cy} r={5} stroke={stroke} strokeWidth={2} fill={stroke} />
-  }
-
-  return <circle cx={cx} cy={cy} r={3} stroke={stroke} strokeWidth={1} fill="white" />
-}
-
 const CustomTooltip = ({
   active,
-  payload,
-  label,
   basePopulation,
+  label,
+  payload,
 }: TooltipProps<ValueType, NameType> & { basePopulation: TOmphaleEvolution }) => {
   if (!active || !payload?.length) return null
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Alert } from '@codegouvfr/react-dsfr/Alert'
@@ -11,6 +12,7 @@ import { tss } from 'tss-react'
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { roundPopulation } from '~/utils/round-chart-axis'
+import { CustomizedDot } from '~/components/charts/customized-dot'
 
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
@@ -52,20 +54,11 @@ const selectOptions = [
   },
 ]
 
-const CustomizedDot = (props: { cx: number; cy: number; period: string; stroke: string; year: string }) => {
-  const { cx, cy, period, stroke, year } = props
-  if (Number(period) === Number(year)) {
-    return <circle cx={cx} cy={cy} r={5} stroke={stroke} strokeWidth={2} fill={stroke} />
-  }
-
-  return <circle cx={cx} cy={cy} r={3} stroke={stroke} strokeWidth={1} fill="white" />
-}
-
 const CustomTooltip = ({
   active,
-  payload,
-  label,
   basePopulation,
+  label,
+  payload,
 }: TooltipProps<ValueType, NameType> & { basePopulation: TPopulationEvolution }) => {
   if (!active || !payload?.length) return null
   return (

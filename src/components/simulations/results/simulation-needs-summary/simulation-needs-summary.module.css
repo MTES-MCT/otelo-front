@@ -4,14 +4,13 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, auto);
   width: 100%;
-  border-bottom: 1px solid var(--border-default-grey);
 }
 
 .cardWrapper {
   width: 100%;
 }
 
-.container {
+.gridContainer {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -23,8 +22,10 @@
   min-height: 10rem;
 }
 
-.rootDisabled {
-  height: 100%;
-  min-height: 10rem;
-  opacity: 0.5;
+.vacancyContainer {
+  border-bottom: 1px solid var(--border-default-grey);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-bottom: 2rem;
 }

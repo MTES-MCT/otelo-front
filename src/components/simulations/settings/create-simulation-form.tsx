@@ -20,6 +20,7 @@ export const CreateSimulationForm: FC = () => {
     q: parseAsString,
     region: parseAsString,
     tauxLV: parseAsFloat,
+    tauxLVLD: parseAsFloat,
     tauxRS: parseAsFloat,
   })
 
@@ -35,6 +36,7 @@ export const CreateSimulationForm: FC = () => {
         b2_scenario: queryStates.omphale as string,
         b2_tx_rs: queryStates.tauxRS ?? undefined,
         b2_tx_vacance: queryStates.tauxLV ?? undefined,
+        b2_tx_vacance_longue: queryStates.tauxLVLD ?? undefined,
         projection: (queryStates.projection as number) ?? 2030,
       },
     },

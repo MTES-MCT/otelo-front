@@ -1,4 +1,5 @@
 import { auth } from '~/lib/auth/auth'
+import { TSimulationWithResults } from '~/schemas/simulation'
 
 export const getSimulationWithResults = async (id: string) => {
   const session = await auth()
@@ -14,5 +15,5 @@ export const getSimulationWithResults = async (id: string) => {
   if (!res.ok) {
     throw new Error('Failed to get simulation with results')
   }
-  return res.json()
+  return res.json() as Promise<TSimulationWithResults>
 }

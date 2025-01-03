@@ -6,6 +6,7 @@ import { getSimulationWithResults } from '~/server-only/simulation/get-simulatio
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
+
   return (
     <>
       <SimulationNeedsSummary
@@ -13,6 +14,8 @@ export default async function Resultats({ params }: { params: { id: string } }) 
         totalStock={simulation.results.totalStock}
         total={simulation.results.total}
         totalFlux={simulation.results.totalFlux}
+        vacancy={simulation.results.vacantAccomodationEvolution}
+        badQuality={simulation.results.badQuality}
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <h5 style={{ paddingLeft: '2rem', paddingTop: '2rem' }}>Besoin en flux - Evolution du besoin démographique en logements</h5>

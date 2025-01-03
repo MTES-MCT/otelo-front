@@ -22,3 +22,9 @@
   height: 100%;
   min-height: 10rem;
 }
+
+.rootDisabled {
+  height: 100%;
+  min-height: 10rem;
+  opacity: 0.5;
+}

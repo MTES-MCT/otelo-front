@@ -1,38 +1,34 @@
-'use client'
-
 import { Range } from '@codegouvfr/react-dsfr/Range'
-import { parseAsFloat, useQueryStates } from 'nuqs'
 import { FC } from 'react'
+import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/taux-cibles-logements/rates-provider'
 
-type LongTermAccomodationRangeProps = {
+interface LongTermAccomodationRangeProps {
+  epci: string
   longTermValue: number
   shortTermValue: number
 }
 
-export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ longTermValue, shortTermValue }) => {
-  const [queryStates, setQueryStates] = useQueryStates({
-    tauxLVLD: parseAsFloat,
-    tauxLVLDPercent: parseAsFloat,
-    tauxLv: parseAsFloat,
-  })
+export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ epci, longTermValue, shortTermValue }) => {
+  const { rates, updateRates } = useBassinRates()
+  const currentRates = rates[epci]
 
   const getComputedTxLv = (value: number, tauxLVLD: number): number => {
     return value - ((tauxLVLD && tauxLVLD / 100) || 0)
   }
 
-  const searchQueryToRangeValue = (queryValue: number | null): number => {
-    if (!queryValue) return 100
-    const rate = queryValue
-
-    return ((longTermValue - rate) / longTermValue) * 100
+  const getCurrentRangeValue = (): number => {
+    if (!currentRates?.txLVLD) return 100
+    return ((longTermValue - currentRates.txLVLD) / longTermValue) * 100
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rangeValue = Number(e.target.value)
     const rate = longTermValue * (1 - rangeValue / 100)
 
-    const txLvLD = rangeValue / 100
-    setQueryStates({ tauxLVLD: rate, tauxLVLDPercent: txLvLD, tauxLv: getComputedTxLv(shortTermValue, rate) })
+    updateRates(epci, {
+      txLV: getComputedTxLv(shortTermValue, rate),
+      txLVLD: rate,
+    })
   }
 
   return (
@@ -42,7 +38,7 @@ export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ 
       min={0}
       nativeInputProps={{
         onChange: handleChange,
-        value: searchQueryToRangeValue(queryStates.tauxLVLD),
+        value: getCurrentRangeValue(),
       }}
     />
   )

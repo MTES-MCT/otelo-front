@@ -4,7 +4,6 @@ import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
 import { CreateSimulationForm } from '~/components/simulations/settings/create-simulation-form'
 import styles from './validation-parametrage.module.css'
-import { getAccommodationRatesByEpci } from '~/server-only/accomodation-rates/get-accommodation-rate-by-epci'
 import { getOmphaleLabel } from '~/utils/omphale-label'
 
 type PageProps = {
@@ -12,9 +11,9 @@ type PageProps = {
 }
 
 export default async function ValidationParametragePage({ searchParams }: PageProps) {
-  const { epci, omphale, projection, q, tauxLv, tauxLVLDPercent, tauxRS } = await searchParamsCache.parse(searchParams)
+  const { omphale, projection, q } = await searchParamsCache.parse(searchParams)
 
-  const accommodationRates = await getAccommodationRatesByEpci(epci)
+  // const accommodationRates = await getAccommodationRatesByBassin(bassin)
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>
@@ -34,11 +33,13 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
       </div>
       <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
         <h4>Projection d&apos;évolution démographique</h4>
-        <Input disabled label="" hintText="Scénario Omphale" nativeInputProps={{ value: getOmphaleLabel(omphale) }} />
+        <Input disabled label="" hintText="Scénario Omphale" nativeInputProps={{ value: getOmphaleLabel(omphale) as string }} />
       </div>
       <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
+        {/* TODO - transform in client component and use react context to get scenario value per epcis */}
+        {/* -- Remove the query state logic from there */}
         <h4>Taux cible de résidences secondaires et logements vacants</h4>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        {/* <div style={{ display: 'flex', gap: '1rem' }}>
           <Input
             disabled
             label=""
@@ -55,7 +56,7 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
             nativeInputProps={{ value: tauxLVLDPercent ? (Number(tauxLVLDPercent) * 100).toFixed(1) : '100' }}
             style={{ flex: 1 }}
           />
-        </div>
+        </div> 
         <Input
           disabled
           label=""
@@ -63,7 +64,7 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
           hintText="Taux cible de résidences secondaires"
           nativeInputProps={{ value: tauxRS ? (Number(tauxRS) * 100).toFixed(2) : Number(accommodationRates.txRs * 100).toFixed(2) }}
           style={{ flex: 1 }}
-        />
+        />*/}
       </div>
       <CreateSimulationForm />
     </div>

@@ -27,6 +27,7 @@ export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
   let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
+
   if (data) {
     formattedValue = data
   }

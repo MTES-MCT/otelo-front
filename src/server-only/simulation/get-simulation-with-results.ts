@@ -6,6 +6,7 @@ export const getSimulationWithResults = async (id: string) => {
   if (!session?.accessToken) {
     throw new Error('Unauthorized')
   }
+
   const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/simulations/${id}/results`, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,

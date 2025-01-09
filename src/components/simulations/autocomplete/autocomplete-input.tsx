@@ -30,9 +30,9 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
 
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     if ('codeEpci' in item) {
-      setSearchQueryState({ epci: item.codeEpci ?? item.code, q: item.nom, region: item.codeRegion })
+      setSearchQueryState({ epci: item.codeEpci ?? item.code, region: item.codeRegion })
     } else {
-      setSearchQueryState({ epci: item.code ?? item.code, q: item.nom, region: item.codesRegions[0] })
+      setSearchQueryState({ epci: item.code ?? item.code, region: item.codesRegions[0] })
     }
     setSearchQuery(item.nom)
     setIsResultsVisible(false)

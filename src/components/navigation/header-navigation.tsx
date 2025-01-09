@@ -55,7 +55,7 @@ export const HeaderNavigation: FC = () => {
                           linkProps: {
                             href: `/simulation/${simulation.id}/resultats`,
                           },
-                          text: `Simulation ${simulation.epci.name} (${simulation.epci.code}) - ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`,
+                          text: `Simulation - ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`,
                         })),
                       },
                     ]

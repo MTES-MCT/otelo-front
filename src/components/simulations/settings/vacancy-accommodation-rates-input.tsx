@@ -5,18 +5,19 @@ import { AccommodationRateInput } from '~/components/simulations/settings/accomm
 import { LongTermAccomodationRange } from '~/components/simulations/settings/long-term-accomodation-range'
 
 type VacancyAccommodationRatesInputProps = {
-  txLv: number
-  txLvLongue: number
+  epci: string
+  longTermValue: number
+  shortTermValue: number
 }
 
-export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ txLv, txLvLongue }) => {
+export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, longTermValue, shortTermValue }) => {
   return (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <div style={{ flex: 1 }}>
-        <AccommodationRateInput defaultValue={txLv} label="Taux cible de logements vacants" queryKey="tauxLv" disabled />
+        <AccommodationRateInput txKey="txLV" epci={epci} label="Taux cible de logements vacants" disabled />
       </div>
       <div style={{ flex: 1 }}>
-        <LongTermAccomodationRange longTermValue={txLvLongue} shortTermValue={txLv} />
+        <LongTermAccomodationRange epci={epci} longTermValue={longTermValue} shortTermValue={shortTermValue} />
       </div>
     </div>
   )

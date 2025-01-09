@@ -1,31 +1,34 @@
-import { fr } from '@codegouvfr/react-dsfr'
+import { fr, RiIconClassName } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
+import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { SearchParams } from 'nuqs'
+import { FC } from 'react'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
-import { AccommodationRateInput } from '~/components/simulations/settings/accommodation-rate-input'
-import { LongTermVacancyAlert } from '~/components/simulations/settings/long-term-vacancy-alert'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
-import { VacancyAccommodationRatesInput } from '~/components/simulations/settings/vacancy-accommodation-rates-input'
+import { getBassinEpcis } from '~/server-only/epcis/get-bassin-epcis'
+import styles from './taux-cibles-logements.module.css'
+import { TAccommodationRates } from '~/schemas/accommodations-rates'
+import { EpcisAccommodationRates } from '~/components/simulations/settings/epcis-accommodation-rates/epcis-accommodation-rates'
 import { getAccommodationRatesByEpci } from '~/server-only/accomodation-rates/get-accommodation-rate-by-epci'
-
 type PageProps = {
   searchParams: Promise<SearchParams>
 }
 
-export default async function TargetRatesHousing({ searchParams }: PageProps) {
-  const { epci } = await searchParamsCache.parse(searchParams)
-  const accommodationRates = await getAccommodationRatesByEpci(epci)
-  const href = `/simulation/validation-parametrage`
+export interface TabChildrenProps {
+  epci: string
+  rates: TAccommodationRates
+}
+const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div>
       <div style={{ marginBottom: '1rem' }}>
         <Alert
           description={
             <span>
-              Le volume de logements vacants longue durée est de {accommodationRates.vacancy.nbAccommodation} logements en 2021.{' '}
+              Le volume de logements vacants longue durée est de {rates.vacancy.nbAccommodation} logements en 2021.
               <span style={{ fontSize: '0.8rem' }}>
-                (soit
-                <span style={{ fontWeight: 'bold' }}> {accommodationRates.vacancy.txLvLongue}% du parc privé total</span>)
+                {' '}
+                (soit <span style={{ fontWeight: 'bold' }}> {rates.vacancy.txLvLongue}% du parc privé total</span>)
               </span>
             </span>
           }
@@ -33,14 +36,27 @@ export default async function TargetRatesHousing({ searchParams }: PageProps) {
           small
         />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-        <VacancyAccommodationRatesInput txLv={accommodationRates.txLv} txLvLongue={accommodationRates.vacancy.txLvLongue} />
+      <EpcisAccommodationRates epci={epci} rates={rates} />
+    </div>
+  )
+}
 
-        <AccommodationRateInput defaultValue={accommodationRates.txRs} label="Taux cible de résidences secondaires" queryKey="tauxRS" />
-      </div>
-      <div style={{ marginTop: '1rem' }}>
-        <LongTermVacancyAlert />
-      </div>
+export default async function TargetRatesHousing({ searchParams }: PageProps) {
+  const { epci } = await searchParamsCache.parse(searchParams)
+  const accommodationRates = await getAccommodationRatesByEpci(epci)
+  const bassinEpcis = await getBassinEpcis(epci)
+
+  const tabs = bassinEpcis.map((bassinEpci) => ({
+    content: <TabChildren epci={bassinEpci.code} rates={accommodationRates[bassinEpci.code]} />,
+    iconId: 'ri-road-map-line' as RiIconClassName,
+    label: bassinEpci.name,
+  }))
+
+  const href = `/simulation/validation-parametrage`
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Tabs classes={{ panel: styles.backgroundWhite }} tabs={tabs} />
 
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w', 'fr-my-auto')}>
         <NextStepLink href={href} query="omphale" />

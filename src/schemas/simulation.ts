@@ -31,6 +31,7 @@ export const ZInitSimulationDto = z.object({
     b2_scenario: z.string(),
     b2_tx_rs: z.number().optional(),
     b2_tx_vacance: z.number().optional(),
+    b2_tx_vacance_longue: z.number().optional(),
     projection: z.number(),
   }),
 })

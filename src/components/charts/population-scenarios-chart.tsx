@@ -1,13 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Select from '@codegouvfr/react-dsfr/SelectNext'
 import { parseAsString, useQueryStates } from 'nuqs'
 import React, { FC } from 'react'
-import { LineChart, Line, YAxis, XAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, YAxis, CartesianGrid, ResponsiveContainer, XAxis, Tooltip, TooltipProps } from 'recharts'
 import { tss } from 'tss-react'
-import { TPopulationDemographicEvolution } from '~/schemas/demographic-evolution'
+import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
+import { roundPopulation } from '~/utils/round-chart-axis'
+import { CustomizedDot } from '~/components/charts/customized-dot'
 
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
@@ -15,20 +20,20 @@ interface PopulationEvolutionChartProps {
 
 const SCENARIOS = [
   {
-    dataKey: 'central',
-    name: 'Population : Central',
-    queryValue: 'central',
-    stroke: '#000091',
-  },
-  {
     dataKey: 'haute',
-    name: 'Population : Haute',
+    name: 'Haute',
     queryValue: 'haute',
     stroke: '#666666',
   },
   {
+    dataKey: 'central',
+    name: 'Central',
+    queryValue: 'central',
+    stroke: '#000091',
+  },
+  {
     dataKey: 'basse',
-    name: 'Population : Basse',
+    name: 'Basse',
     queryValue: 'basse',
     stroke: '#161616',
   },
@@ -49,15 +54,64 @@ const selectOptions = [
   },
 ]
 
+const CustomTooltip = ({
+  active,
+  basePopulation,
+  label,
+  payload,
+}: TooltipProps<ValueType, NameType> & { basePopulation: TPopulationEvolution }) => {
+  if (!active || !payload?.length) return null
+  return (
+    <div
+      style={{
+        backgroundColor: 'white',
+        border: '1px solid var(--border-default-grey)',
+        borderRadius: '4px',
+        padding: '1rem',
+      }}
+    >
+      <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{`Année ${label}`}</p>
+      {payload.map((item: any) => {
+        const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
+        return (
+          <div
+            key={item.dataKey}
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              gap: '0.5rem',
+              marginTop: '0.25rem',
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: item.stroke,
+                borderRadius: '50%',
+                height: '8px',
+                width: '8px',
+              }}
+            />
+            <span>{item.name}:</span>
+            <span style={{ fontWeight: 'bold' }}>{item.value} habitants</span>
+            <span style={{ fontSize: '10px' }}>({evol > 0 ? `+${evol}` : evol} habitants par rapport à 2021)</span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ demographicEvolution }) => {
   const { classes } = useStyles()
   const { data, metadata } = demographicEvolution
 
   const [queryStates, setQueryStates] = useQueryStates({
+    periode: parseAsString,
     population: parseAsString,
     scenario: parseAsString,
   })
 
+  const period = queryStates.periode ? queryStates.periode : '2030'
   const displayedScenarios = SCENARIOS.map((scenario) => ({
     ...scenario,
     stroke: queryStates.population
@@ -68,6 +122,13 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
     strokeWidth: queryStates.population && scenario.queryValue === queryStates.population ? 2 : 1,
   }))
 
+  const basePopulation = data.find((item) => item.year === 2021) as TPopulationEvolution
+  const popEvolution = data.find((item) => item.year === Number(period)) as TPopulationEvolution
+
+  const evol =
+    popEvolution[queryStates.population as keyof typeof popEvolution] -
+    basePopulation[queryStates.population as keyof typeof basePopulation]
+
   return (
     <>
       <div className={classes.chartContainer}>
@@ -75,21 +136,28 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
           <LineChart width={500} height={300} data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             {displayedScenarios.map(({ dataKey, name, queryValue, stroke, strokeWidth }) => (
-              <React.Fragment key={dataKey}>
-                <Line
-                  key={dataKey}
-                  name={name}
-                  type="monotone"
-                  dataKey={dataKey}
-                  stroke={stroke}
-                  strokeWidth={strokeWidth}
-                  onClick={() => setQueryStates({ population: queryValue })}
-                />
-              </React.Fragment>
+              <Line
+                key={dataKey}
+                name={name}
+                type="monotone"
+                dataKey={dataKey}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                dot={(props) => (
+                  <CustomizedDot
+                    {...props}
+                    stroke={stroke}
+                    period={period}
+                    year={props.payload.year}
+                    key={`${dataKey}-${props.payload.year}`}
+                  />
+                )}
+                onClick={() => setQueryStates({ population: queryValue })}
+              />
             ))}
-
             <XAxis dataKey="year" />
-            <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => Math.round(value).toString()} />
+            <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
+            <Tooltip content={<CustomTooltip basePopulation={basePopulation} />} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -105,6 +173,13 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
           style={{ marginTop: '1rem' }}
         />
       </div>
+      {queryStates.population && (
+        <Alert
+          description={`Votre scénario anticipe une évolution de la population de ${evol > 0 ? `+${evol}` : evol} habitants sur la période 2021 - ${period}.`}
+          severity="warning"
+          small
+        />
+      )}
       <div className={classes.buttonContainer}>
         <Button disabled={!queryStates.population} onClick={() => setQueryStates({ scenario: 'menages' })}>
           Choix du scénario de décohabitation
@@ -118,6 +193,7 @@ const useStyles = tss.create({
   buttonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
+    marginTop: '1rem',
   },
   chartContainer: {
     backgroundColor: 'white',

@@ -13,11 +13,7 @@ export default async function TerritorialChoicePage() {
           background: fr.colors.decisions.background.default.grey.default,
         }}
       >
-        <AutocompleteInput hintText="Saisissez un nom de commune, un code postal ou le nom de l'EPCI du territoire concerné." />
-        {/* <CallOut className="fr-mt-2w" iconId="ri-information-line" title="Quelques informations sur votre territoire">
-          Votre territoire xxxxxxx
-        </CallOut> */}
-        {/* <SelectTerritorialIssues /> */}
+        <AutocompleteInput hintText="Saisissez le nom de l'EPCI du territoire concerné, ou par défaut, vous pouvez saisir le nom de la commune ou son code postal." />
       </div>
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
         <NextStepLink href={href} query="q" />

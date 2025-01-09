@@ -26,9 +26,6 @@ export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
   const defaultTagProps = {
-    linkProps: {
-      href,
-    },
     value,
   }
 
@@ -36,6 +33,9 @@ export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
     ? {
         iconId: 'fr-icon-checkbox-circle-line' as const,
         ...defaultTagProps,
+        linkProps: {
+          href,
+        },
       }
     : defaultTagProps
 

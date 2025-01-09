@@ -7,12 +7,17 @@ import { tss } from 'tss-react'
 
 type AccommodationRateInputProps = {
   defaultValue: number
+  isPercentage?: boolean
   label: string
+  max?: number
   queryKey: string
 }
 
-export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ defaultValue, label, queryKey }) => {
-  const [searchQuery, setSearchQuery] = useQueryState(queryKey, { defaultValue: Number(defaultValue * 100).toFixed(2) })
+export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ defaultValue, isPercentage = false, label, max, queryKey }) => {
+  const defaultValueFormatted = isPercentage ? Number(defaultValue * 100).toFixed(2) : Number(defaultValue).toFixed(2)
+  const [searchQuery, setSearchQuery] = useQueryState(queryKey, {
+    defaultValue: defaultValueFormatted,
+  })
   const { classes } = useStyles()
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)
 
@@ -23,6 +28,7 @@ export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ defaul
         label={label}
         nativeInputProps={{
           inputMode: 'numeric',
+          max: max,
           onChange: handleInputChange,
           pattern: '[0-9]*[.,]?[0-9]*',
           step: '0.01',

@@ -13,7 +13,6 @@ type PageProps = {
 export default async function ValidationParametragePage({ searchParams }: PageProps) {
   const { epci, omphale, projection, q, tauxLV, tauxRS } = await searchParamsCache.parse(searchParams)
   const accommodationRates = await getAccommodationRatesByEpci(epci)
-
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>

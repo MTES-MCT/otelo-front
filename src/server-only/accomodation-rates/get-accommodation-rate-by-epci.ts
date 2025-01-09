@@ -16,5 +16,12 @@ export const getAccommodationRatesByEpci = async (epci: string) => {
   if (!res.ok) {
     throw new Error('Failed to get accommodation rates by epci')
   }
-  return res.json() as Promise<{ txLv: number; txRs: number }>
+  return res.json() as Promise<{
+    txLv: number
+    txRs: number
+    vacancy: {
+      nbAccommodation: number
+      txLvLongue: number
+    }
+  }>
 }

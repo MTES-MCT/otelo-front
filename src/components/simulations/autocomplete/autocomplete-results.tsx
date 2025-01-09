@@ -17,16 +17,16 @@ export const AutocompleteResults = ({ data, onClick }: AutocompleteResultsProps)
   return (
     <div className={classes.container}>
       <ul className={classes.ulContainer}>
-        {hasCommunes && <span className={fr.cx('fr-text--bold')}>Résultat de recherche par commune :</span>}
-        {data.communes.map((item) => (
-          <li className={classes.liItem} onClick={() => onClick(item)} key={`commune-${item.code}`}>
+        {hasEpcis && <span className={fr.cx('fr-text--bold')}>Résultat de recherche par EPCI :</span>}
+        {data.epcis.map((item) => (
+          <li className={classes.liItem} onClick={() => onClick(item)} key={`epci-${item.code}`}>
             {item.nom} ({item.code})
           </li>
         ))}
         {hasCommunes && hasEpcis && <div className={classes.separator} />}
-        {hasEpcis && <span className={fr.cx('fr-text--bold')}>Résultat de recherche par EPCI :</span>}
-        {data.epcis.map((item) => (
-          <li className={classes.liItem} onClick={() => onClick(item)} key={`epci-${item.code}`}>
+        {hasCommunes && <span className={fr.cx('fr-text--bold')}>Résultat de recherche par commune :</span>}
+        {data.communes.map((item) => (
+          <li className={classes.liItem} onClick={() => onClick(item)} key={`commune-${item.code}`}>
             {item.nom} ({item.code})
           </li>
         ))}

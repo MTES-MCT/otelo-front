@@ -5,6 +5,7 @@ import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/s
 import { AccommodationRateInput } from '~/components/simulations/settings/accommodation-rate-input'
 import { LongTermVacancyAlert } from '~/components/simulations/settings/long-term-vacancy-alert'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
+import { VacancyAccommodationRatesInput } from '~/components/simulations/settings/vacancy-accommodation-rates-input'
 import { getAccommodationRatesByEpci } from '~/server-only/accomodation-rates/get-accommodation-rate-by-epci'
 
 type PageProps = {
@@ -14,6 +15,7 @@ type PageProps = {
 export default async function TargetRatesHousing({ searchParams }: PageProps) {
   const { epci } = await searchParamsCache.parse(searchParams)
   const accommodationRates = await getAccommodationRatesByEpci(epci)
+  console.log(accommodationRates)
   const href = `/simulation/validation-parametrage`
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -33,27 +35,9 @@ export default async function TargetRatesHousing({ searchParams }: PageProps) {
         />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <AccommodationRateInput
-            defaultValue={accommodationRates.vacancy.txLvLongue}
-            label="Taux cible de logements vacants longue durée"
-            max={accommodationRates.vacancy.txLvLongue}
-            queryKey="tauxLVLD"
-          />
-          <AccommodationRateInput
-            isPercentage
-            defaultValue={accommodationRates.txLv}
-            label="Taux cible de logements vacants"
-            queryKey="tauxLv"
-          />
-        </div>
+        <VacancyAccommodationRatesInput txLv={accommodationRates.txLv} txLvLongue={accommodationRates.vacancy.txLvLongue} />
 
-        <AccommodationRateInput
-          isPercentage
-          defaultValue={accommodationRates.txRs}
-          label="Taux cible de résidences secondaires"
-          queryKey="tauxRS"
-        />
+        <AccommodationRateInput defaultValue={accommodationRates.txRs} label="Taux cible de résidences secondaires" queryKey="tauxRS" />
       </div>
       <div style={{ marginTop: '1rem' }}>
         <LongTermVacancyAlert />

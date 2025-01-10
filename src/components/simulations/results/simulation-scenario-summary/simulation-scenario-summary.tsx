@@ -63,7 +63,7 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
             iconId: 'ri-percent-line',
             key: 'tauxRS',
             label: 'Taux cible de résidences secondaires',
-            tags: [<Tag key="tauxRS">Taux cible de résidences secondaires : {scenario.b2_tx_rs} %</Tag>],
+            tags: [<Tag key="tauxRS">Taux cible de résidences secondaires : {Number(scenario.b2_tx_rs * 100).toFixed(2)} %</Tag>],
           },
         ]
       : []),
@@ -73,7 +73,13 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
             iconId: 'ri-percent-line',
             key: 'tauxLV',
             label: 'Taux cible de logements vacants',
-            tags: [<>{scenario.b2_tx_vacance && <Tag key="tauxLV">Taux cible de logements vacants : {scenario.b2_tx_vacance} %</Tag>}</>],
+            tags: [
+              <>
+                {scenario.b2_tx_vacance && (
+                  <Tag key="tauxLV">Taux cible de logements vacants : {Number(scenario.b2_tx_vacance * 100).toFixed(2)} %</Tag>
+                )}
+              </>,
+            ],
           },
         ]
       : []),

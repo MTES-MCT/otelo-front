@@ -19,14 +19,16 @@ interface CreationGuideTagProps {
 export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
   const { disabled = false, label, path, queryKey } = step
   const [value] = useQueryState(queryKey)
+  console.log('value', value)
   const { classes } = useStyles({ disabled, value })
   const searchParams = useSearchParams()
 
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
+  const formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
   const defaultTagProps = {
-    value,
+    value: formattedValue,
   }
 
   const tagProps = value
@@ -41,7 +43,7 @@ export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
 
   return (
     <Tag iconId="fr-icon-question-line" className={classes.tag} {...tagProps}>
-      {value ?? label}
+      {formattedValue ?? label}
     </Tag>
   )
 }

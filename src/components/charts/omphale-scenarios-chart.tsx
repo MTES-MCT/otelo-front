@@ -146,11 +146,11 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
 
   const [queryStates, setQueryStates] = useQueryStates({
     omphale: parseAsString,
-    periode: parseAsString,
     population: parseAsString,
+    projection: parseAsString,
   })
 
-  const period = queryStates.periode ? queryStates.periode : '2030'
+  const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.filter((scenario) => scenario.id === queryStates.population).map((scenario) => ({
     ...scenario,
     stroke: queryStates.omphale

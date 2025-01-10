@@ -11,7 +11,8 @@ type PageProps = {
 }
 
 export default async function ValidationParametragePage({ searchParams }: PageProps) {
-  const { epci, omphale, projection, q, tauxLV, tauxRS } = await searchParamsCache.parse(searchParams)
+  const { epci, omphale, projection, q, tauxLv, tauxLVLDPercent, tauxRS } = await searchParamsCache.parse(searchParams)
+
   const accommodationRates = await getAccommodationRatesByEpci(epci)
   return (
     <div className={styles.container}>
@@ -38,19 +39,27 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
             disabled
             label=""
             iconId="ri-percent-line"
-            hintText="Taux cible de résidences secondaires"
-            nativeInputProps={{ value: tauxRS ?? Number(accommodationRates.txRs * 100).toFixed(2) }}
+            hintText="Taux cible de logements vacants"
+            nativeInputProps={{ value: tauxLv ? (Number(tauxLv) * 100).toFixed(2) : Number(accommodationRates.txLv * 100).toFixed(2) }}
             style={{ flex: 1 }}
           />
           <Input
             disabled
             label=""
             iconId="ri-percent-line"
-            hintText="Taux cible de logements vacants"
-            nativeInputProps={{ value: tauxLV ?? Number(accommodationRates.txLv * 100).toFixed(2) }}
+            hintText="Taux cible de logements vacants longue durée"
+            nativeInputProps={{ value: tauxLVLDPercent ? (Number(tauxLVLDPercent) * 100).toFixed(1) : '100' }}
             style={{ flex: 1 }}
           />
         </div>
+        <Input
+          disabled
+          label=""
+          iconId="ri-percent-line"
+          hintText="Taux cible de résidences secondaires"
+          nativeInputProps={{ value: tauxRS ? (Number(tauxRS) * 100).toFixed(2) : Number(accommodationRates.txRs * 100).toFixed(2) }}
+          style={{ flex: 1 }}
+        />
       </div>
       <CreateSimulationForm />
     </div>

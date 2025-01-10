@@ -106,12 +106,12 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
   const { data, metadata } = demographicEvolution
 
   const [queryStates, setQueryStates] = useQueryStates({
-    periode: parseAsString,
     population: parseAsString,
+    projection: parseAsString,
     scenario: parseAsString,
   })
 
-  const period = queryStates.periode ? queryStates.periode : '2030'
+  const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.map((scenario) => ({
     ...scenario,
     stroke: queryStates.population

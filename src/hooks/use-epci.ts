@@ -1,19 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { useQueryState } from 'nuqs'
-import { TDepartementGeoJSON } from '~/server-only/geojson/get-departments'
-import { getDepartementDetails } from '~/server-only/get-departments-details'
+import { TEpci } from '~/schemas/epci'
 
 export const useEpci = () => {
-  const [selectedDepartment] = useQueryState('departement')
-
+  const [selectedEpci] = useQueryState('epci')
   const fetchEpcis = async () => {
     try {
-      const departmentsDetails = await getDepartementDetails(selectedDepartment as string)
-      const response = await fetch(`http://localhost:3000/api/geojson/zo_R${departmentsDetails[0].codeRegion}`)
+      const response = await fetch(`/api/epci/${selectedEpci}`)
       if (!response.ok) {
         throw new Error('Failed to fetch epci data')
       }
-      const data: TDepartementGeoJSON = await response.json()
+      const data: TEpci = await response.json()
       return data
     } catch (error) {
       console.error('Error fetching epci:', error)
@@ -21,9 +18,9 @@ export const useEpci = () => {
   }
 
   const { data, isLoading } = useQuery({
-    enabled: !!selectedDepartment,
+    enabled: !!selectedEpci,
     queryFn: fetchEpcis,
-    queryKey: ['epci', selectedDepartment],
+    queryKey: ['epci', selectedEpci],
   })
 
   return { data, isLoading }

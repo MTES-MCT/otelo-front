@@ -5,6 +5,7 @@ import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/s
 import { CreateSimulationForm } from '~/components/simulations/settings/create-simulation-form'
 import styles from './validation-parametrage.module.css'
 import { getAccommodationRatesByEpci } from '~/server-only/accomodation-rates/get-accommodation-rate-by-epci'
+import { getOmphaleLabel } from '~/utils/omphale-label'
 
 type PageProps = {
   searchParams: Promise<SearchParams>
@@ -18,19 +19,22 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>
       <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
-        <h4>Territoire</h4>
+        <h4>Territoire et horizon temporel</h4>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <Input disabled label="" hintText="Commune" nativeInputProps={{ value: q }} style={{ flex: 1 }} />
-          <Input disabled label="" hintText="EPCI" nativeInputProps={{ value: epci }} style={{ flex: 1 }} />
+          <Input
+            disabled
+            label=""
+            iconId="ri-calendar-line"
+            hintText="Année de projection"
+            style={{ flex: 1 }}
+            nativeInputProps={{ value: projection }}
+          />
         </div>
       </div>
       <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
         <h4>Projection d&apos;évolution démographique</h4>
-        <Input disabled label="" hintText="Scénario Omphale" nativeInputProps={{ value: omphale }} />
-      </div>
-      <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
-        <h4>Horizon temporel de la simulation</h4>
-        <Input disabled label="" iconId="ri-calendar-line" hintText="Année de projection" nativeInputProps={{ value: projection }} />
+        <Input disabled label="" hintText="Scénario Omphale" nativeInputProps={{ value: getOmphaleLabel(omphale) }} />
       </div>
       <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
         <h4>Taux cible de résidences secondaires et logements vacants</h4>
@@ -47,7 +51,7 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
             disabled
             label=""
             iconId="ri-percent-line"
-            hintText="Taux cible de logements vacants longue durée"
+            hintText="Réduction du nombre de logements vacants longue durée"
             nativeInputProps={{ value: tauxLVLDPercent ? (Number(tauxLVLDPercent) * 100).toFixed(1) : '100' }}
             style={{ flex: 1 }}
           />

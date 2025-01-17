@@ -1,5 +1,7 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
+import Alert from '@codegouvfr/react-dsfr/Alert'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { tss } from 'tss-react'
@@ -43,6 +45,18 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
       ]}
     >
       <h5>{title}</h5>
+      {queryState.scenario === 'menages' && (
+        <div className={fr.cx('fr-my-2w')}>
+          <Alert
+            description="Les projections de nombre de ménages proposées par Otelo sont établies à partir du modèle Omphale, produit par l'Insee. Il permet
+        d'obtenir des projections de population sur la période 2018-2050 à partir de scénarios qui reposent sur différentes hypothèses de
+        natalité, de mortalité et de migration. Ces projections de population sont ensuite transformées en projections de nombre de ménages
+        à l'aide d'une méthode conçue en partenariat par la DHUP, l'Insee et le SDES selon plusieurs scénarios de décohabitation."
+            severity="info"
+            small
+          />
+        </div>
+      )}
       {content}
     </Tabs>
   )

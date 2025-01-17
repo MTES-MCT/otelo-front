@@ -15,7 +15,6 @@ type PageProps = {
 export default async function TargetRatesHousing({ searchParams }: PageProps) {
   const { epci } = await searchParamsCache.parse(searchParams)
   const accommodationRates = await getAccommodationRatesByEpci(epci)
-  console.log(accommodationRates)
   const href = `/simulation/validation-parametrage`
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>

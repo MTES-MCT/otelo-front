@@ -12,7 +12,7 @@ export const LongTermVacancyAlert: FC = () => {
   return (
     <Alert
       description={`Votre choix de taux de logements vacants longue durée équivaut à 100 logements résorbés sur la période 2021 - ${queryStates.projection}.`}
-      severity="warning"
+      severity="info"
       small
     />
   )

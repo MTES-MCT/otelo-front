@@ -4,13 +4,16 @@ import { fr } from '@codegouvfr/react-dsfr'
 import styles from './simulation-side-menu.module.css'
 import React from 'react'
 import { CreationGuideTag } from '~/components/simulations/creation-guide/creation-guide-tag'
+import { useEpci } from '~/hooks/use-epci'
 
 export default function SimulationSideMenu() {
+  const { data: epci } = useEpci()
   const steps = [
     {
+      data: epci?.name,
       label: 'Territoire à étudier',
       path: '/simulation/choix-du-territoire',
-      queryKey: 'q',
+      queryKey: 'epci',
       title: <span>Choix du territoire</span>,
     },
     {
@@ -29,11 +32,7 @@ export default function SimulationSideMenu() {
       label: 'Taux de résidences secondaires / logements vacants',
       path: '/simulation/taux-cibles-logements',
       queryKey: 'tauxRS',
-      title: (
-        <span>
-          Paramétrage résidences secondaires et logements vacants <span className={styles.optional}>(optionnel)</span>
-        </span>
-      ),
+      title: <span>Paramétrage résidences secondaires et logements vacants</span>,
     },
   ]
 

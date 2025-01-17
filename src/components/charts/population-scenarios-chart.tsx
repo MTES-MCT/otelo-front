@@ -13,6 +13,7 @@ import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { roundPopulation } from '~/utils/round-chart-axis'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { formatNumber } from '~/utils/format-numbers'
 
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
@@ -92,8 +93,11 @@ const CustomTooltip = ({
               }}
             />
             <span>{item.name}:</span>
-            <span style={{ fontWeight: 'bold' }}>{item.value} habitants</span>
-            <span style={{ fontSize: '10px' }}>({evol > 0 ? `+${evol}` : evol} habitants par rapport à 2021)</span>
+            <span>
+              <span style={{ fontWeight: 'bold' }}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
+              <span style={{ fontWeight: 'bold' }}>2021</span>
+            </span>
+            <span style={{ fontSize: '10px' }}>({formatNumber(item.value)} habitants)</span>
           </div>
         )
       })}
@@ -176,13 +180,13 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
       {queryStates.population && (
         <Alert
           description={`Votre scénario anticipe une évolution de la population de ${evol > 0 ? `+${evol}` : evol} habitants sur la période 2021 - ${period}.`}
-          severity="warning"
+          severity="info"
           small
         />
       )}
       <div className={classes.buttonContainer}>
         <Button disabled={!queryStates.population} onClick={() => setQueryStates({ scenario: 'menages' })}>
-          Choix du scénario de décohabitation
+          Traduire en nombre de ménages
         </Button>
       </div>
     </>

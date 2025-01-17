@@ -11,6 +11,7 @@ import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
 import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
+import { formatNumber } from '~/utils/format-numbers'
 import { roundPopulation } from '~/utils/round-chart-axis'
 
 interface DemographicEvolutionChartProps {
@@ -121,8 +122,11 @@ const CustomTooltip = ({
               }}
             />
             <span>{item.name}:</span>
-            <span style={{ fontWeight: 'bold' }}>{item.value} habitants</span>
-            <span style={{ fontSize: '10px' }}>({evol > 0 ? `+${evol}` : evol} habitants par rapport à 2021)</span>
+            <span>
+              <span style={{ fontWeight: 'bold' }}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
+              <span style={{ fontWeight: 'bold' }}>2021</span>
+            </span>
+            <span style={{ fontSize: '10px' }}>({formatNumber(item.value)} habitants)</span>
           </div>
         )
       })}
@@ -213,14 +217,20 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
       <div className={fr.cx('fr-py-2w')}>
         <SelectOmphale />
       </div>
-      {queryStates.omphale && (
+      {queryStates.omphale && maxYear && (
         <Alert
-          description={`Votre scénario anticipe une évolution du nombre de ménages de ${evol > 0 ? `+${evol}` : evol} sur la période 2021 - ${period}.`}
-          severity="warning"
+          description={
+            <>
+              <p>
+                Votre scénario anticipe une évolution du nombre de ménages de {evol > 0 ? `+${evol}` : evol} sur la période 2021 - {period}.
+              </p>
+              <p>Le pic de ménages sera atteint en {maxYear}.</p>
+            </>
+          }
+          severity="info"
           small
         />
       )}
-      {maxYear && <Alert description={`Le pic de ménages sera atteint en ${maxYear}.`} severity="info" small />}
     </>
   )
 }

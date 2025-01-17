@@ -6,9 +6,11 @@ import { FC } from 'react'
 import { tss } from 'tss-react'
 import { useSearchParams } from 'next/navigation'
 import { fr } from '@codegouvfr/react-dsfr'
+import { getOmphaleLabel } from '~/utils/omphale-label'
 
 interface CreationGuideTagProps {
   step: {
+    data?: string
     disabled?: boolean
     label: string
     path: string
@@ -17,16 +19,20 @@ interface CreationGuideTagProps {
 }
 
 export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
-  const { disabled = false, label, path, queryKey } = step
+  const { data, disabled = false, label, path, queryKey } = step
   const [value] = useQueryState(queryKey)
-  console.log('value', value)
   const { classes } = useStyles({ disabled, value })
   const searchParams = useSearchParams()
-
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
-  const formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
+  let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
+  if (data) {
+    formattedValue = data
+  }
+  if (queryKey === 'omphale') {
+    formattedValue = getOmphaleLabel(value)
+  }
   const defaultTagProps = {
     value: formattedValue,
   }

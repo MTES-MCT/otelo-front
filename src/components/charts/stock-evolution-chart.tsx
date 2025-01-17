@@ -6,6 +6,7 @@ import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { tss } from 'tss-react'
 import { TSimulationWithResults } from '~/schemas/simulation'
 import { Table } from '@codegouvfr/react-dsfr/Table'
+import { formatNumber } from '~/utils/format-numbers'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
@@ -107,13 +108,21 @@ export const StockEvolutionChart: FC<{ data: TSimulationWithResults }> = ({ data
             noCaption
             caption="Résumé des besoins en stock"
             data={[
-              ['Hébergés', hosted, `${Number((hosted / totalStock) * 100).toFixed(1)} %`],
-              ['Hors logement', noAccomodation, `${Number((noAccomodation / totalStock) * 100).toFixed(1)} %`],
-              ['Inadéquation financière', financialInadequation, `${Number((financialInadequation / totalStock) * 100).toFixed(1)} %`],
-              ['Inadéquation physique', physicalInadequation, `${Number((physicalInadequation / totalStock) * 100).toFixed(1)} %`],
-              ['Parc social', socialParc, `${Number((socialParc / totalStock) * 100).toFixed(1)} %`],
-              ['Mauvaise qualité', badQuality, `${Number((badQuality / totalStock) * 100).toFixed(1)} %`],
-              ['Total', totalStock, '-'],
+              ['Hébergés', formatNumber(hosted), `${Number((hosted / totalStock) * 100).toFixed(1)} %`],
+              ['Hors logement', formatNumber(noAccomodation), `${Number((noAccomodation / totalStock) * 100).toFixed(1)} %`],
+              [
+                'Inadéquation financière',
+                formatNumber(financialInadequation),
+                `${Number((financialInadequation / totalStock) * 100).toFixed(1)} %`,
+              ],
+              [
+                'Inadéquation physique',
+                formatNumber(physicalInadequation),
+                `${Number((physicalInadequation / totalStock) * 100).toFixed(1)} %`,
+              ],
+              ['Parc social', formatNumber(socialParc), `${Number((socialParc / totalStock) * 100).toFixed(1)} %`],
+              ['Mauvaise qualité', formatNumber(badQuality), `${Number((badQuality / totalStock) * 100).toFixed(1)} %`],
+              ['Total', formatNumber(totalStock), '-'],
             ]}
             fixed
             headers={['Catégorie', 'Besoin calculé', 'en % du total']}

@@ -17,10 +17,7 @@ export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ defaul
   const [searchQuery, setSearchQuery] = useQueryState(queryKey, parseAsFloat.withDefault(defaultValue))
   const { classes } = useStyles()
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value)
-    setSearchQuery(Number(e.target.value) / 100)
-  }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(Number(e.target.value) / 100)
 
   return (
     <div className={classes.container}>

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import { TAccommodationRates } from '~/schemas/accommodations-rates'
 
-interface RateSettings {
+export interface RateSettings {
   txLV: number
   txLVLD: number
   txRS: number
@@ -25,7 +25,7 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
       ...acc,
       [epciId]: {
         txLV: rates.txLv,
-        txLVLD: rates.vacancy.txLvLongue,
+        // txLVLD: rates.vacancy.txLvLongue,
         txRS: rates.txRs,
       },
     }),
@@ -33,7 +33,6 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
   )
 
   const [rates, setRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
-
   const updateRates = (epciId: string, newRates: Partial<RateSettings>) => {
     setRates((prevRates) => ({
       ...prevRates,
@@ -50,7 +49,7 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
 export const useBassinRates = () => {
   const context = useContext(RatesSettingsContext)
   if (context === undefined) {
-    throw new Error('useRates must be used within a RatesProvider')
+    throw new Error('useBassinRates must be used within a RatesProvider')
   }
   return context
 }

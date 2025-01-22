@@ -3,7 +3,7 @@
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/taux-cibles-logements/rates-provider'
+import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 type AccommodationRateInputProps = {
   disabled?: boolean

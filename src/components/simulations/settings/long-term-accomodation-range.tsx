@@ -1,6 +1,6 @@
 import { Range } from '@codegouvfr/react-dsfr/Range'
 import { FC } from 'react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/taux-cibles-logements/rates-provider'
+import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 interface LongTermAccomodationRangeProps {
   epci: string
@@ -17,7 +17,7 @@ export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ 
   }
 
   const getCurrentRangeValue = (): number => {
-    if (!currentRates?.txLVLD) return 100
+    if (!currentRates.txLVLD) return 100
     return ((longTermValue - currentRates.txLVLD) / longTermValue) * 100
   }
 

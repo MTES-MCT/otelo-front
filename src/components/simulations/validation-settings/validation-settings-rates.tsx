@@ -16,7 +16,7 @@ interface TabChildrenProps {
   rates: RateSettings
 }
 
-const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
+const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
   const { txLV, txRS } = rates
   return (
     <div style={{ display: 'flex', gap: '1rem' }}>

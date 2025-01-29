@@ -1,30 +1,92 @@
-import { DemographicEvolutionChart } from '~/components/charts/demographic-evolution-chart'
+import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/classNames'
+import Tabs from '@codegouvfr/react-dsfr/Tabs'
+import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
-import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import { TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
 
+  const results = {
+    badQuality: simulation.results.badQuality.total,
+    total: simulation.results.total,
+    totalFlux: simulation.results.totalFlux,
+    totalStock: simulation.results.totalStock,
+    vacancy: simulation.results.vacantAccomodationEvolution.total,
+  }
+
+  const epciTabs = simulation.epcis.map((epci) => {
+    const badQuality = (simulation.results.badQuality.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value
+    const totalStock = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalStock
+    const totalFlux = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalFlux
+    const epciResults = {
+      badQuality,
+      total: (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).total,
+      totalFlux,
+      totalStock,
+      vacancy: (simulation.results.vacantAccomodationEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+    }
+
+    const stockResults = {
+      badQuality,
+      financialInadequation: (
+        simulation.results.financialInadequation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult
+      ).value,
+      hosted: (simulation.results.hosted.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      noAccomodation: (simulation.results.noAccomodation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      physicalInadequation: (simulation.results.physicalInadequation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult)
+        .value,
+      socialParc: (simulation.results.socialParc.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      totalStock,
+    }
+
+    const flowResults = {
+      demographicEvolution: (simulation.results.demographicEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult)
+        .value,
+      renewalNeeds: (simulation.results.renewalNeeds.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      secondaryResidenceAccomodationEvolution: (
+        simulation.results.secondaryResidenceAccomodationEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult
+      ).value,
+      totalFlux,
+      vacantAccomodationEvolution: (
+        simulation.results.vacantAccomodationEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult
+      ).value,
+    }
+
+    return {
+      content: (
+        <>
+          <SimulationNeedsSummary projection={simulation.scenario.projection} results={epciResults} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <h5 style={{ paddingLeft: '2rem', paddingTop: '2rem' }}>Besoin en flux - Evolution du besoin démographique en logements</h5>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
+              {/* <DemographicEvolutionChart data={simulation} /> */}
+              <FlowRequirementsChart results={flowResults} />
+            </div>
+          </div>
+          <StockEvolutionChart results={stockResults} />
+        </>
+      ),
+      iconId: 'ri-road-map-line' as RiIconClassName,
+      label: epci.name,
+    }
+  })
+  const bassinTab = {
+    content: (
+      <div>
+        <SimulationNeedsSummary projection={simulation.scenario.projection} results={results} />
+      </div>
+    ),
+    iconId: 'ri-home-line' as RiIconClassName,
+    label: "Résumé à l'échelle du bassin",
+  }
+  const tabs = [...epciTabs, bassinTab]
+
   return (
     <>
-      <SimulationNeedsSummary
-        projection={simulation.scenario.projection}
-        totalStock={simulation.results.totalStock}
-        total={simulation.results.total}
-        totalFlux={simulation.results.totalFlux}
-        vacancy={simulation.results.vacantAccomodationEvolution}
-        badQuality={simulation.results.badQuality}
-      />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <h5 style={{ paddingLeft: '2rem', paddingTop: '2rem' }}>Besoin en flux - Evolution du besoin démographique en logements</h5>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
-          <DemographicEvolutionChart data={simulation} />
-          <FlowRequirementsChart data={simulation} />
-        </div>
-      </div>
-      <StockEvolutionChart data={simulation} />
+      <Tabs tabs={tabs} />
     </>
   )
 }

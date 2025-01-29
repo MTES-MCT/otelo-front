@@ -20,13 +20,13 @@ export const ZSimulationWithRelations = ZSimulation.pick({
   id: true,
   updatedAt: true,
 }).extend({
-  epci: ZEpci,
+  epcis: z.array(ZEpci),
 })
 
 export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
-  epci: z.object({ code: z.string(), region: z.string() }),
+  epci: z.array(z.object({ code: z.string() })),
   scenario: z.object({
     b2_scenario: z.string(),
     epcis: z.record(

@@ -1,3 +1,7 @@
 export const formatNumber = (value: number): string => {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  try {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  } catch (error) {
+    return `N/C`
+  }
 }

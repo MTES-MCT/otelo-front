@@ -13,9 +13,8 @@ type PageProps = {
 }
 
 export default async function ValidationParametragePage({ searchParams }: PageProps) {
-  const { omphale, projection, q } = await searchParamsCache.parse(searchParams)
+  const { omphale, projection } = await searchParamsCache.parse(searchParams)
 
-  // const accommodationRates = await getAccommodationRatesByBassin(bassin)
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>

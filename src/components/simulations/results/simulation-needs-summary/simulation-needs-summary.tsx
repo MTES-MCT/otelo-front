@@ -3,15 +3,18 @@ import styles from './simulation-needs-summary.module.css'
 import Tile from '@codegouvfr/react-dsfr/Tile'
 
 type SimulationNeedsSummaryProps = {
-  badQuality: number
   projection: number
-  total: number
-  totalFlux: number
-  totalStock: number
-  vacancy: number
+  results: {
+    badQuality: number
+    total: number
+    totalFlux: number
+    totalStock: number
+    vacancy: number
+  }
 }
 
-export const SimulationNeedsSummary = ({ badQuality, projection, total, totalFlux, totalStock, vacancy }: SimulationNeedsSummaryProps) => {
+export const SimulationNeedsSummary = ({ projection, results }: SimulationNeedsSummaryProps) => {
+  const { badQuality, total, totalFlux, totalStock, vacancy } = results
   return (
     <div className={styles.container}>
       <div className={styles.gridContainer}>

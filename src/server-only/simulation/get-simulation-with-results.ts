@@ -3,6 +3,7 @@ import { TSimulationWithResults } from '~/schemas/simulation'
 
 export const getSimulationWithResults = async (id: string) => {
   const session = await auth()
+
   if (!session?.accessToken) {
     throw new Error('Unauthorized')
   }

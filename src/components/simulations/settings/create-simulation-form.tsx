@@ -30,10 +30,9 @@ export const CreateSimulationForm: FC = () => {
   } = useForm<TInitSimulationDto>({
     resolver: zodResolver(ZInitSimulationDto),
     values: {
-      epci: { code: queryStates.epci as string, region: queryStates.region as string },
+      epci: Object.entries(rates).map(([epci]) => ({ code: epci })),
       scenario: {
         b2_scenario: queryStates.omphale as string,
-        projection: (queryStates.projection as number) ?? 2030,
         epcis: Object.entries(rates).reduce(
           (acc, [epci, rates]) => {
             acc[epci] = {
@@ -44,6 +43,7 @@ export const CreateSimulationForm: FC = () => {
           },
           {} as Record<string, TInitSimulationDto['scenario']['epcis'][string]>,
         ),
+        projection: (queryStates.projection as number) ?? 2030,
       },
     },
   })

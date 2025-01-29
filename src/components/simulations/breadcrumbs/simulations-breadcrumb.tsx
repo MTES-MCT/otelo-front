@@ -16,7 +16,8 @@ export const SimulationsBreadcrumb = () => {
       }}
       segments={[
         {
-          label: `Simulation ${simulation?.epci.name} (${simulation?.epci.code}) - ${dayjs(simulation?.createdAt).format('DD/MM/YYYY')}`,
+          // todo: add epci name
+          label: `Simulation - ${dayjs(simulation?.createdAt).format('DD/MM/YYYY')}`,
           linkProps: { href: pathname },
         },
       ]}

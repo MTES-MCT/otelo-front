@@ -33,7 +33,7 @@ export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ 
 
   return (
     <Range
-      label="Taux cible de logements vacants longue durée"
+      label="Réduction du taux  de logements vacants longue durée"
       max={100}
       min={0}
       nativeInputProps={{

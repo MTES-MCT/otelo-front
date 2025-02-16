@@ -39,7 +39,7 @@ export const HeaderNavigation: FC = () => {
     ...(session
       ? [
           {
-            className: session ? classes.margin : undefined,
+            className: classes.margin,
             megaMenu: {
               categories:
                 data && data.length > 0
@@ -72,6 +72,10 @@ export const HeaderNavigation: FC = () => {
               },
             },
             text: 'Mes simulations',
+          },
+          {
+            linkProps: { href: '/visualiser-les-donnees', target: '_self' },
+            text: 'Visualiser les données',
           },
           {
             isActive: pathname.includes('/guide-utilisateur'),

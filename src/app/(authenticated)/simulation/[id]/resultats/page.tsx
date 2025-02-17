@@ -4,7 +4,8 @@ import { SimulationNeedsSummary } from '~/components/simulations/results/simulat
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
-import { TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
+import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
+import { SitadelEvolutionChart } from '~/components/charts/sitadel-evolution-chart'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
@@ -55,6 +56,8 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       ).value,
     }
 
+    const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
+
     return {
       content: (
         <>
@@ -67,6 +70,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
             </div>
           </div>
           <StockEvolutionChart results={stockResults} />
+          <SitadelEvolutionChart results={sitadelResults} />
         </>
       ),
       iconId: 'ri-road-map-line' as RiIconClassName,

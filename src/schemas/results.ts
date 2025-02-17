@@ -39,6 +39,18 @@ export const ZCalculationResult = z.object({
 
 export type TCalculationResult = z.infer<typeof ZCalculationResult>
 
+export const ZChartData = z.object({
+  code: z.string(),
+  data: z.array(z.object({ value: z.number(), year: z.number() })),
+  metadata: z.object({ max: z.number(), min: z.number() }),
+})
+export type TChartData = z.infer<typeof ZChartData>
+
+export const ZChartDataResult = z.object({
+  epcis: z.array(ZChartData),
+})
+export type TChartDataResult = z.infer<typeof ZChartDataResult>
+
 export const ZResults = z.object({
   badQuality: ZCalculationResult,
   demographicEvolution: ZCalculationResult,
@@ -49,6 +61,7 @@ export const ZResults = z.object({
   physicalInadequation: ZCalculationResult,
   renewalNeeds: ZCalculationResult,
   secondaryResidenceAccomodationEvolution: ZCalculationResult,
+  sitadel: ZChartDataResult,
   socialParc: ZCalculationResult,
   total: z.number(),
   totalFlux: z.number(),

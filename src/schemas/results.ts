@@ -57,6 +57,7 @@ export const ZResults = z.object({
   epcisTotals: z.array(z.object({ epciCode: z.string(), total: z.number(), totalFlux: z.number(), totalStock: z.number() })),
   financialInadequation: ZCalculationResult,
   hosted: ZCalculationResult,
+  newConstructions: ZChartDataResult,
   noAccomodation: ZCalculationResult,
   physicalInadequation: ZCalculationResult,
   renewalNeeds: ZCalculationResult,

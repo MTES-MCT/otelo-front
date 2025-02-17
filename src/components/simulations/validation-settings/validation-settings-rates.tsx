@@ -17,7 +17,8 @@ interface TabChildrenProps {
 }
 
 const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
-  const { txLV, txRS } = rates
+  const { txLV, txLVLD, txRS } = rates
+
   return (
     <div style={{ display: 'flex', gap: '1rem' }}>
       <Input
@@ -27,6 +28,8 @@ const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
         hintText="Taux cible de logements vacants"
         nativeInputProps={{ value: (Number(txLV) * 100).toFixed(2) }}
         style={{ flex: 1 }}
+        stateRelatedMessage={`dont ${txLVLD}% de logements vacants de longue durée`}
+        state="info"
       />
       <Input
         disabled

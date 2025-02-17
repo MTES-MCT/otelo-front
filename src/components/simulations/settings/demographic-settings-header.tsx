@@ -20,8 +20,8 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
 
   const title =
     queryState.scenario === 'menages'
-      ? 'Évolution du nombre de ménages annuel par projections Omphale'
-      : 'Évolution de la population annuelle par projections à la population'
+      ? "Évolution du nombre de ménages en fonction des scénarios d'évolution des modes d'habitation"
+      : 'Évolution de la population annuelle par scénario de projection'
 
   const content = selectedTabId === 'population' ? children[0] : children[1]
 
@@ -45,7 +45,7 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
       ]}
     >
       <h5>{title}</h5>
-      {queryState.scenario === 'menages' && (
+      {queryState.scenario === 'population' && (
         <div className={fr.cx('fr-my-2w')}>
           <Alert
             description="Les projections de nombre de ménages proposées par Otelo sont établies à partir du modèle Omphale, produit par l'Insee. Il permet

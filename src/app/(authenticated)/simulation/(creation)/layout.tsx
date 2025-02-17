@@ -2,7 +2,11 @@ import { fr } from '@codegouvfr/react-dsfr'
 import SimulationSideMenu from '~/components/simulations/settings/simulation-side-menu'
 import { SimulationStepper } from '~/components/simulations/settings/simulation-stepper'
 
-export default async function SimulationLayout({ children }: { children: React.ReactNode }) {
+type PageProps = {
+  children: React.ReactNode
+}
+
+export default function SimulationLayout({ children }: PageProps) {
   return (
     <div className={fr.cx('fr-grid-row')}>
       <SimulationSideMenu />

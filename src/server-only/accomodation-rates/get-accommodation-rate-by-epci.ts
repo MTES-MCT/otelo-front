@@ -1,4 +1,5 @@
 import { auth } from '~/lib/auth/auth'
+import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
 
 export const getAccommodationRatesByEpci = async (epci: string) => {
   const session = await auth()
@@ -13,15 +14,10 @@ export const getAccommodationRatesByEpci = async (epci: string) => {
       'Content-Type': 'application/json',
     },
   })
+
   if (!res.ok) {
     throw new Error('Failed to get accommodation rates by epci')
   }
-  return res.json() as Promise<{
-    txLv: number
-    txRs: number
-    vacancy: {
-      nbAccommodation: number
-      txLvLongue: number
-    }
-  }>
+
+  return res.json() as Promise<TEpcisAccommodationRates>
 }

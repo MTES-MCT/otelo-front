@@ -1,23 +1,25 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
-import { parseAsFloat, useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
+import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 type AccommodationRateInputProps = {
-  defaultValue: number
   disabled?: boolean
+  epci: string
   label: string
   max?: number
-  queryKey: string
+  txKey: string
 }
 
-export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ defaultValue, disabled = false, label, max, queryKey }) => {
-  const [searchQuery, setSearchQuery] = useQueryState(queryKey, parseAsFloat.withDefault(defaultValue))
+export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ disabled = false, epci, label, max, txKey }) => {
+  const { rates, updateRates } = useBassinRates()
   const { classes } = useStyles()
+  const ratesByEpci = rates[epci]
+  const value = ratesByEpci[txKey as keyof typeof ratesByEpci]
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(Number(e.target.value) / 100)
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => updateRates(epci, { [txKey]: Number(e.target.value) / 100 })
 
   return (
     <div className={classes.container}>
@@ -32,7 +34,7 @@ export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ defaul
           pattern: '[0-9]*[.,]?[0-9]*',
           step: '0.01',
           type: 'number',
-          value: (Number(searchQuery) * 100).toFixed(2) ?? '',
+          value: (Number(value) * 100).toFixed(2) ?? '',
         }}
       />
     </div>

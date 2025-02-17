@@ -6,9 +6,12 @@ import { Range } from '@codegouvfr/react-dsfr/Range'
 
 export const SelectHorizonPeriod: FC = () => {
   const [projection, setProjection] = useQueryState('projection')
+
   useEffect(() => {
-    setProjection('2030')
-  }, [])
+    if (!projection) {
+      setProjection('2030')
+    }
+  }, [projection, setProjection])
 
   return (
     <Range

@@ -4,24 +4,23 @@ import Button from '@codegouvfr/react-dsfr/Button'
 import { FC } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { parseAsFloat, parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
+import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
 import { ZInitSimulationDto } from '~/schemas/simulation'
 import { TInitSimulationDto } from '~/schemas/simulation'
 import { tss } from 'tss-react'
+import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 export const CreateSimulationForm: FC = () => {
   const { classes } = useStyles()
   const { mutateAsync } = useCreateSimulation()
+  const { rates } = useBassinRates()
+
   const [queryStates] = useQueryStates({
     epci: parseAsString,
     omphale: parseAsString,
     projection: parseAsInteger,
-    q: parseAsString,
     region: parseAsString,
-    tauxLVLD: parseAsFloat,
-    tauxLv: parseAsFloat,
-    tauxRS: parseAsFloat,
   })
 
   const {
@@ -31,17 +30,23 @@ export const CreateSimulationForm: FC = () => {
   } = useForm<TInitSimulationDto>({
     resolver: zodResolver(ZInitSimulationDto),
     values: {
-      epci: { code: queryStates.epci as string, name: queryStates.q as string, region: queryStates.region as string },
+      epci: Object.entries(rates).map(([epci]) => ({ code: epci })),
       scenario: {
         b2_scenario: queryStates.omphale as string,
-        b2_tx_rs: queryStates.tauxRS ?? undefined,
-        b2_tx_vacance: queryStates.tauxLv ?? undefined,
-        b2_tx_vacance_longue: queryStates.tauxLVLD ?? undefined,
+        epcis: Object.entries(rates).reduce(
+          (acc, [epci, rates]) => {
+            acc[epci] = {
+              b2_tx_rs: rates.txRS ?? undefined,
+              b2_tx_vacance: rates.txLV ?? undefined,
+            }
+            return acc
+          },
+          {} as Record<string, TInitSimulationDto['scenario']['epcis'][string]>,
+        ),
         projection: (queryStates.projection as number) ?? 2030,
       },
     },
   })
-
   const onSubmit = async () => mutateAsync(getValues())
 
   return (

@@ -1,5 +1,5 @@
-export const getOmphaleLabel = (value: string | null): string => {
-  if (!value) return ''
+export const getOmphaleLabel = (value: string | null): string | null => {
+  if (!value) return null
 
   const scenario = value.split('_')[0]
   const decohabitation = value.split('_')[1]
@@ -15,10 +15,10 @@ export const getOmphaleLabel = (value: string | null): string => {
     formattedScenario = 'Accelération'
   }
   if (decohabitation === 'H') {
-    formattedDecohabitation = 'Accélération'
+    formattedDecohabitation = 'Haute'
   }
   if (decohabitation === 'B') {
-    formattedDecohabitation = 'Décélération'
+    formattedDecohabitation = 'Basse'
   }
   if (decohabitation === 'C') {
     formattedDecohabitation = 'Tendanciel'

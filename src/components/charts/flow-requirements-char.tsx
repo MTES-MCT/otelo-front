@@ -5,20 +5,23 @@ import { CartesianGrid } from 'recharts'
 import { BarChart } from 'recharts'
 import { ResponsiveContainer } from 'recharts'
 import { tss } from 'tss-react'
-import { TSimulationWithResults } from '~/schemas/simulation'
 
 interface FlowRequirementsChartProps {
-  data: TSimulationWithResults
+  results: {
+    demographicEvolution: number
+    renewalNeeds: number
+    secondaryResidenceAccomodationEvolution: number
+    totalFlux: number
+    vacantAccomodationEvolution: number
+  }
 }
 
-export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ data }) => {
-  const { demographicEvolution, renewalNeeds, secondaryResidenceAccomodationEvolution, totalFlux, vacantAccomodationEvolution } =
-    data.results
-  const { currentProjection } = demographicEvolution
+export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results }) => {
+  const { demographicEvolution, renewalNeeds, secondaryResidenceAccomodationEvolution, totalFlux, vacantAccomodationEvolution } = results
 
   const positiveData = {
     name: 'Besoin supplémentaire',
-    ...(currentProjection > 0 && { demographicEvolution: currentProjection }),
+    ...(demographicEvolution > 0 && { demographicEvolution }),
     ...(renewalNeeds > 0 && { renewalNeeds }),
     ...(secondaryResidenceAccomodationEvolution > 0 && { secondaryResidenceAccomodationEvolution }),
     ...(vacantAccomodationEvolution > 0 && { vacantAccomodationEvolution }),
@@ -26,7 +29,7 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ data }) 
 
   const negativeData = {
     name: 'Besoin résorbée',
-    ...(currentProjection < 0 && { demographicEvolution: Math.abs(currentProjection) }),
+    ...(demographicEvolution < 0 && { demographicEvolution: Math.abs(demographicEvolution) }),
     ...(renewalNeeds < 0 && { renewalNeeds: Math.abs(renewalNeeds) }),
     ...(secondaryResidenceAccomodationEvolution < 0 && {
       secondaryResidenceAccomodationEvolution: Math.abs(secondaryResidenceAccomodationEvolution),

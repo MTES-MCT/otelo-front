@@ -9,6 +9,7 @@ export const ZDepartementDetailsSchema = z.object({
 export type TDepartementDetailsSchema = z.infer<typeof ZDepartementDetailsSchema>
 
 export const getDepartementDetails = async (name: string) => {
+  return []
   const response = await fetch(`https://geo.api.gouv.fr/departements?nom=${name}&fields=nom,code,codeRegion`)
   if (!response.ok) {
     throw new Error('Failed to fetch departements data')

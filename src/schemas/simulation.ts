@@ -20,18 +20,22 @@ export const ZSimulationWithRelations = ZSimulation.pick({
   id: true,
   updatedAt: true,
 }).extend({
-  epci: ZEpci,
+  epcis: z.array(ZEpci),
 })
 
 export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
-  epci: z.object({ code: z.string(), name: z.string(), region: z.string() }),
+  epci: z.array(z.object({ code: z.string() })),
   scenario: z.object({
     b2_scenario: z.string(),
-    b2_tx_rs: z.number().optional(),
-    b2_tx_vacance: z.number().optional(),
-    b2_tx_vacance_longue: z.number().optional(),
+    epcis: z.record(
+      z.string(),
+      z.object({
+        b2_tx_rs: z.number().optional(),
+        b2_tx_vacance: z.number().optional(),
+      }),
+    ),
     projection: z.number(),
   }),
 })

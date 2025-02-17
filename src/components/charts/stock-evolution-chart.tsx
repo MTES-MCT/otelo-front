@@ -4,16 +4,27 @@ import React, { FC, useState } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
 import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { tss } from 'tss-react'
-import { TSimulationWithResults } from '~/schemas/simulation'
 import { Table } from '@codegouvfr/react-dsfr/Table'
 import { formatNumber } from '~/utils/format-numbers'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
-export const StockEvolutionChart: FC<{ data: TSimulationWithResults }> = ({ data }) => {
+interface StockEvolutionChartProps {
+  results: {
+    badQuality: number
+    financialInadequation: number
+    hosted: number
+    noAccomodation: number
+    physicalInadequation: number
+    socialParc: number
+    totalStock: number
+  }
+}
+
+export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) => {
   const [activeIndex, setActiveIndex] = useState<number>()
   const { classes } = useStyles()
-  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, socialParc, totalStock } = data.results
+  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, socialParc, totalStock } = results
   const chartData = [
     { name: 'Hébergés', value: hosted },
     { name: 'Hors logement', value: noAccomodation },

@@ -6,11 +6,11 @@ import { TEpci } from '~/schemas/epci'
 import Tag from '@codegouvfr/react-dsfr/Tag'
 
 export interface SimulationScenarioSummaryProps {
-  epci: TEpci
+  epcis: TEpci[]
   scenario: TScenario
 }
 
-export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ epci, scenario }) => {
+export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ epcis, scenario }) => {
   const getOmphaleScenarioLabel = (scenario: string) => {
     switch (scenario) {
       case 'Central_B':
@@ -38,12 +38,7 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       iconId: 'fr-icon-france-line',
       key: 'territory',
       label: 'Territoire en étude',
-      tags: [
-        <Tag key="epci-name">{epci.name}</Tag>,
-        <Tag key="epci-code" className={styles.epci}>
-          {epci.code}
-        </Tag>,
-      ],
+      tags: [...epcis.map((epci) => <Tag key="epci-name">{epci.name}</Tag>)],
     },
     {
       iconId: 'fr-icon-calendar-line',
@@ -85,7 +80,7 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       : []),
   ]
   return (
-    <nav style={{ borderRight: '0.5px solid var(--background-alt-grey-active)', paddingRight: '1rem' }}>
+    <nav style={{ paddingRight: '1rem' }}>
       <div className={styles.headerContainer}>
         <h5>Votre paramétrage</h5>
       </div>

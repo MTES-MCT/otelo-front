@@ -3,9 +3,11 @@ import { TSimulationWithResults } from '~/schemas/simulation'
 
 export const getSimulationWithResults = async (id: string) => {
   const session = await auth()
+
   if (!session?.accessToken) {
     throw new Error('Unauthorized')
   }
+
   const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/simulations/${id}/results`, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,

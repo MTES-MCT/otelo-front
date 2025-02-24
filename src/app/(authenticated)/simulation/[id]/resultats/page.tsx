@@ -5,7 +5,7 @@ import { FlowRequirementsChart } from '~/components/charts/flow-requirements-cha
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
-import { SitadelEvolutionChart } from '~/components/charts/sitadel-evolution-chart'
+import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
@@ -57,7 +57,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     }
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
-
+    const newConstructionsResults = simulation.results.newConstructions.epcis.find((e) => e.code === epci.code) as TChartData
     return {
       content: (
         <>
@@ -70,7 +70,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
             </div>
           </div>
           <StockEvolutionChart results={stockResults} />
-          <SitadelEvolutionChart results={sitadelResults} />
+          <AccommodationContructionEvolutionChart sitadelResults={sitadelResults} newConstructionsResults={newConstructionsResults} />
         </>
       ),
       iconId: 'ri-road-map-line' as RiIconClassName,

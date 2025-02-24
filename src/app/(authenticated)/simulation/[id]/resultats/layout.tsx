@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { SimulationScenarioSummary } from '~/components/simulations/results/simulation-scenario-summary/simulation-scenario-summary'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 
@@ -5,9 +6,10 @@ export default async function SimulationResultLayout({ children, params }: { chi
   const simulation = await getSimulationWithResults(params.id)
   return (
     <div style={{ display: 'flex' }}>
-      <SimulationScenarioSummary scenario={simulation.scenario} epcis={simulation.epcis} />
-      <div style={{ flex: 1 }}>
-        {/* <SimulationHeaderResults /> */}
+      <div className={fr.cx('fr-col-2')}>
+        <SimulationScenarioSummary scenario={simulation.scenario} epcis={simulation.epcis} />
+      </div>
+      <div className={fr.cx('fr-col-9')}>
         <div>{children}</div>
       </div>
     </div>

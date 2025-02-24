@@ -42,10 +42,8 @@ const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
         <VacancyAccommodationRatesInput epci={epci} longTermValue={epciRates.vacancy.txLvLongue} shortTermValue={epciRates.txLv} />
-        <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
-      </div>
-      <div style={{ marginTop: '1rem' }}>
         <LongTermVacancyAlert />
+        <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
       </div>
     </div>
   )

@@ -9,10 +9,10 @@ export const getOmphaleLabel = (value: string | null): string | null => {
     formattedScenario = 'Central'
   }
   if (scenario === 'PB') {
-    formattedScenario = 'Décélération'
+    formattedScenario = 'Basse'
   }
   if (scenario === 'PH') {
-    formattedScenario = 'Accelération'
+    formattedScenario = 'Haute'
   }
   if (decohabitation === 'H') {
     formattedDecohabitation = 'Haute'

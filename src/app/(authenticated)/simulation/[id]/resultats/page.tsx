@@ -86,7 +86,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     iconId: 'ri-home-line' as RiIconClassName,
     label: "Résumé à l'échelle du bassin",
   }
-  const tabs = [...epciTabs, bassinTab]
+  const tabs = [bassinTab, ...epciTabs]
 
   return (
     <>

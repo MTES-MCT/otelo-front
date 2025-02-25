@@ -13,6 +13,17 @@ type NextStepLinkProps = {
   query: string
 }
 
+export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 'label'>> = ({ href, label = 'Étape suivante' }) => {
+  const searchParams = useSearchParams()
+  const searchParamsString = new URLSearchParams(searchParams).toString()
+  const hrefWithParams = `${href}${searchParamsString ? `?${searchParamsString}` : ''}`
+  return (
+    <Link href={hrefWithParams}>
+      <Button>{label}</Button>
+    </Link>
+  )
+}
+
 export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Étape suivante', query }) => {
   const [value] = useQueryState(query, {
     defaultValue: defaultValue ?? '',

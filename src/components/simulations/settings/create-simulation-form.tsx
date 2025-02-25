@@ -13,7 +13,10 @@ import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rat
 
 export const CreateSimulationForm: FC = () => {
   const { classes } = useStyles()
-  const { mutateAsync } = useCreateSimulation()
+  const createSimulationForResults = useCreateSimulation()
+  const createSimulationForBadHousing = useCreateSimulation({
+    redirectUri: '/simulation/{{id}}/modifier/horizon-de-resorption',
+  })
   const { rates } = useBassinRates()
 
   const [queryStates] = useQueryStates({
@@ -47,22 +50,30 @@ export const CreateSimulationForm: FC = () => {
       },
     },
   })
-  const onSubmit = async () => mutateAsync(getValues())
+
+  const onSubmitForResults = async () => createSimulationForResults.mutateAsync(getValues())
+  const onSubmitForBadHousing = async () => createSimulationForBadHousing.mutateAsync(getValues())
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={classes.container}>
-        <Button disabled={!isValid} type="submit">
-          Accéder au résultat
-        </Button>
-      </div>
-    </form>
+    <div className={classes.container}>
+      <Button
+        priority="secondary"
+        onClick={handleSubmit(onSubmitForBadHousing)}
+        disabled={!isValid || createSimulationForBadHousing.isPending}
+      >
+        Paramétrer le mal-logement
+      </Button>
+      <Button onClick={handleSubmit(onSubmitForResults)} disabled={!isValid || createSimulationForResults.isPending}>
+        Accéder au résultat
+      </Button>
+    </div>
   )
 }
 
 const useStyles = tss.create({
   container: {
     display: 'flex',
+    gap: '1rem',
     justifyContent: 'flex-end',
   },
 })

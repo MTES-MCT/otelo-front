@@ -6,6 +6,17 @@ export enum ESourceB11 {
   SNE = 'SNE',
 }
 
+export enum ESourceB14 {
+  RP = 'RP',
+  Filo = 'Filo',
+  FF = 'FF',
+}
+
+export enum ESourceB15 {
+  RP = 'RP',
+  Filo = 'Filo',
+}
+
 export const ZScenario = ZCommonDateFields.extend({
   b11_etablissement: z.array(z.string()),
   b11_fortune: z.boolean(),
@@ -31,11 +42,6 @@ export const ZScenario = ZCommonDateFields.extend({
   b17_motif: z.union([z.literal('Tout'), z.literal('Env'), z.literal('Assis'), z.literal('Rappr'), z.literal('Trois')]),
   b1_horizon_resorption: z.number(),
   b2_scenario: z.string(),
-  b2_tx_disparition: z.number(),
-  b2_tx_restructuration: z.number(),
-  b2_tx_rs: z.number(),
-  b2_tx_vacance: z.number(),
-  b2_tx_vacance_longue: z.number(),
   id: z.string(),
   isConfidential: z.boolean(),
   projection: z.number(),
@@ -45,3 +51,10 @@ export const ZScenario = ZCommonDateFields.extend({
 })
 
 export type TScenario = z.infer<typeof ZScenario>
+
+export const ZScenarioWithSimulationId = z.object({
+  id: z.string(),
+  scenario: ZScenario,
+})
+
+export type TScenarioWithSimulationId = z.infer<typeof ZScenarioWithSimulationId>

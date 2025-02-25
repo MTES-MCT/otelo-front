@@ -53,3 +53,17 @@ export const ZSimulationWithResults = ZSimulationWithEpciAndScenario.extend({
 })
 
 export type TSimulationWithResults = z.infer<typeof ZSimulationWithResults>
+
+export const ZUpdateSimulationDto = z.object({
+  id: z.string(),
+  scenario: ZScenario.omit({
+    b17_motif: true,
+    b2_scenario: true,
+    updatedAt: true,
+    createdAt: true,
+    isConfidential: true,
+    projection: true,
+  }),
+})
+
+export type TUpdateSimulationDto = z.infer<typeof ZUpdateSimulationDto>

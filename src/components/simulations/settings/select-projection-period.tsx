@@ -4,7 +4,7 @@ import { useQueryState } from 'nuqs'
 import { FC, useEffect } from 'react'
 import { Range } from '@codegouvfr/react-dsfr/Range'
 
-export const SelectHorizonPeriod: FC = () => {
+export const SelectProjectionPeriod: FC = () => {
   const [projection, setProjection] = useQueryState('projection')
 
   useEffect(() => {

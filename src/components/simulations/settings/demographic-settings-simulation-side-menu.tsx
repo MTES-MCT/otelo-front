@@ -3,12 +3,12 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import styles from './simulation-side-menu.module.css'
 import React from 'react'
-import { CreationGuideTag } from '~/components/simulations/creation-guide/creation-guide-tag'
+import { DemographicSettingsCreationGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
 import { useEpci } from '~/hooks/use-epci'
 
-export default function SimulationSideMenu() {
+export default function DemographicSettingsSimulationSideMenu() {
   const { data: epci } = useEpci()
-  const steps = [
+  const demographicSteps = [
     {
       data: epci?.name,
       label: 'Territoire à étudier',
@@ -39,7 +39,7 @@ export default function SimulationSideMenu() {
   return (
     <nav className={fr.cx('fr-col-md-3')}>
       <div className={styles.container}>
-        {steps.map((step, index) => (
+        {demographicSteps.map((step, index) => (
           <React.Fragment key={index}>
             <div className={styles.stepContainer}>
               <div className={styles.stepNumber}>
@@ -50,14 +50,14 @@ export default function SimulationSideMenu() {
             {
               <div className={styles.stepDelimitor}>
                 <div className={styles.badgeContainer}>
-                  <CreationGuideTag step={step} />
+                  <DemographicSettingsCreationGuideTag step={step} />
                 </div>
               </div>
             }
           </React.Fragment>
         ))}
         <div className={styles.stepContainer}>
-          <div className={styles.stepNumber}>{steps.length + 1}</div>
+          <div className={styles.stepNumber}>{demographicSteps.length + 1}</div>
           <span>Validation de votre paramétrage</span>
         </div>
       </div>

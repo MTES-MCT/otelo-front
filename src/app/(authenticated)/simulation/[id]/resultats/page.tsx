@@ -6,6 +6,7 @@ import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
 import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
+import Button from '@codegouvfr/react-dsfr/Button'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
@@ -90,6 +91,11 @@ export default async function Resultats({ params }: { params: { id: string } }) 
 
   return (
     <>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/horizon-de-resorption` }}>
+          Paramétrer le mal-logement
+        </Button>
+      </div>
       <Tabs tabs={tabs} />
     </>
   )

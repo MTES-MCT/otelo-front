@@ -5,7 +5,7 @@ import Stepper from '@codegouvfr/react-dsfr/Stepper'
 import { usePathname } from 'next/navigation'
 import { FC, useMemo } from 'react'
 
-export const SimulationStepper: FC = () => {
+export const DemographicSettingsSimulationStepper: FC = () => {
   const pathname = usePathname()
 
   const stepperProps = useMemo(() => {

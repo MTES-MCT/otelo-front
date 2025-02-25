@@ -1,19 +1,19 @@
 import { fr } from '@codegouvfr/react-dsfr'
-import SimulationSideMenu from '~/components/simulations/settings/simulation-side-menu'
-import { SimulationStepper } from '~/components/simulations/settings/simulation-stepper'
+import DemographicSettingsSimulationSideMenu from '~/components/simulations/settings/demographic-settings-simulation-side-menu'
+import { DemographicSettingsSimulationStepper } from '~/components/simulations/settings/demographic-settings-simulation-stepper'
 
 type PageProps = {
   children: React.ReactNode
 }
 
-export default function SimulationLayout({ children }: PageProps) {
+export default function CreateSimulationLayout({ children }: PageProps) {
   return (
     <div className={fr.cx('fr-grid-row')}>
-      <SimulationSideMenu />
+      <DemographicSettingsSimulationSideMenu />
 
       <div className={fr.cx('fr-col-md-9')} style={{ background: fr.colors.decisions.background.alt.blueFrance.default }}>
         <div className={fr.cx('fr-container')}>
-          <SimulationStepper />
+          <DemographicSettingsSimulationStepper />
           {children}
         </div>
       </div>

@@ -1,39 +1,29 @@
 'use client'
 
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
-import { useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 import { useSearchParams } from 'next/navigation'
 import { fr } from '@codegouvfr/react-dsfr'
-import { getOmphaleLabel } from '~/utils/omphale-label'
 
 interface CreationGuideTagProps {
   step: {
-    data?: string
     disabled?: boolean
     label: string
     path: string
-    queryKey: string
+    value?: string
   }
 }
 
-export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
-  const { data, disabled = false, label, path, queryKey } = step
-  const [value] = useQueryState(queryKey)
+export const BadHousingSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
+  const { disabled = false, label, path, value } = step
   const { classes } = useStyles({ disabled, value })
   const searchParams = useSearchParams()
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
-  let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
+  const formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
 
-  if (data) {
-    formattedValue = data
-  }
-  if (queryKey === 'omphale') {
-    formattedValue = getOmphaleLabel(value)
-  }
   const defaultTagProps = {
     value: formattedValue,
   }
@@ -55,7 +45,7 @@ export const CreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
   )
 }
 
-const useStyles = tss.withParams<{ disabled: boolean; value: string | null }>().create(({ disabled, value }) => {
+const useStyles = tss.withParams<{ disabled: boolean; value: string | undefined }>().create(({ disabled, value }) => {
   let backgroundColor = undefined
   let hoverBackgroundColor = undefined
   let color = undefined

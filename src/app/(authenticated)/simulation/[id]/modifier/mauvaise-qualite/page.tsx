@@ -1,0 +1,37 @@
+import { fr } from '@codegouvfr/react-dsfr'
+import Alert from '@codegouvfr/react-dsfr/Alert'
+import { SelectBadQualityPart } from '~/components/simulations/settings/modification/bad-quality/select-bad-quality-part'
+import { SelectBadQualitySource } from '~/components/simulations/settings/modification/bad-quality/select-bad-quality-source'
+import { SelectConfortSource } from '~/components/simulations/settings/modification/bad-quality/select-confort-source'
+import { SelectOccupationSource } from '~/components/simulations/settings/modification/bad-quality/select-occupation-source'
+import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+
+export default async function BadQualityPage({ params }: { params: { id: string } }) {
+  const href = `/simulation/${params.id}/modifier/suroccupation`
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <h5>Choix de la source et des critères retenus</h5>
+      <SelectBadQualitySource />
+      <SelectConfortSource />
+      <SelectOccupationSource />
+      <Alert
+        severity="info"
+        description={
+          <>
+            <p>
+              Une part des logements de mauvaise qualité peut faire l&apos;objet d&apos;une rénovation. Plus la part de logements rénovés
+              est importante, plus le besoin lié à la mauvaise qualité des logements diminuera.
+            </p>
+            <p>Par défaut elle s&apos;élève à 80%.</p>
+          </>
+        }
+        small
+      />
+      <SelectBadQualityPart />
+      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
+        <NextStepLinkWithoutValidation href={href} />
+      </div>
+    </div>
+  )
+}

@@ -10,5 +10,6 @@ interface SimulationFormContextWrapperProps {
 export const SimulationFormContextWrapper = ({ children }: SimulationFormContextWrapperProps) => {
   const { data: accommodationRates } = useAccommodationRatesByEpci()
   if (!accommodationRates) return null
+
   return <RatesProvider initialRates={accommodationRates}>{children}</RatesProvider>
 }

@@ -39,8 +39,9 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
     }
   }
 
-  const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)!.b2_tx_rs
-  const epciTxVacance = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)!.b2_tx_vacance
+  const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_rs
+  const epciTxVacance = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance
+
   const settings = [
     {
       iconId: 'fr-icon-france-line',

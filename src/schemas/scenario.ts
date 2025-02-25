@@ -7,15 +7,23 @@ export enum ESourceB11 {
 }
 
 export enum ESourceB14 {
-  RP = 'RP',
-  Filo = 'Filo',
   FF = 'FF',
+  Filo = 'Filo',
+  RP = 'RP',
 }
 
 export enum ESourceB15 {
-  RP = 'RP',
   Filo = 'Filo',
+  RP = 'RP',
 }
+
+export const ZEpciScenario = z.object({
+  b2_tx_disparition: z.number(),
+  b2_tx_restructuration: z.number(),
+  b2_tx_rs: z.number(),
+  b2_tx_vacance: z.number(),
+  epciCode: z.string(),
+})
 
 export const ZScenario = ZCommonDateFields.extend({
   b11_etablissement: z.array(z.string()),
@@ -42,6 +50,7 @@ export const ZScenario = ZCommonDateFields.extend({
   b17_motif: z.union([z.literal('Tout'), z.literal('Env'), z.literal('Assis'), z.literal('Rappr'), z.literal('Trois')]),
   b1_horizon_resorption: z.number(),
   b2_scenario: z.string(),
+  epciScenarios: z.array(ZEpciScenario),
   id: z.string(),
   isConfidential: z.boolean(),
   projection: z.number(),

@@ -59,10 +59,11 @@ export const ZUpdateSimulationDto = z.object({
   scenario: ZScenario.omit({
     b17_motif: true,
     b2_scenario: true,
-    updatedAt: true,
     createdAt: true,
+    epciScenarios: true,
     isConfidential: true,
     projection: true,
+    updatedAt: true,
   }),
 })
 

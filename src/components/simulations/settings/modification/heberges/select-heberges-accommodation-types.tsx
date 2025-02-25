@@ -19,7 +19,6 @@ export const SelectHebergesAccommodationTypes = () => {
     })
   }
 
-
   return (
     <Checkbox
       legend="Type d'hébergement"

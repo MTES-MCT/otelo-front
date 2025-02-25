@@ -14,11 +14,9 @@ export const BadHousingSettingsFormContextWrapper = ({ children }: BadHousingSet
   const { data } = useScenario()
 
   if (!data) return null
-  const { scenario, id } = data
+  const { id, scenario } = data
 
   const initialSettings: BadHousingSettings = {
-    id: scenario.id,
-    simulationId: id,
     badQuality: {
       confort: scenario.b14_confort,
       occupation: scenario.b14_occupation,
@@ -40,12 +38,14 @@ export const BadHousingSettingsFormContextWrapper = ({ children }: BadHousingSet
       sa: scenario.b11_sa,
       source: scenario.source_b11,
     },
+    id: scenario.id,
     inadequationFinanciere: {
       accedant: scenario.b13_acc,
       maxEffort: scenario.b13_taux_effort,
       part: scenario.b13_taux_reallocation,
       plp: scenario.b13_plp,
     },
+    simulationId: id,
     suroccupation: {
       part: scenario.b15_taux_reallocation,
       plp: scenario.b15_loc_hors_hlm,

@@ -1,8 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 
 export interface BadHousingSettings {
-  id: string
-  simulationId: string
   badQuality: {
     confort: string
     occupation: string
@@ -24,12 +22,14 @@ export interface BadHousingSettings {
     sa: boolean
     source: string
   }
+  id: string
   inadequationFinanciere: {
     accedant: boolean
     maxEffort: number
     part: number
     plp: boolean
   }
+  simulationId: string
   suroccupation: {
     part: number
     plp: boolean

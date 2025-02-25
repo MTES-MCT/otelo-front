@@ -113,7 +113,7 @@ export default function ValidationParametragePage() {
         </div>
       </div>
       <div style={{ display: 'flex', gap: '1rem' }}>
-        <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem', flex: 1 }}>
+        <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, flex: 1, padding: '1rem' }}>
           <h5>Paramétrage mauvaise qualité</h5>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -134,7 +134,7 @@ export default function ValidationParametragePage() {
             </div>
           </div>
         </div>
-        <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem', flex: 1 }}>
+        <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, flex: 1, padding: '1rem' }}>
           <h5>Paramétrage suroccupation</h5>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', gap: '1rem' }}>

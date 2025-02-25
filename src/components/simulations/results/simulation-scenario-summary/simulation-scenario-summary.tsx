@@ -1,9 +1,12 @@
+'use client'
+
 import React, { FC } from 'react'
 import styles from './simulation-scenario-summary.module.css'
 import { fr, FrCxArg } from '@codegouvfr/react-dsfr'
 import { TScenario } from '~/schemas/scenario'
 import { TEpci } from '~/schemas/epci'
 import Tag from '@codegouvfr/react-dsfr/Tag'
+import { useQueryState } from 'nuqs'
 
 export interface SimulationScenarioSummaryProps {
   epcis: TEpci[]
@@ -11,6 +14,8 @@ export interface SimulationScenarioSummaryProps {
 }
 
 export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ epcis, scenario }) => {
+  const [selectedEpci] = useQueryState('epci')
+
   const getOmphaleScenarioLabel = (scenario: string) => {
     switch (scenario) {
       case 'Central_B':
@@ -33,6 +38,9 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
         return 'Population : Haute | Ménages : Accélération'
     }
   }
+
+  const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)!.b2_tx_rs
+  const epciTxVacance = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)!.b2_tx_vacance
   const settings = [
     {
       iconId: 'fr-icon-france-line',
@@ -52,28 +60,24 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       label: "Scénario de l'évolution démographique",
       tags: [<Tag key="omphale">{getOmphaleScenarioLabel(scenario.b2_scenario)}</Tag>],
     },
-    ...(scenario.b2_tx_rs
+    ...(epciTxRs
       ? [
           {
             iconId: 'ri-percent-line',
             key: 'tauxRS',
             label: 'Taux cible de résidences secondaires',
-            tags: [<Tag key="tauxRS">Taux cible de résidences secondaires : {Number(scenario.b2_tx_rs * 100).toFixed(2)} %</Tag>],
+            tags: [<Tag key="tauxRS">Taux cible de résidences secondaires : {Number(epciTxRs * 100).toFixed(2)} %</Tag>],
           },
         ]
       : []),
-    ...(scenario.b2_tx_vacance
+    ...(epciTxVacance
       ? [
           {
             iconId: 'ri-percent-line',
             key: 'tauxLV',
             label: 'Taux cible de logements vacants',
             tags: [
-              <>
-                {scenario.b2_tx_vacance && (
-                  <Tag key="tauxLV">Taux cible de logements vacants : {Number(scenario.b2_tx_vacance * 100).toFixed(2)} %</Tag>
-                )}
-              </>,
+              <>{epciTxVacance && <Tag key="tauxLV">Taux cible de logements vacants : {Number(epciTxVacance * 100).toFixed(2)} %</Tag>}</>,
             ],
           },
         ]

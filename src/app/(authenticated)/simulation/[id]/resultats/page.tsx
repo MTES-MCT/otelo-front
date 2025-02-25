@@ -1,5 +1,4 @@
 import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/classNames'
-import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
@@ -7,6 +6,7 @@ import { getSimulationWithResults } from '~/server-only/simulation/get-simulatio
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
 import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
 import Button from '@codegouvfr/react-dsfr/Button'
+import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
@@ -76,6 +76,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       ),
       iconId: 'ri-road-map-line' as RiIconClassName,
       label: epci.name,
+      tabId: epci.code,
     }
   })
   const bassinTab = {
@@ -86,6 +87,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     ),
     iconId: 'ri-home-line' as RiIconClassName,
     label: "Résumé à l'échelle du bassin",
+    tabId: 'bassin',
   }
   const tabs = [bassinTab, ...epciTabs]
 
@@ -96,7 +98,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
           Paramétrer le mal-logement
         </Button>
       </div>
-      <Tabs tabs={tabs} />
+      <SimulationResultsTabs tabs={tabs} />
     </>
   )
 }

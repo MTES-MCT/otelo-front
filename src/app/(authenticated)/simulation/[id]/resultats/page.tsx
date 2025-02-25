@@ -93,7 +93,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
         <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/horizon-de-resorption` }}>
           Paramétrer le mal-logement
         </Button>

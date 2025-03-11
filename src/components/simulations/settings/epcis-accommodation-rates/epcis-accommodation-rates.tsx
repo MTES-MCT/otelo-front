@@ -29,10 +29,10 @@ const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
         <Alert
           description={
             <span>
-              Le volume de logements vacants longue durée est de {epciRates.vacancy.nbAccommodation} logements en 2021.
+              Le volume de logements vacants longue durée est de {epciRates.vacancy.nbAccommodation} logements en {epciRates.vacancy.year}.
               <span style={{ fontSize: '0.8rem' }}>
                 {' '}
-                (soit <span style={{ fontWeight: 'bold' }}> {epciRates.vacancy.txLvLongue}% du parc privé total</span>)
+                (soit <span style={{ fontWeight: 'bold' }}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
               </span>
             </span>
           }

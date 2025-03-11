@@ -6,6 +6,9 @@ const ZAccommodationRates = z.object({
   vacancy: z.object({
     nbAccommodation: z.number(),
     txLvLongue: z.number(),
+    txLvLongue2Years: z.number(),
+    txLvLongue5Years: z.number(),
+    year: z.number().optional(),
   }),
 })
 

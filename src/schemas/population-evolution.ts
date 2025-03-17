@@ -9,19 +9,39 @@ const ZPopulationEvolution = z.object({
 const ZTerritoryPopulationData = z.object({
   data: z.array(ZPopulationEvolution),
   metadata: ZMetadata,
+  epci: z.object({
+    code: z.string(),
+    name: z.string(),
+  }),
 })
 
 export type TTerritoryPopulationData = z.infer<typeof ZTerritoryPopulationData>
 
-const ZBarChartData = z
-  .object({
-    year: z.number(),
-  })
-  .and(z.record(z.string(), z.number()))
+export const ZRPDataTable = z.record(
+  z
+    .object({
+      annualEvolution: z.record(
+        z.object({
+          percent: z.string(),
+          value: z.number(),
+        }),
+      ),
+      name: z.string(),
+    })
+    .and(
+      z.record(
+        z.object({
+          value: z.number(),
+        }),
+      ),
+    ),
+)
+
+export type TRPDataTable = z.infer<typeof ZRPDataTable>
 
 export const ZRPPopulationEvolution = z.object({
-  barChart: z.array(ZBarChartData),
   linearChart: z.record(z.string(), ZTerritoryPopulationData),
+  tableData: ZRPDataTable,
 })
 
 export type TRPPopulationEvolution = z.infer<typeof ZRPPopulationEvolution>

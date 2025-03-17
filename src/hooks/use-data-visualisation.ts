@@ -25,6 +25,5 @@ export const useDataVisualisation = () => {
     queryFn: () => fetchDataVisualisation(),
     queryKey: ['data-visualisation', queryStates.epci, queryStates.type],
   })
-
   return { data, isLoading }
 }

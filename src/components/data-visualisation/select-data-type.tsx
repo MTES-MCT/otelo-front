@@ -7,7 +7,7 @@ import { FC } from 'react'
 export const DATA_TYPE_OPTIONS = [
   { label: 'Evolution passée de la population', value: 'population-evolution' },
   { label: 'Evolution passée du nombre de ménages', value: 'menage-evolution' },
-  // { label: 'Projection en population', value: 'projection-population-evolution' },
+  { label: 'Projection en population', value: 'projection-population-evolution' },
   // { label: 'Projection en ménages', value: 'projection-menages-evolution' },
 ]
 

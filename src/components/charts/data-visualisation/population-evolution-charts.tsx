@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
+import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { useEpci } from '~/hooks/use-epci'
 import { TRPPopulationEvolution } from '~/schemas/population-evolution'
@@ -10,21 +11,19 @@ export type PopulationEvolutionChartProps = {
   type: string | null
 }
 
-const barChartColors = ['#6b9bd0', '#82ca9d', '#f4a582', '#8884d8', '#a8a8a8', '#d9b26f']
-
 export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ data: chartData, type }) => {
   const { classes } = useStyles()
   const epcisLinearChart = Object.keys(chartData.linearChart)
   const linearDataKey = type?.split('-')[0]
   const { data: epciData } = useEpci()
   const barChartData = Object.entries(chartData.tableData).map(([key, value]) => ({
+    '2010-2015': value.annualEvolution?.['2010-2015']?.value ?? 0,
+    '2015-2021': value.annualEvolution?.['2015-2021']?.value ?? 0,
     epciCode: key,
     name: value.name,
-    ...value.annualEvolution,
   }))
 
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
-  console.log(chartData.linearChart)
   return (
     <>
       <h5>
@@ -32,7 +31,7 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
       </h5>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart width={500} height={500}>
+          <LineChart width={500} height={500} margin={{ left: 20, right: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="year" allowDuplicatedCategory={false} />
 
@@ -67,15 +66,14 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
           </LineChart>
         </ResponsiveContainer>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart width={730} height={250} data={barChartData}>
+          <BarChart width={730} height={600} data={barChartData} margin={{ bottom: 100, left: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <Legend align="right" verticalAlign="top" />
-
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} tick={{ fontSize: 12 }} />
             <YAxis />
             <Tooltip />
-            <Bar dataKey={(dataPoint) => dataPoint['2010-2015'].value} name="2010-2015" fill={barChartColors[0]} key={`2010-2015`} />
-            <Bar dataKey={(dataPoint) => dataPoint['2015-2021'].value} name="2015-2021" fill={barChartColors[1]} key={`2015-2021`} />
+            <Bar dataKey="2010-2015" name="2010-2015" fill={barChartColors[0]} key="2010-2015" />
+            <Bar dataKey="2015-2021" name="2015-2021" fill={barChartColors[1]} key="2015-2021" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -87,7 +85,7 @@ const useStyles = tss.create({
   chartContainer: {
     display: 'flex',
     gap: '2rem',
-    height: '500px',
+    height: '700px',
     width: '100%',
   },
 })

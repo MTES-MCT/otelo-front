@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const ZMetadata = z.object({
+export const ZMetadata = z.object({
   max: z.number(),
   min: z.number(),
 })

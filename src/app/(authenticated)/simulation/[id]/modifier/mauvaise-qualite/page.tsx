@@ -5,12 +5,12 @@ import { SelectBadQualitySource } from '~/components/simulations/settings/modifi
 import { SelectConfortSource } from '~/components/simulations/settings/modification/bad-quality/select-confort-source'
 import { SelectOccupationSource } from '~/components/simulations/settings/modification/bad-quality/select-occupation-source'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
-
+import styles from './mauvaise-qualite.module.css'
 export default async function BadQualityPage({ params }: { params: { id: string } }) {
   const href = `/simulation/${params.id}/modifier/suroccupation`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className={styles.container}>
       <h5>Choix de la source et des critères retenus</h5>
       <SelectBadQualitySource />
       <SelectConfortSource />

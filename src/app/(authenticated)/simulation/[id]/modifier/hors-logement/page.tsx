@@ -3,12 +3,13 @@ import { SelectAccommodationTypes } from '~/components/simulations/settings/modi
 import { SelectNoAccomodationPart } from '~/components/simulations/settings/modification/hors-logement/select-no-accommodation-part'
 import { SelectNoAccommodationSource } from '~/components/simulations/settings/modification/hors-logement/select-no-accommodation-source'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import styles from './hors-logement.module.css'
 
 export default async function HorsLogementPage({ params }: { params: { id: string } }) {
   const href = `/simulation/${params.id}/modifier/heberges`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className={styles.container}>
       <h5>Sans abris - Habitations de fortune - Logés à l&apos;hôtel</h5>
       <SelectNoAccommodationSource />
       <h5>Hébergement social</h5>

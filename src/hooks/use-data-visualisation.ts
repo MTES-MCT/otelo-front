@@ -19,7 +19,6 @@ export const useDataVisualisation = () => {
       return []
     }
   }
-
   const { data, isLoading } = useQuery({
     enabled: !!queryStates.epci && !!queryStates.type,
     queryFn: () => fetchDataVisualisation(),

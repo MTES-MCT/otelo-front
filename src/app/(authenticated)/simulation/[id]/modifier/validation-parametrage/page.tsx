@@ -11,10 +11,10 @@ export default function ValidationParametragePage() {
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, flex: 1, padding: '1rem' }}>
+      <div className={styles.subContainer}>
+        <div className={styles.sectionContainer}>
           <h5>Horizon de résorption</h5>
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className={styles.horizonSubContainer}>
             <Input
               disabled
               label=""
@@ -24,9 +24,9 @@ export default function ValidationParametragePage() {
             />
           </div>
         </div>
-        <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, flex: 1, padding: '1rem' }}>
+        <div className={styles.sectionContainer}>
           <h5>Paramétrage hors logement</h5>
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className={styles.subContainer}>
             <Input
               disabled
               label=""
@@ -44,11 +44,11 @@ export default function ValidationParametragePage() {
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <div className={styles.subContainer}>
         <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className={styles.hebergesContainer}>
             <h5>Paramétrage hébergés</h5>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div className={styles.hebergesSubContainer}>
               <Input disabled label="" hintText="Source" nativeInputProps={{ value: badHousingSettings.horsLogement.source }} />
               <Input disabled label="" hintText="Part" nativeInputProps={{ value: `${badHousingSettings.horsLogement.part}%` }} />
               <Checkbox

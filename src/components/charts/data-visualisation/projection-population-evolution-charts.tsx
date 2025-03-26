@@ -1,9 +1,11 @@
+import { parseAsArrayOf } from 'nuqs'
+import { parseAsString } from 'nuqs'
+import { useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
-import { useEpci } from '~/hooks/use-epci'
 import { TDemographicProjectionEvolution } from '~/schemas/population-evolution'
 
 export type ProjectionPopulationEvolutionChartProps = {
@@ -12,11 +14,16 @@ export type ProjectionPopulationEvolutionChartProps = {
 }
 
 export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutionChartProps> = ({ data: chartData, type }) => {
+  const [queryStates] = useQueryStates({
+    epci: parseAsString.withDefault(''),
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
+  })
   const { classes } = useStyles()
-  const epcisLinearChart = Object.keys(chartData.linearChart)
-  const { data: epciData } = useEpci()
+  const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
+  const epciName = chartData.tableData[queryStates.epci as string]?.name
 
   const barChartData = Object.entries(chartData.tableData)
+    .filter(([key]) => queryStates.epcis.includes(key))
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([_, epciData]) => {
       return [
@@ -49,7 +56,7 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
   return (
     <>
       <h5>
-        {title} - {epciData?.name}
+        {title} - {epciName}
       </h5>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">

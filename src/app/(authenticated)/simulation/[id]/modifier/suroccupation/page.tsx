@@ -5,12 +5,13 @@ import { SelectSuroccupationLevel } from '~/components/simulations/settings/modi
 import { SelectSuroccupationPart } from '~/components/simulations/settings/modification/suroccupation /select-suroccupation-part'
 import { SelectSuroccupationSource } from '~/components/simulations/settings/modification/suroccupation /select-suroccupation-source'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import styles from './suroccupation.module.css'
 
 export default async function SuroccupationPage({ params }: { params: { id: string } }) {
   const href = `/simulation/${params.id}/modifier/validation-parametrage`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className={styles.container}>
       <h5>Niveaux de suroccupation</h5>
       <SelectSuroccupationSource />
       <SelectSuroccupationLevel />

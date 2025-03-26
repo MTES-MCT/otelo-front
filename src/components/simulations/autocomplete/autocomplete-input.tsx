@@ -1,7 +1,7 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
-import { parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC, useState } from 'react'
 import { tss } from 'tss-react'
 import { AutocompleteResults } from '~/components/simulations/autocomplete/autocomplete-results'
@@ -18,6 +18,7 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSearchQueryState] = useQueryStates({
     epci: parseAsString.withDefault(''),
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
     q: parseAsString.withDefault(''),
     region: parseAsString.withDefault(''),
   })
@@ -30,9 +31,9 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
 
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     if ('codeEpci' in item) {
-      setSearchQueryState({ epci: item.codeEpci ?? item.code, region: item.codeRegion })
+      setSearchQueryState({ epci: item.codeEpci ?? item.code, epcis: [], region: item.codeRegion })
     } else {
-      setSearchQueryState({ epci: item.code ?? item.code, region: item.codesRegions[0] })
+      setSearchQueryState({ epci: item.code ?? item.code, epcis: [], region: item.codesRegions[0] })
     }
     setSearchQuery(item.nom)
     setIsResultsVisible(false)

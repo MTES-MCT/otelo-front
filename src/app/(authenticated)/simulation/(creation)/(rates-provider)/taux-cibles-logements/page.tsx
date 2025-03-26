@@ -4,6 +4,7 @@ import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/s
 import { EpcisAccommodationRates } from '~/components/simulations/settings/epcis-accommodation-rates/epcis-accommodation-rates'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { getBassinEpcis } from '~/server-only/epcis/get-bassin-epcis'
+import styles from './taux-cibles-logements.module.css'
 
 type PageProps = {
   searchParams: Promise<SearchParams>
@@ -15,7 +16,7 @@ export default async function TargetRatesHousing({ searchParams }: PageProps) {
   const href = `/simulation/validation-parametrage`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className={styles.container}>
       <EpcisAccommodationRates bassinEpcis={bassinEpcis} />
 
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w', 'fr-my-auto')}>

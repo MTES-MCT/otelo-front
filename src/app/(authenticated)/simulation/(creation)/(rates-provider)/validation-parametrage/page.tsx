@@ -1,4 +1,3 @@
-import { fr } from '@codegouvfr/react-dsfr'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
@@ -18,9 +17,9 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>
-      <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
+      <div className={styles.subContainer}>
         <h4>Territoire et horizon temporel</h4>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div className={styles.settingsContainer}>
           <ValidationSettingsInputEpci />
           <Input
             disabled
@@ -32,7 +31,7 @@ export default async function ValidationParametragePage({ searchParams }: PagePr
           />
         </div>
       </div>
-      <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
+      <div className={styles.subContainer}>
         <h4>Projection d&apos;évolution démographique</h4>
         <Input disabled label="" hintText="Scénario Omphale" nativeInputProps={{ value: getOmphaleLabel(omphale) as string }} />
       </div>

@@ -10,8 +10,7 @@ export type ProjectionPopulationEvolutionTableProps = {
 }
 
 export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutionTableProps> = ({ data }) => {
-  const { tableData } = data
-  const dataTable = Object.entries(tableData).map(([, rowValue]) => {
+  const dataTable = Object.entries(data).map(([, rowValue]) => {
     const typedRowValue = rowValue as unknown as TDemographicProjectionDataTableRow
     return {
       [typedRowValue.name]: {

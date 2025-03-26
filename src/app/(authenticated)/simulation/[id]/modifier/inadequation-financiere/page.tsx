@@ -4,12 +4,13 @@ import { SelectInadequationFinanciereCategories } from '~/components/simulations
 import { SelectInadequationFinancierePart } from '~/components/simulations/settings/modification/inadequation-financiere/select-inadequation-financiere-part'
 import { SelectMaxEffortPart } from '~/components/simulations/settings/modification/inadequation-financiere/select-max-effort-part'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import styles from './inadequation-financiere.module.css'
 
 export default async function FinancialInadequationPage({ params }: { params: { id: string } }) {
   const href = `/simulation/${params.id}/modifier/mauvaise-qualite`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className={styles.container}>
       <h5>Taux d&apos;effort maximal (rapport entre le loyer et le revenu des ménages)</h5>
       <Alert
         severity="info"

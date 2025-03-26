@@ -17,7 +17,6 @@ export default {
             },
             method: 'POST',
           })
-
           if (!response.ok) {
             throw new Error('Failed to get tokens from API')
           }

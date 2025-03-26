@@ -1,9 +1,9 @@
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
-import { useEpci } from '~/hooks/use-epci'
 import { TRPPopulationEvolution } from '~/schemas/population-evolution'
 
 export type PopulationEvolutionChartProps = {
@@ -12,22 +12,28 @@ export type PopulationEvolutionChartProps = {
 }
 
 export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ data: chartData, type }) => {
+  const [queryStates] = useQueryStates({
+    epci: parseAsString.withDefault(''),
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
+  })
   const { classes } = useStyles()
-  const epcisLinearChart = Object.keys(chartData.linearChart)
+  const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
   const linearDataKey = type?.split('-')[0]
-  const { data: epciData } = useEpci()
-  const barChartData = Object.entries(chartData.tableData).map(([key, value]) => ({
-    '2010-2015': value.annualEvolution?.['2010-2015']?.value ?? 0,
-    '2015-2021': value.annualEvolution?.['2015-2021']?.value ?? 0,
-    epciCode: key,
-    name: value.name,
-  }))
+  const epciName = chartData.tableData[queryStates.epci as string]?.name
+  const barChartData = Object.entries(chartData.tableData)
+    .filter(([key]) => queryStates.epcis.includes(key))
+    .map(([key, value]) => ({
+      '2010-2015': value.annualEvolution?.['2010-2015']?.value ?? 0,
+      '2015-2021': value.annualEvolution?.['2015-2021']?.value ?? 0,
+      epciCode: key,
+      name: value.name,
+    }))
 
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
   return (
     <>
       <h5>
-        {title} - {epciData?.name}
+        {title} - {epciName}
       </h5>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">

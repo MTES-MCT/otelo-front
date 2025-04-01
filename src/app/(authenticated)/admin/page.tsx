@@ -1,8 +1,8 @@
-import { UsersTableHeader } from '~/components/admin/users/users-table-header'
-import { UsersTable } from '~/components/admin/users/users-table'
-import { TSession } from '~/types/next-auth'
 import { redirect } from 'next/navigation'
+import { UsersTable } from '~/components/admin/users/users-table'
+import { UsersTableHeader } from '~/components/admin/users/users-table-header'
 import { auth } from '~/lib/auth/auth'
+import { TSession } from '~/types/next-auth'
 
 export default async function AdminPage() {
   const session = (await auth()) as TSession

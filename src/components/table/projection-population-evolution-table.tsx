@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import styles from './projection-population-evolution-table.module.css'
 import { TDemographicProjectionDataTable, TDemographicProjectionDataTableRow } from '~/schemas/population-evolution'
 import { formatNumber } from '~/utils/format-numbers'
+import styles from './projection-population-evolution-table.module.css'
 
 type ScenarioKey = 'basse' | 'central' | 'haute'
 

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import { parseAsString, useQueryStates } from 'nuqs'
 import React, { FC } from 'react'
-import { LineChart, Line, YAxis, XAxis, CartesianGrid, ResponsiveContainer, Tooltip, TooltipProps } from 'recharts'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
@@ -101,6 +100,7 @@ const CustomTooltip = ({
       }}
     >
       <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{`Année ${label}`}</p>
+      {/* biome-ignore lint/suspicious/noExplicitAny: TODO */}
       {payload.map((item: any) => {
         const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
         return (

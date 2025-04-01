@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
-import styles from './population-evolution-table.module.css'
+import { FC } from 'react'
 import { PopulationEvolutionChartProps } from '~/components/charts/data-visualisation/population-evolution-charts'
 import { formatNumber } from '~/utils/format-numbers'
+import styles from './population-evolution-table.module.css'
 
 export const PopulationEvolutionTable: FC<PopulationEvolutionChartProps> = ({ data, type }) => {
   const { tableData } = data

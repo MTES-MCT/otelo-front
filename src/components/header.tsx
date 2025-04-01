@@ -1,8 +1,8 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import Header from '@codegouvfr/react-dsfr/Header'
 import { FC } from 'react'
-import { QuickAccessItems } from '~/components/quick-access-items'
 import { HeaderNavigation } from '~/components/navigation/header-navigation'
+import { QuickAccessItems } from '~/components/quick-access-items'
 
 export const HeaderComponent: FC = async () => {
   return (

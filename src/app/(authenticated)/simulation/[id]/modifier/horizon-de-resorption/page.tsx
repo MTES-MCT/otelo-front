@@ -1,7 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
-import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import { SelectResorptionHorizonPeriod } from '~/components/simulations/settings/modification/horizon/select-horizon-resorption-period'
+import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import classes from './horizon-de-resorption.module.css'
 
 export default async function ResorptionHorizonPage({ params }: { params: { id: string } }) {

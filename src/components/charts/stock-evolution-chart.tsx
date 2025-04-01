@@ -1,10 +1,10 @@
 'use client'
 
-import React, { FC, useState } from 'react'
+import { Table } from '@codegouvfr/react-dsfr/Table'
+import { FC, useState } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
 import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { tss } from 'tss-react'
-import { Table } from '@codegouvfr/react-dsfr/Table'
 import { formatNumber } from '~/utils/format-numbers'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
@@ -34,8 +34,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
     { name: 'Mauvaise qualité', value: badQuality },
   ]
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onPieEnter = (_: any, index: number) => setActiveIndex(index)
+  const onPieEnter = (_: unknown, index: number) => setActiveIndex(index)
 
   const renderActiveShape = (props: PieSectorDataItem) => {
     const RADIAN = Math.PI / 180
@@ -107,7 +106,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
                 dataKey="value"
                 innerRadius={130}
               >
-                {chartData.map((entry, index) => (
+                {chartData.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

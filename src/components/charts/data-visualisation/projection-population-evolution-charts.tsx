@@ -24,7 +24,6 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
 
   const barChartData = Object.entries(chartData.tableData)
     .filter(([key]) => queryStates.epcis.includes(key))
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([_, epciData]) => {
       return [
         {
@@ -128,7 +127,7 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
                 // Format the value and include the population type
                 return [`${value}`, `${name}`]
               }}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              // biome-ignore lint/suspicious/noExplicitAny: TODO
               labelFormatter={(label: string, payload: any[]) => {
                 // Show both period and EPCI name
                 if (payload && payload.length > 0) {

@@ -15,7 +15,6 @@ type AutocompleteInputProps = {
 export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label }: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSearchQueryState] = useQueryStates({
     epci: parseAsString.withDefault(''),
     epcis: parseAsArrayOf(parseAsString).withDefault([]),

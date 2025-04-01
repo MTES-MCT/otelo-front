@@ -1,7 +1,7 @@
 'use client'
 
-import { FC } from 'react'
 import { Range } from '@codegouvfr/react-dsfr/Range'
+import { FC } from 'react'
 import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/modifier/simulation-scenario-bad-housing-modification-provider'
 
 export const SelectResorptionHorizonPeriod: FC = () => {

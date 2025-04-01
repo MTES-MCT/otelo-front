@@ -1,12 +1,12 @@
 'use client'
 
-import React, { FC } from 'react'
-import styles from './simulation-scenario-summary.module.css'
-import { fr, FrCxArg } from '@codegouvfr/react-dsfr'
-import { TScenario } from '~/schemas/scenario'
-import { TEpci } from '~/schemas/epci'
+import { FrCxArg, fr } from '@codegouvfr/react-dsfr'
 import Tag from '@codegouvfr/react-dsfr/Tag'
 import { useQueryState } from 'nuqs'
+import React, { FC } from 'react'
+import { TEpci } from '~/schemas/epci'
+import { TScenario } from '~/schemas/scenario'
+import styles from './simulation-scenario-summary.module.css'
 
 export interface SimulationScenarioSummaryProps {
   epcis: TEpci[]

@@ -1,11 +1,11 @@
+import heroImage from '@assets/img/home-background.png'
+import { fr } from '@codegouvfr/react-dsfr'
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import { Tile } from '@codegouvfr/react-dsfr/Tile'
+import Image from 'next/image'
 import { SignInButton } from '~/components/sign-in-button'
 import { auth } from '~/lib/auth/auth'
 import styles from './accueil.module.css'
-import heroImage from '@assets/img/home-background.png'
-import Image from 'next/image'
-import { fr } from '@codegouvfr/react-dsfr'
 
 export default async function AccueilPage() {
   const session = await auth()

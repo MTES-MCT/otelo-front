@@ -1,7 +1,7 @@
 'use client'
 
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
-import { useQueryState, parseAsArrayOf, parseAsString } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import { ComponentProps, FC, useEffect } from 'react'
 
 import { useDataVisualisation } from '~/hooks/use-data-visualisation'

@@ -1,11 +1,11 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
-import styles from './validation-parametrage.module.css'
-import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/modifier/simulation-scenario-bad-housing-modification-provider'
-import Input from '@codegouvfr/react-dsfr/Input'
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
+import Input from '@codegouvfr/react-dsfr/Input'
+import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/modifier/simulation-scenario-bad-housing-modification-provider'
 import { UpdateSimulationForm } from '~/components/simulations/settings/modification/update-simulation-form'
+import styles from './validation-parametrage.module.css'
 export default function ValidationParametragePage() {
   const { badHousingSettings } = useBadHousingSettings()
   return (

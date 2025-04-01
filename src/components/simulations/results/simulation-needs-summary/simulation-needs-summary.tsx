@@ -1,6 +1,6 @@
+import Tile from '@codegouvfr/react-dsfr/Tile'
 import { formatNumber } from '~/utils/format-numbers'
 import styles from './simulation-needs-summary.module.css'
-import Tile from '@codegouvfr/react-dsfr/Tile'
 
 type SimulationNeedsSummaryProps = {
   projection: number

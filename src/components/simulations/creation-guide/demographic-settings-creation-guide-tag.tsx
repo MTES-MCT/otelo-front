@@ -1,11 +1,11 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
+import { useSearchParams } from 'next/navigation'
 import { useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useSearchParams } from 'next/navigation'
-import { fr } from '@codegouvfr/react-dsfr'
 import { getOmphaleLabel } from '~/utils/omphale-label'
 
 interface CreationGuideTagProps {

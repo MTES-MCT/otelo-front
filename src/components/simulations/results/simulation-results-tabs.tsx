@@ -17,7 +17,6 @@ export const SimulationResultsTabs = ({
   const [epci, setEpci] = useQueryState('epci')
   const selectedTabId = epci as string
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const tabsProps = tabs.map(({ content, ...tabProps }) => tabProps)
 
   return (

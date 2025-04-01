@@ -1,10 +1,10 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
-import styles from '../simulation-side-menu.module.css'
 import React from 'react'
-import { BadHousingSettingsCreationGuideTag } from '~/components/simulations/creation-guide/bad-housing-settings-creation-guide-tag'
 import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/modifier/simulation-scenario-bad-housing-modification-provider'
+import { BadHousingSettingsCreationGuideTag } from '~/components/simulations/creation-guide/bad-housing-settings-creation-guide-tag'
+import styles from '../simulation-side-menu.module.css'
 
 type BadHousingSettingsSimulationSideMenuProps = {
   id: string

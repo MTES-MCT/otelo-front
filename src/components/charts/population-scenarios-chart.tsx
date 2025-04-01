@@ -1,19 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import { fr } from '@codegouvfr/react-dsfr'
+import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Select from '@codegouvfr/react-dsfr/SelectNext'
 import { parseAsString, useQueryStates } from 'nuqs'
-import React, { FC } from 'react'
-import { LineChart, Line, YAxis, CartesianGrid, ResponsiveContainer, XAxis, Tooltip, TooltipProps } from 'recharts'
-import { tss } from 'tss-react'
-import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
+import { FC } from 'react'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
-import { roundPopulation } from '~/utils/round-chart-axis'
+import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { formatNumber } from '~/utils/format-numbers'
+import { roundPopulation } from '~/utils/round-chart-axis'
 
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
@@ -72,6 +71,7 @@ const CustomTooltip = ({
       }}
     >
       <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{`Année ${label}`}</p>
+      {/* biome-ignore lint/suspicious/noExplicitAny: TODO */}
       {payload.map((item: any) => {
         const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
         return (

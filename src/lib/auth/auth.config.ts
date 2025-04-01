@@ -27,7 +27,7 @@ export default {
           token.refreshToken = data.session.refreshToken
           token.expiresAt = expiresAtUnix
           token.user = data.user
-        } catch (error) {
+        } catch (_error) {
           throw new Error('Failed to get tokens from API')
         }
       } else if (Date.now() < (token.expiresAt as number) * 1000) {

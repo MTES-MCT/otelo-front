@@ -1,6 +1,6 @@
 'use client'
 
-import { fr, FrCxArg } from '@codegouvfr/react-dsfr'
+import { FrCxArg, fr } from '@codegouvfr/react-dsfr'
 import { useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'

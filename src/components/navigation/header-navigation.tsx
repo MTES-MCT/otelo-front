@@ -1,13 +1,13 @@
 'use client'
 
-import { FC } from 'react'
 import { MainNavigation, MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation'
-import { usePathname } from 'next/navigation'
+import dayjs from 'dayjs'
 import { useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
+import { FC } from 'react'
 import { tss } from 'tss-react'
 import { useSimulations } from '~/hooks/use-simulations'
 import { TSession } from '~/types/next-auth'
-import dayjs from 'dayjs'
 
 export const HeaderNavigation: FC = () => {
   const pathname = usePathname()

@@ -1,8 +1,8 @@
 'use client'
 
+import { Range } from '@codegouvfr/react-dsfr/Range'
 import { useQueryState } from 'nuqs'
 import { FC, useEffect } from 'react'
-import { Range } from '@codegouvfr/react-dsfr/Range'
 
 export const SelectProjectionPeriod: FC = () => {
   const [projection, setProjection] = useQueryState('projection')

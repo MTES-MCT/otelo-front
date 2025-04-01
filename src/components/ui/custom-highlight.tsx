@@ -1,6 +1,6 @@
-import styles from './custom-highlight.module.scss'
-import { ReactNode } from 'react'
 import cn from 'classnames'
+import { ReactNode } from 'react'
+import styles from './custom-highlight.module.scss'
 
 interface Props {
   boldText?: boolean

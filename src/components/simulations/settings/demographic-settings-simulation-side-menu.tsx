@@ -1,10 +1,10 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
-import styles from './simulation-side-menu.module.css'
 import React from 'react'
 import { DemographicSettingsCreationGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
 import { useEpci } from '~/hooks/use-epci'
+import styles from './simulation-side-menu.module.css'
 
 export default function DemographicSettingsSimulationSideMenu() {
   const { data: epci } = useEpci()

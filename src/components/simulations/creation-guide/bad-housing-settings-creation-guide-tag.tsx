@@ -1,10 +1,10 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
+import { useSearchParams } from 'next/navigation'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useSearchParams } from 'next/navigation'
-import { fr } from '@codegouvfr/react-dsfr'
 
 interface CreationGuideTagProps {
   step: {

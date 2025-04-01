@@ -1,8 +1,8 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { AutocompleteInput } from '~/components/simulations/autocomplete/autocomplete-input'
+import { ListEpcis } from '~/components/simulations/settings/list-epcis'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import classes from './choix-du-territoire.module.css'
-import { ListEpcis } from '~/components/simulations/settings/list-epcis'
 
 export default async function TerritorialChoicePage() {
   const href = `/simulation/cadrage-temporel`

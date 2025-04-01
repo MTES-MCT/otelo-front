@@ -1,14 +1,14 @@
 'use client'
 
-import React, { FC } from 'react'
-import dayjs from 'dayjs'
 import { fr } from '@codegouvfr/react-dsfr'
-import { tss } from 'tss-react'
-import { createModal } from '@codegouvfr/react-dsfr/Modal'
 import Button from '@codegouvfr/react-dsfr/Button'
-import { useUsers } from '~/hooks/use-users'
-import { useSearchUsers } from '~/hooks/use-search-users'
+import { createModal } from '@codegouvfr/react-dsfr/Modal'
+import dayjs from 'dayjs'
 import { useQueryState } from 'nuqs'
+import { FC } from 'react'
+import { tss } from 'tss-react'
+import { useSearchUsers } from '~/hooks/use-search-users'
+import { useUsers } from '~/hooks/use-users'
 
 export const UsersTable: FC = () => {
   const { classes, cx } = useStyles()

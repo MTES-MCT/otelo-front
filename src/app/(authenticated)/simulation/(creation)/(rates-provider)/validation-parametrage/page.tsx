@@ -1,11 +1,11 @@
 import Input from '@codegouvfr/react-dsfr/Input'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
-import styles from './validation-parametrage.module.css'
-import { getOmphaleLabel } from '~/utils/omphale-label'
 import { CreateSimulationForm } from '~/components/simulations/settings/create-simulation-form'
 import { ValidationSettingsInputEpci } from '~/components/simulations/validation-settings/validation-settings-input-epci'
 import { ValidationSettingsRates } from '~/components/simulations/validation-settings/validation-settings-rates'
+import { getOmphaleLabel } from '~/utils/omphale-label'
+import styles from './validation-parametrage.module.css'
 
 type PageProps = {
   searchParams: Promise<SearchParams>

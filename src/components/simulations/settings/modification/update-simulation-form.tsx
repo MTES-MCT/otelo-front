@@ -1,14 +1,14 @@
 'use client'
 
 import Button from '@codegouvfr/react-dsfr/Button'
-import { FC } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { TUpdateSimulationDto, ZUpdateSimulationDto } from '~/schemas/simulation'
 import { tss } from 'tss-react'
 import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/modifier/simulation-scenario-bad-housing-modification-provider'
-import { ESourceB11, ESourceB14, ESourceB15 } from '~/schemas/scenario'
 import { useUpdateSimulation } from '~/hooks/use-update-simulation'
+import { ESourceB11, ESourceB14, ESourceB15 } from '~/schemas/scenario'
+import { TUpdateSimulationDto, ZUpdateSimulationDto } from '~/schemas/simulation'
 
 export const UpdateSimulationForm: FC = () => {
   const { badHousingSettings } = useBadHousingSettings()

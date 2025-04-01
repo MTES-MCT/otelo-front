@@ -2,6 +2,7 @@
 
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC } from 'react'
+import { tss } from 'tss-react'
 import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { LongTermAccomodationRange } from '~/components/simulations/settings/long-term-accomodation-range'
 
@@ -13,12 +14,13 @@ type VacancyAccommodationRatesInputProps = {
 
 export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, longTermValue, shortTermValue }) => {
   const { rates } = useBassinRates()
+  const { classes } = useStyles()
   const ratesByEpci = rates[epci]
   const txLv = ratesByEpci.txLV
 
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
-      <div style={{ flex: 1 }}>
+    <div className={classes.container}>
+      <div className={classes.flex}>
         <Input
           disabled
           iconId="ri-percent-line"
@@ -29,9 +31,19 @@ export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputPr
           }}
         />
       </div>
-      <div style={{ flex: 1 }}>
+      <div className={classes.flex}>
         <LongTermAccomodationRange epci={epci} longTermValue={longTermValue} shortTermValue={shortTermValue} />
       </div>
     </div>
   )
 }
+
+const useStyles = tss.create({
+  container: {
+    display: 'flex',
+    gap: '1rem',
+  },
+  flex: {
+    flex: 1,
+  },
+})

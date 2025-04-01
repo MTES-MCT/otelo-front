@@ -85,7 +85,7 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       : []),
   ]
   return (
-    <nav style={{ paddingRight: '1rem' }}>
+    <nav className={fr.cx('fr-pr-2w')}>
       <div className={styles.headerContainer}>
         <h5>Votre paramétrage</h5>
       </div>

@@ -1,6 +1,8 @@
 'use client'
+
 import { FC } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { tss } from 'tss-react'
 import { TChartData } from '~/schemas/results'
 
 interface AccommodationContructionEvolutionChartProps {
@@ -12,6 +14,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
   newConstructionsResults,
   sitadelResults,
 }) => {
+  const { classes } = useStyles()
   const { data: sitadelData } = sitadelResults
   const { data: newConstructionsData } = newConstructionsResults
 
@@ -30,7 +33,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
   return (
     <>
       <h5>Évolution du nombre de logements construits (Données SITADEL)</h5>
-      <div style={{ height: '600px', marginBottom: '2rem', paddingLeft: '2rem', paddingTop: '2rem', width: '100%' }}>
+      <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             width={500}
@@ -56,3 +59,13 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
     </>
   )
 }
+
+const useStyles = tss.create(() => ({
+  chartContainer: {
+    height: '600px',
+    marginBottom: '2rem',
+    paddingLeft: '2rem',
+    paddingTop: '2rem',
+    width: '100%',
+  },
+}))

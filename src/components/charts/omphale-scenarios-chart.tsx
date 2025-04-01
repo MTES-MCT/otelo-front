@@ -89,44 +89,23 @@ const CustomTooltip = ({
   label,
   payload,
 }: TooltipProps<ValueType, NameType> & { basePopulation: TOmphaleEvolution }) => {
+  const { classes } = useStyles()
   if (!active || !payload?.length) return null
   return (
-    <div
-      style={{
-        backgroundColor: 'white',
-        border: '1px solid var(--border-default-grey)',
-        borderRadius: '4px',
-        padding: '1rem',
-      }}
-    >
-      <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{`Année ${label}`}</p>
+    <div className={classes.tooltipContainer}>
+      <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
       {/* biome-ignore lint/suspicious/noExplicitAny: TODO */}
       {payload.map((item: any) => {
         const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
         return (
-          <div
-            key={item.dataKey}
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              gap: '0.5rem',
-              marginTop: '0.25rem',
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: item.stroke,
-                borderRadius: '50%',
-                height: '8px',
-                width: '8px',
-              }}
-            />
+          <div key={item.dataKey} className={classes.tooltipItem}>
+            <div className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
             <span>{item.name}:</span>
             <span>
-              <span style={{ fontWeight: 'bold' }}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
-              <span style={{ fontWeight: 'bold' }}>2021</span>
+              <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
+              <span className={classes.bold}>2021</span>
             </span>
-            <span style={{ fontSize: '10px' }}>({formatNumber(item.value)} habitants)</span>
+            <span className={classes.smallText}>({formatNumber(item.value)} habitants)</span>
           </div>
         )
       })}
@@ -177,7 +156,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
         Vous avez la possibilité de revenir à l'étape précèdente pour modifier votre choix de projection par population."
         severity="info"
         small
-        style={{ marginBottom: '1rem' }}
+        className={fr.cx('fr-mb-2w')}
       />
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
@@ -241,5 +220,33 @@ const useStyles = tss.create({
     height: '500px',
     padding: '1rem',
     width: '100%',
+  },
+  tooltipContainer: {
+    backgroundColor: 'white',
+    border: '1px solid var(--border-default-grey)',
+    borderRadius: '4px',
+    padding: '1rem',
+  },
+  tooltipTitle: {
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+  },
+  tooltipItem: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipDot: {
+    backgroundColor: 'var(--stroke-color)',
+    borderRadius: '50%',
+    height: '8px',
+    width: '8px',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  smallText: {
+    fontSize: '10px',
   },
 })

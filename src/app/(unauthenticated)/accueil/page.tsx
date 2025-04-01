@@ -2,6 +2,7 @@ import heroImage from '@assets/img/home-background.png'
 import { fr } from '@codegouvfr/react-dsfr'
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import { Tile } from '@codegouvfr/react-dsfr/Tile'
+import classNames from 'classnames'
 import Image from 'next/image'
 import { SignInButton } from '~/components/sign-in-button'
 import { auth } from '~/lib/auth/auth'
@@ -30,7 +31,7 @@ export default async function AccueilPage() {
             <Image src={heroImage} className={styles.heroImage} priority alt="hero-image" />
             <div className={styles.heroGradient} />
           </div>
-          <div className={fr.cx('fr-container')} style={{ minHeight: '30rem' }}>
+          <div className={classNames(fr.cx('fr-container'), styles.heroContentContainer)}>
             <div className={styles.heroContent}>
               <h1 className={styles.heroTitle}>
                 Otelo, votre allié pour une stratégie habitat réussie. <br />

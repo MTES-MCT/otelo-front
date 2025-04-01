@@ -7,6 +7,7 @@ import { SimulationNeedsSummary } from '~/components/simulations/results/simulat
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import styles from './resultats.module.css'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
@@ -63,9 +64,9 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       content: (
         <>
           <SimulationNeedsSummary projection={simulation.scenario.projection} results={epciResults} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <h5 style={{ paddingLeft: '2rem', paddingTop: '2rem' }}>Besoin en flux - Evolution du besoin démographique en logements</h5>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
+          <div className={styles.flowContainer}>
+            <h5 className={styles.flowTitle}>Besoin en flux - Evolution du besoin démographique en logements</h5>
+            <div className={styles.flowChartContainer}>
               {/* <DemographicEvolutionChart data={simulation} /> */}
               <FlowRequirementsChart results={flowResults} />
             </div>
@@ -93,7 +94,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
 
   return (
     <>
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+      <div className={styles.headerContainer}>
         <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/horizon-de-resorption` }}>
           Paramétrer le mal-logement
         </Button>

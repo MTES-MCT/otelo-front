@@ -17,7 +17,7 @@ export const DataVisualisationPage: FC = () => {
   if (isLoading) return <div>Chargement des données en cours...</div>
 
   return (
-    <div className={classNames(fr.cx('fr-my-4v'), classes.container)} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className={classNames(fr.cx('fr-my-4v'), classes.container)}>
       {!!data && (
         <>
           <DataVisualisationChart data={data} type={type} />

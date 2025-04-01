@@ -5,6 +5,7 @@ import Input from '@codegouvfr/react-dsfr/Input'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { useSearchParams } from 'next/navigation'
 import { FC } from 'react'
+import { tss } from 'tss-react'
 import {
   RateSettings,
   useBassinRates,
@@ -17,27 +18,28 @@ interface TabChildrenProps {
 }
 
 const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
+  const { classes } = useStyles()
   const { txLV, txLVLD, txRS } = rates
 
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
+    <div className={classes.container}>
       <Input
         disabled
         label=""
         iconId="ri-percent-line"
         hintText="Taux cible de logements vacants"
         nativeInputProps={{ value: (Number(txLV) * 100).toFixed(2) }}
-        style={{ flex: 1 }}
-        stateRelatedMessage={`dont ${txLVLD}% de logements vacants de longue durée`}
+        className={classes.flex}
+        stateRelatedMessage={`dont ${Number(txLVLD).toFixed(2)}% de logements vacants de longue durée`}
         state="info"
       />
       <Input
         disabled
+        className={classes.flex}
         label=""
         iconId="ri-percent-line"
         hintText="Taux cible de résidences secondaires"
         nativeInputProps={{ value: (Number(txRS) * 100).toFixed(2) }}
-        style={{ flex: 1 }}
       />
     </div>
   )
@@ -58,9 +60,19 @@ export const ValidationSettingsRates: FC = () => {
     }))
 
   return (
-    <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
+    <div className={fr.cx('fr-p-2w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>
       <h4>Taux cible de résidences secondaires et logements vacants</h4>
       <Tabs tabs={tabs} />
     </div>
   )
 }
+
+const useStyles = tss.create({
+  container: {
+    display: 'flex',
+    gap: '1rem',
+  },
+  flex: {
+    flex: 1,
+  },
+})

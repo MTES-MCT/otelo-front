@@ -1,6 +1,6 @@
 'use client'
 
-import { RiIconClassName } from '@codegouvfr/react-dsfr'
+import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { FC } from 'react'
@@ -19,20 +19,21 @@ interface TabChildrenProps {
 }
 
 const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
+  const { classes } = useStyles()
   const { data: rates } = useAccommodationRatesByEpci()
   const epciRates = rates?.[epci]
   if (!epciRates) return null
 
   return (
     <div>
-      <div style={{ marginBottom: '1rem' }}>
+      <div className={fr.cx('fr-mb-2w')}>
         <Alert
           description={
             <span>
               Le volume de logements vacants longue durée est de {epciRates.vacancy.nbAccommodation} logements en {epciRates.vacancy.year}.
-              <span style={{ fontSize: '0.8rem' }}>
+              <span className={classes.smallText}>
                 {' '}
-                (soit <span style={{ fontWeight: 'bold' }}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
+                (soit <span className={classes.bold}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
               </span>
             </span>
           }
@@ -40,7 +41,7 @@ const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
           small
         />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
+      <div className={classes.inputsContainer}>
         <VacancyAccommodationRatesInput epci={epci} longTermValue={epciRates.vacancy.txLvLongue} shortTermValue={epciRates.txLv} />
         <LongTermVacancyAlert />
         <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
@@ -63,5 +64,17 @@ export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ bass
 const useStyles = tss.create({
   backgroundWhite: {
     backgroundColor: 'white',
+  },
+  inputsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    justifyContent: 'space-between',
+  },
+  smallText: {
+    fontSize: '0.8rem',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 })

@@ -45,14 +45,14 @@ const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
   )
 }
 
-export const ValidationSettingsRates: FC = () => {
+export const ValidationSettingsRates: FC<{ epci?: string }> = ({ epci }) => {
   const searchParams = useSearchParams()
-  const epci = searchParams.get('epci')
-  const { data: bassinEpcis } = useBassinEpcis()
+  const epciParams = epci ?? searchParams.get('epci')
+  const { data: bassinEpcis } = useBassinEpcis(epci)
   const { rates } = useBassinRates()
 
   const tabs = Object.entries(rates)
-    .sort(([code]) => (code === epci ? -1 : 1))
+    .sort(([code]) => (code === epciParams ? -1 : 1))
     .map(([epci, rates]) => ({
       content: <TabChildren epci={epci} rates={rates} />,
       iconId: 'ri-road-map-line' as RiIconClassName,

@@ -27,7 +27,6 @@ export const UsersTable: FC = () => {
 
     return {
       handleDeleteUser: () => {
-        console.log('delete user', user.id)
         modalActions.close()
       },
       modalActions,

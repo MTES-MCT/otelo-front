@@ -20,7 +20,7 @@ interface TabChildrenProps {
 
 const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
   const { classes } = useStyles()
-  const { data: rates } = useAccommodationRatesByEpci()
+  const { data: rates } = useAccommodationRatesByEpci(epci)
   const epciRates = rates?.[epci]
   if (!epciRates) return null
 

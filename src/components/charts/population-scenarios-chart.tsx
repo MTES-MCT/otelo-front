@@ -16,6 +16,7 @@ import { roundPopulation } from '~/utils/round-chart-axis'
 
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
+  modification?: boolean
 }
 
 const SCENARIOS = [
@@ -135,7 +136,9 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
                     key={`${dataKey}-${props.payload.year}`}
                   />
                 )}
-                onClick={() => setQueryStates({ population: queryValue })}
+                onClick={() => {
+                  setQueryStates({ population: queryValue })
+                }}
               />
             ))}
             <XAxis dataKey="year" />

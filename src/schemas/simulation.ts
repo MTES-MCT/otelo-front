@@ -54,7 +54,7 @@ export const ZSimulationWithResults = ZSimulationWithEpciAndScenario.extend({
 
 export type TSimulationWithResults = z.infer<typeof ZSimulationWithResults>
 
-export const ZUpdateSimulationDto = z.object({
+export const ZUpdateBadHousingSimulationDto = z.object({
   id: z.string(),
   scenario: ZScenario.omit({
     b17_motif: true,
@@ -67,4 +67,22 @@ export const ZUpdateSimulationDto = z.object({
   }),
 })
 
-export type TUpdateSimulationDto = z.infer<typeof ZUpdateSimulationDto>
+export type TUpdateBadHousingSimulationDto = z.infer<typeof ZUpdateBadHousingSimulationDto>
+
+export const ZUpdateDemographicSimulationDto = z.object({
+  id: z.string(),
+  scenario: z.object({
+    id: z.string(),
+    b2_scenario: z.string(),
+    epciScenarios: z.record(
+      z.string(),
+      z.object({
+        b2_tx_rs: z.number().optional(),
+        b2_tx_vacance: z.number().optional(),
+      }),
+    ),
+    projection: z.number(),
+  }),
+})
+
+export type TUpdateDemographicSimulationDto = z.infer<typeof ZUpdateDemographicSimulationDto>

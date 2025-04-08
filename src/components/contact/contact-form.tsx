@@ -10,11 +10,7 @@ import { TContactForm, ZContactForm } from '~/schemas/contact-form'
 
 export const ContactForm: FC = () => {
   const { classes } = useStyles()
-  // todo - handling form submission
-  const {
-    formState: { errors },
-    register,
-  } = useForm<TContactForm>({
+  const { register } = useForm<TContactForm>({
     resolver: zodResolver(ZContactForm),
     values: {
       consent: false,
@@ -25,8 +21,6 @@ export const ContactForm: FC = () => {
       subject: '',
     },
   })
-  console.log(errors)
-  // todo - manage states for each inputs and errors
 
   return (
     <form>

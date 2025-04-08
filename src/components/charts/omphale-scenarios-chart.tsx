@@ -15,6 +15,7 @@ import { roundPopulation } from '~/utils/round-chart-axis'
 
 interface DemographicEvolutionChartProps {
   demographicEvolution: TOmphaleDemographicEvolution
+  onChange?: (e: string) => void
 }
 
 const SCENARIOS = [
@@ -123,7 +124,7 @@ const findMaxValueYear = (data: TOmphaleEvolution[], scenarioKey?: string) => {
   }, data[0]).year
 }
 
-export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution }) => {
+export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution, onChange }) => {
   const { classes } = useStyles()
   const { data, metadata } = demographicEvolution
 
@@ -181,7 +182,9 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
                       key={`${dataKey}-${props.payload.year}`}
                     />
                   )}
-                  onClick={() => setQueryStates({ omphale: queryValue })}
+                  onClick={() => {
+                    setQueryStates({ omphale: queryValue })
+                  }}
                 />
               </React.Fragment>
             ))}
@@ -194,7 +197,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
         </ResponsiveContainer>
       </div>
       <div className={fr.cx('fr-py-2w')}>
-        <SelectOmphale />
+        <SelectOmphale onChange={onChange} />
       </div>
       {queryStates.omphale && maxYear && (
         <Alert

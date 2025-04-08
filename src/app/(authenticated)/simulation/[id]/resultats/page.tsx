@@ -95,7 +95,8 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   return (
     <>
       <div className={styles.headerContainer}>
-        <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/horizon-de-resorption` }}>
+        <Button linkProps={{ href: `/simulation/${params.id}/modifier/cadrage-temporel` }}>Modifier mes paramètres</Button>
+        <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/mal-logement/horizon-de-resorption` }}>
           Paramétrer le mal-logement
         </Button>
       </div>

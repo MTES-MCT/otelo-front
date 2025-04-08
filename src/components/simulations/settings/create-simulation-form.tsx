@@ -15,7 +15,7 @@ export const CreateSimulationForm: FC = () => {
   const { classes } = useStyles()
   const createSimulationForResults = useCreateSimulation()
   const createSimulationForBadHousing = useCreateSimulation({
-    redirectUri: '/simulation/{{id}}/modifier/horizon-de-resorption',
+    redirectUri: '/simulation/{{id}}/modifier/mal-logement/horizon-de-resorption',
   })
   const { rates } = useBassinRates()
 

@@ -13,7 +13,6 @@ export const useBassinEpcis = (epci?: string) => {
       if (!response.ok) {
         throw new Error('Failed to get bassin epcis list')
       }
-
       const data = await response.json()
       return data
     } catch (error) {
@@ -23,7 +22,7 @@ export const useBassinEpcis = (epci?: string) => {
   }
 
   const { data, isLoading } = useQuery({
-    enabled: !!epci,
+    enabled: !!epciParams,
     queryFn: () => getBassinEpcis(),
     queryKey: ['bassin-epcis', epci],
   })

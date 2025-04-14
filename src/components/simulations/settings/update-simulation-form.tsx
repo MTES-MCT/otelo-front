@@ -9,7 +9,6 @@ import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rat
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import { useUpdateDemographicSimulation } from '~/hooks/use-update-simulation'
 import { TUpdateDemographicSimulationDto, ZUpdateDemographicSimulationDto } from '~/schemas/simulation'
-import { TInitSimulationDto } from '~/schemas/simulation'
 
 export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
   const { classes } = useStyles()
@@ -39,7 +38,7 @@ export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
             }
             return acc
           },
-          {} as Record<string, TInitSimulationDto['scenario']['epcis'][string]>,
+          {} as Record<string, TUpdateDemographicSimulationDto['scenario']['epciScenarios'][string]>,
         ),
         projection,
       },

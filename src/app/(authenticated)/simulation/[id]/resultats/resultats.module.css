@@ -25,3 +25,13 @@
   gap: 1rem;
   justify-content: space-between;
 }
+
+.buttonsContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.border {
+  border-left: 1px solid grey;
+  width: 1px;
+}

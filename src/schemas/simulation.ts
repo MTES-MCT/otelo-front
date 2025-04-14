@@ -34,6 +34,7 @@ export const ZInitSimulationDto = z.object({
       z.object({
         b2_tx_rs: z.number().optional(),
         b2_tx_vacance: z.number().optional(),
+        default: z.boolean(),
       }),
     ),
     projection: z.number(),
@@ -86,3 +87,9 @@ export const ZUpdateDemographicSimulationDto = z.object({
 })
 
 export type TUpdateDemographicSimulationDto = z.infer<typeof ZUpdateDemographicSimulationDto>
+
+export const ZSimulationExportDto = ZSimulation.pick({
+  id: true,
+})
+
+export type TSimulationExportDto = z.infer<typeof ZSimulationExportDto>

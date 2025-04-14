@@ -3,6 +3,7 @@ import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/clas
 import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
+import { ExportSimulationSettings } from '~/components/simulations/results/export/export-simulation-settings'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
@@ -95,10 +96,14 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   return (
     <>
       <div className={styles.headerContainer}>
-        <Button linkProps={{ href: `/simulation/${params.id}/modifier/cadrage-temporel` }}>Modifier mes paramètres</Button>
-        <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/mal-logement/horizon-de-resorption` }}>
-          Paramétrer le mal-logement
-        </Button>
+        <div className={styles.buttonsContainer}>
+          <Button linkProps={{ href: `/simulation/${params.id}/modifier/cadrage-temporel` }}>Modifier mes paramètres</Button>
+          <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/mal-logement/horizon-de-resorption` }}>
+            Paramétrer le mal-logement
+          </Button>
+        </div>
+        <div className={styles.border} />
+        <ExportSimulationSettings id={params.id} />
       </div>
       <SimulationResultsTabs tabs={tabs} />
     </>

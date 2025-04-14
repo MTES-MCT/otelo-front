@@ -3,7 +3,7 @@
 import { FrCxArg, fr } from '@codegouvfr/react-dsfr'
 import Tag from '@codegouvfr/react-dsfr/Tag'
 import { useQueryState } from 'nuqs'
-import React, { FC } from 'react'
+import React, { FC, Fragment } from 'react'
 import { TEpci } from '~/schemas/epci'
 import { TScenario } from '~/schemas/scenario'
 import styles from './simulation-scenario-summary.module.css'
@@ -100,7 +100,11 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
             </div>
             {
               <div className={styles.stepDelimitor}>
-                <div className={styles.badgeContainer}>{setting.tags.map((tag) => tag)}</div>
+                <div className={styles.badgeContainer}>
+                  {setting.tags.map((tag, index) => (
+                    <Fragment key={index}>{tag}</Fragment>
+                  ))}
+                </div>
               </div>
             }
           </React.Fragment>

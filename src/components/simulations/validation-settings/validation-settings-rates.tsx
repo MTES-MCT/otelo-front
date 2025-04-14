@@ -49,6 +49,7 @@ export const ValidationSettingsRates: FC<{ epci?: string }> = ({ epci }) => {
   const searchParams = useSearchParams()
   const epciParams = epci ?? searchParams.get('epci')
   const { data: bassinEpcis } = useBassinEpcis(epci)
+  console.log('bassin', bassinEpcis)
   const { rates } = useBassinRates()
 
   const tabs = Object.entries(rates)

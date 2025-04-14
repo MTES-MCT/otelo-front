@@ -41,6 +41,7 @@ export const CreateSimulationForm: FC = () => {
             acc[epci] = {
               b2_tx_rs: rates.txRS ?? undefined,
               b2_tx_vacance: rates.txLV ?? undefined,
+              default: epci === queryStates.epci,
             }
             return acc
           },

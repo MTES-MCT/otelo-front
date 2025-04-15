@@ -14,9 +14,9 @@ type PageProps = {
 }
 
 export default async function DemographicSettingsPage({ searchParams }: PageProps) {
-  const { epci } = await searchParamsCache.parse(searchParams)
-  const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epci)
-  const populationEvolution = await getPopulationDemographicEvolutionByEpci(epci)
+  const { epcis } = await searchParamsCache.parse(searchParams)
+  const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epcis)
+  const populationEvolution = await getPopulationDemographicEvolutionByEpci(epcis)
   const href = `/simulation/taux-cibles-logements`
 
   return (

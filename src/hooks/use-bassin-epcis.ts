@@ -4,7 +4,7 @@ import { TEpci } from '~/schemas/epci'
 
 export const useBassinEpcis = (epci?: string) => {
   const searchParams = useSearchParams()
-  const epciParams = epci ?? searchParams.get('epci')
+  const epciParams = epci ?? searchParams.get('epcis')?.split(',')[0]
 
   const getBassinEpcis = async (): Promise<TEpci[]> => {
     try {
@@ -24,7 +24,7 @@ export const useBassinEpcis = (epci?: string) => {
   const { data, isLoading } = useQuery({
     enabled: !!epciParams,
     queryFn: () => getBassinEpcis(),
-    queryKey: ['bassin-epcis', epci],
+    queryKey: ['bassin-epcis', epciParams],
   })
   return { data, isLoading }
 }

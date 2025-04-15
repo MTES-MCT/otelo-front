@@ -3,14 +3,14 @@
 import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
 import Input from '@codegouvfr/react-dsfr/Input'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
-import { useSearchParams } from 'next/navigation'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 import {
   RateSettings,
-  useBassinRates,
+  useEpcisRates,
 } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { useBassinEpcis } from '~/hooks/use-bassin-epcis'
+import { useEpcis } from '~/hooks/use-epcis'
 
 interface TabChildrenProps {
   epci: string
@@ -45,20 +45,20 @@ const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
   )
 }
 
-export const ValidationSettingsRates: FC<{ epci?: string }> = ({ epci }) => {
-  const searchParams = useSearchParams()
-  const epciParams = epci ?? searchParams.get('epci')
-  const { data: bassinEpcis } = useBassinEpcis(epci)
-  console.log('bassin', bassinEpcis)
-  const { rates } = useBassinRates()
+type ValidationSettingsRatesProps = {
+  epcis?: string[]
+}
+export const ValidationSettingsRates: FC<ValidationSettingsRatesProps> = ({ epcis }) => {
+  const { data: epcisList } = useEpcis(epcis)
+  const { data: bassinEpcis } = useBassinEpcis()
 
-  const tabs = Object.entries(rates)
-    .sort(([code]) => (code === epciParams ? -1 : 1))
-    .map(([epci, rates]) => ({
-      content: <TabChildren epci={epci} rates={rates} />,
-      iconId: 'ri-road-map-line' as RiIconClassName,
-      label: bassinEpcis?.find((bassinEpci) => bassinEpci.code === epci)?.name,
-    }))
+  const { rates } = useEpcisRates()
+
+  const tabs = Object.entries(rates).map(([epci, rates]) => ({
+    content: <TabChildren epci={epci} rates={rates} />,
+    iconId: 'ri-road-map-line' as RiIconClassName,
+    label: [...(epcisList || []), ...(bassinEpcis || [])]?.find((bassinEpci) => bassinEpci.code === epci)?.name,
+  }))
 
   return (
     <div className={fr.cx('fr-p-2w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>

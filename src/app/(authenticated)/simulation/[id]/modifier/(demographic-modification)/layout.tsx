@@ -16,15 +16,12 @@ export default async function ModifySimulationLayout({ children, params }: PageP
   const { id } = params
 
   const simulation = await getSimulationWithResults(params.id)
-  const epci = simulation.scenario.epciScenarios.find((e) => e.default)
+  const epcis = simulation.scenario.epciScenarios.map((e) => e.epciCode)
 
-  if (!epci) {
-    throw new Error('Default EPCI of the simulation not found')
-  }
   return (
     <div className={fr.cx('fr-grid-row')}>
       <SimulationSettingsFormContextWrapper>
-        <SimulationFormRatesProviderContextWrapper epci={epci.epciCode}>
+        <SimulationFormRatesProviderContextWrapper epcis={epcis}>
           <UpdateDemographicSettingsSimulationSideMenu id={id} />
 
           <div className={fr.cx('fr-col-md-9')} style={{ background: fr.colors.decisions.background.alt.blueFrance.default }}>

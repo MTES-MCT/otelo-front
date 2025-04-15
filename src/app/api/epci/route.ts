@@ -1,21 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { auth } from '~/lib/auth/auth'
 
-export async function GET(_: NextRequest, { params }: { params: { epci: string } }) {
+export async function GET(request: Request) {
   const session = await auth()
-
   if (!session?.accessToken) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/accommodation-rates?epciCode=${params.epci}`, {
+  const { searchParams } = new URL(request.url)
+  const epcis = searchParams.get('epcis')
+
+  const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/epcis?epcis=${epcis}`, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
       'Content-Type': 'application/json',
     },
   })
   if (!res.ok) {
-    return NextResponse.json({ error: 'Failed to fetch accommodation rates by epci' }, { status: res.status })
+    return NextResponse.json({ error: 'Failed to fetch epcis' }, { status: res.status })
   }
 
   const data = await res.json()

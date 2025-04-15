@@ -48,10 +48,10 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
   return <RatesSettingsContext.Provider value={{ rates, updateRates }}>{children}</RatesSettingsContext.Provider>
 }
 
-export const useBassinRates = () => {
+export const useEpcisRates = () => {
   const context = useContext(RatesSettingsContext)
   if (context === undefined) {
-    throw new Error('useBassinRates must be used within a RatesProvider')
+    throw new Error('useEpcisRates must be used within a RatesProvider')
   }
   return context
 }

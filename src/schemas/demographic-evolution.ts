@@ -19,10 +19,13 @@ export const ZOmphaleEvolution = z.object({
 })
 export type TOmphaleEvolution = z.infer<typeof ZOmphaleEvolution>
 
-export const ZOmphaleDemographicEvolution = z.object({
-  data: z.array(ZOmphaleEvolution),
-  metadata: ZMetadata,
-})
+export const ZOmphaleDemographicEvolution = z.record(
+  z.string(),
+  z.object({
+    data: z.array(ZOmphaleEvolution),
+    metadata: ZMetadata,
+  }),
+)
 
 export type TOmphaleDemographicEvolution = z.infer<typeof ZOmphaleDemographicEvolution>
 
@@ -34,9 +37,11 @@ export const ZPopulationEvolution = z.object({
 })
 export type TPopulationEvolution = z.infer<typeof ZPopulationEvolution>
 
-export const ZPopulationDemographicEvolution = z.object({
-  data: z.array(ZPopulationEvolution),
-  metadata: ZMetadata,
-})
+export const ZPopulationDemographicEvolution = z.record(
+  z.object({
+    data: z.array(ZPopulationEvolution),
+    metadata: ZMetadata,
+  }),
+)
 
 export type TPopulationDemographicEvolution = z.infer<typeof ZPopulationDemographicEvolution>

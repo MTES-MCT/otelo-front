@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import { useUpdateDemographicSimulation } from '~/hooks/use-update-simulation'
 import { TUpdateDemographicSimulationDto, ZUpdateDemographicSimulationDto } from '~/schemas/simulation'
@@ -14,7 +14,7 @@ export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
   const { classes } = useStyles()
   const updateSimulationForResults = useUpdateDemographicSimulation()
 
-  const { rates } = useBassinRates()
+  const { rates } = useEpcisRates()
 
   const { simulationSettings } = useSimulationSettings()
   const { b2_scenario, projection } = simulationSettings

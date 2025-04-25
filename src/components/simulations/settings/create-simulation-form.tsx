@@ -6,7 +6,7 @@ import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
 import { ZInitSimulationDto } from '~/schemas/simulation'
 import { TInitSimulationDto } from '~/schemas/simulation'
@@ -17,7 +17,7 @@ export const CreateSimulationForm: FC = () => {
   const createSimulationForBadHousing = useCreateSimulation({
     redirectUri: '/simulation/{{id}}/modifier/mal-logement/horizon-de-resorption',
   })
-  const { rates } = useBassinRates()
+  const { rates } = useEpcisRates()
 
   const [queryStates] = useQueryStates({
     epci: parseAsString,
@@ -41,7 +41,6 @@ export const CreateSimulationForm: FC = () => {
             acc[epci] = {
               b2_tx_rs: rates.txRS ?? undefined,
               b2_tx_vacance: rates.txLV ?? undefined,
-              default: epci === queryStates.epci,
             }
             return acc
           },

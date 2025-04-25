@@ -2,7 +2,7 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
-import { parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import React, { FC } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
@@ -126,13 +126,15 @@ const findMaxValueYear = (data: TOmphaleEvolution[], scenarioKey?: string) => {
 
 export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution, onChange }) => {
   const { classes } = useStyles()
-  const { data, metadata } = demographicEvolution
 
   const [queryStates, setQueryStates] = useQueryStates({
     omphale: parseAsString,
     population: parseAsString,
     projection: parseAsString,
+    epciChart: parseAsString.withDefault(''),
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
   })
+  const { data, metadata } = demographicEvolution[queryStates.epciChart ?? queryStates.epcis[0]]
 
   const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.filter((scenario) => scenario.id === queryStates.population).map((scenario) => ({

@@ -2,7 +2,7 @@ import { Range } from '@codegouvfr/react-dsfr/Range'
 import { FC } from 'react'
 import {
   getComputedTxLv,
-  useBassinRates,
+  useEpcisRates,
 } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 interface LongTermAccomodationRangeProps {
@@ -12,7 +12,7 @@ interface LongTermAccomodationRangeProps {
 }
 
 export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ epci, longTermValue, shortTermValue }) => {
-  const { rates, updateRates } = useBassinRates()
+  const { rates, updateRates } = useEpcisRates()
   const currentRates = rates[epci]
 
   const getCurrentRangeValue = (): number => {

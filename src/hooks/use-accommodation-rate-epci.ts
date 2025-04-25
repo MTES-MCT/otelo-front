@@ -1,14 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { useSearchParams } from 'next/navigation'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
 
-export const useAccommodationRatesByEpci = (epci?: string) => {
-  const searchParams = useSearchParams()
-  const epciParam = epci ?? searchParams.get('epci')
-
+export const useAccommodationRatesByEpci = (epcis: Array<string>) => {
   const getAccommodationRatesByEpci = async (): Promise<TEpcisAccommodationRates> => {
     try {
-      const response = await fetch(`/api/accommodation-rates/${epciParam}`)
+      const response = await fetch(`/api/accommodation-rates?epcis=${epcis.join(',')}`)
       if (!response.ok) {
         throw new Error('Failed to get accommodation rates by epci')
       }
@@ -22,9 +18,9 @@ export const useAccommodationRatesByEpci = (epci?: string) => {
   }
 
   const { data, isLoading } = useQuery({
-    enabled: !!epciParam,
+    enabled: !!epcis.length,
     queryFn: () => getAccommodationRatesByEpci(),
-    queryKey: ['accommodation-rates-by-epci', epciParam],
+    queryKey: ['accommodation-rates-by-epci', epcis],
   })
   return { data, isLoading }
 }

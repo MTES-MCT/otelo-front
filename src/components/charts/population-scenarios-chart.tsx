@@ -4,7 +4,7 @@ import { fr } from '@codegouvfr/react-dsfr'
 import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Select from '@codegouvfr/react-dsfr/SelectNext'
-import { parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
@@ -87,13 +87,15 @@ const CustomTooltip = ({
 
 export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ demographicEvolution }) => {
   const { classes } = useStyles()
-  const { data, metadata } = demographicEvolution
-
   const [queryStates, setQueryStates] = useQueryStates({
     population: parseAsString,
     projection: parseAsString,
     scenario: parseAsString,
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epciChart: parseAsString.withDefault(''),
   })
+
+  const { data, metadata } = demographicEvolution[queryStates.epciChart ?? queryStates.epcis[0]]
 
   const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.map((scenario) => ({

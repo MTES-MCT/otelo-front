@@ -1,7 +1,7 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
-import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
 import { FC, useState } from 'react'
 import { tss } from 'tss-react'
 import { AutocompleteResults } from '~/components/simulations/autocomplete/autocomplete-results'
@@ -15,11 +15,12 @@ type AutocompleteInputProps = {
 export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label }: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
-  const [_, setSearchQueryState] = useQueryStates({
-    epci: parseAsString.withDefault(''),
+  const [queryState, setSearchQueryState] = useQueryStates({
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
     q: parseAsString.withDefault(''),
     region: parseAsString.withDefault(''),
+    type: parseAsStringEnum(['bh', 'epcis']),
+    epciChart: parseAsString.withDefault(''),
   })
   const [isResultsVisible, setIsResultsVisible] = useState(false)
 
@@ -29,11 +30,18 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
   }
 
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
-    if ('codeEpci' in item) {
-      setSearchQueryState({ epci: item.codeEpci ?? item.code, epcis: [], region: item.codeRegion })
+    const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
+    const region = 'codesRegions' in item ? item.codesRegions[0] : item.codeRegion
+    if (!queryState.type || queryState.type === 'bh') {
+      setSearchQueryState({ epcis: [code], region, epciChart: code })
     } else {
-      setSearchQueryState({ epci: item.code ?? item.code, epcis: [], region: item.codesRegions[0] })
+      setSearchQueryState({
+        epcis: queryState.epcis.filter((e) => e !== code).concat(code),
+        region,
+        epciChart: code,
+      })
     }
+
     setSearchQuery(item.nom)
     setIsResultsVisible(false)
   }

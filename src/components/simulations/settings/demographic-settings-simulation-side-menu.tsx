@@ -3,35 +3,35 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import React from 'react'
 import { DemographicSettingsCreationGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
-import { useEpci } from '~/hooks/use-epci'
+import { useEpcis } from '~/hooks/use-epcis'
 import styles from './simulation-side-menu.module.css'
 
 export default function DemographicSettingsSimulationSideMenu() {
-  const { data: epci } = useEpci()
+  const { data: epcis } = useEpcis()
   const demographicSteps = [
     {
-      data: epci?.name,
+      data: epcis?.map((epci) => epci.name),
       label: 'Territoire à étudier',
       path: '/simulation/choix-du-territoire',
-      queryKey: 'epci',
+      queryKeys: ['epci', 'epcis'],
       title: <span>Choix du territoire</span>,
     },
     {
       label: 'Cadrage temporel de la simulation',
       path: '/simulation/cadrage-temporel',
-      queryKey: 'projection',
+      queryKeys: ['projection'],
       title: <span>Déterminer l&apos;horizon de temps</span>,
     },
     {
       label: "Scénario de l'évolution démographique",
       path: '/simulation/parametrages-demographique',
-      queryKey: 'omphale',
+      queryKeys: ['omphale'],
       title: <span>Paramétrage évolution démographique</span>,
     },
     {
       label: 'Taux de résidences secondaires / logements vacants',
       path: '/simulation/taux-cibles-logements',
-      queryKey: 'tauxRS',
+      queryKeys: ['tauxRS'],
       title: <span>Paramétrage résidences secondaires et logements vacants</span>,
     },
   ]
@@ -47,13 +47,11 @@ export default function DemographicSettingsSimulationSideMenu() {
               </div>
               <span>{step.title}</span>
             </div>
-            {
-              <div className={styles.stepDelimitor}>
-                <div className={styles.badgeContainer}>
-                  <DemographicSettingsCreationGuideTag step={step} />
-                </div>
+            <div className={styles.stepDelimitor}>
+              <div className={styles.badgeContainer}>
+                <DemographicSettingsCreationGuideTag step={step} />
               </div>
-            }
+            </div>
           </React.Fragment>
         ))}
         <div className={styles.stepContainer}>

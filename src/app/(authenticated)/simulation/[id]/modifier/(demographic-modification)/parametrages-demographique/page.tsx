@@ -14,19 +14,15 @@ type PageProps = {
 
 export default async function ParametragesDemographiquePage({ params }: PageProps) {
   const simulation = await getSimulationWithResults(params.id)
-  const epci = simulation.scenario.epciScenarios.find((e) => e.default)
-
-  if (!epci) {
-    throw new Error('Default EPCI of the simulation not found')
-  }
+  const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
 
   const href = `/simulation/${params.id}/modifier/taux-cibles-logements`
-  const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epci.epciCode)
-  const populationEvolution = await getPopulationDemographicEvolutionByEpci(epci.epciCode)
+  const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epcisCodes)
+  const populationEvolution = await getPopulationDemographicEvolutionByEpci(epcisCodes)
 
   return (
     <div className={classes.container}>
-      <DemographicSettingsFormWrapper omphaleEvolution={omphaleEvolution} populationEvolution={populationEvolution} />
+      <DemographicSettingsFormWrapper epcis={epcisCodes} omphaleEvolution={omphaleEvolution} populationEvolution={populationEvolution} />
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
         <NextStepLinkWithoutValidation href={href} />
       </div>

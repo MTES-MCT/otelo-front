@@ -9,18 +9,19 @@ import { AccommodationRateInput } from '~/components/simulations/settings/accomm
 import { LongTermVacancyAlert } from '~/components/simulations/settings/long-term-vacancy-alert'
 import { VacancyAccommodationRatesInput } from '~/components/simulations/settings/vacancy-accommodation-rates-input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
+import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
 
 interface EpcisAccommodationRatesProps {
-  bassinEpcis: Array<{ code: string; name: string; region: string }>
+  epcis: Array<{ code: string; name: string; region: string }>
 }
 
 interface TabChildrenProps {
   epci: string
+  rates: TEpcisAccommodationRates
 }
 
-const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
+const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
   const { classes } = useStyles()
-  const { data: rates } = useAccommodationRatesByEpci(epci)
   const epciRates = rates?.[epci]
   if (!epciRates) return null
 
@@ -50,12 +51,17 @@ const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
   )
 }
 
-export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ bassinEpcis }) => {
+export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ epcis }) => {
   const { classes } = useStyles()
-  const tabs = bassinEpcis.map((bassinEpci) => ({
-    content: <TabChildren epci={bassinEpci.code} />,
+  const epcisCodes = epcis.map((epci) => epci.code)
+  const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
+
+  if (!rates) return null
+
+  const tabs = epcis.map((epci) => ({
+    content: <TabChildren epci={epci.code} rates={rates} />,
     iconId: 'ri-road-map-line' as RiIconClassName,
-    label: bassinEpci.name,
+    label: epci.name,
   }))
 
   return <Tabs classes={{ panel: classes.backgroundWhite }} tabs={tabs} />

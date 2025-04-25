@@ -15,8 +15,8 @@ export const AuthenticatedBreadcrumb = () => {
   const breadcrumbComponents: Record<BreadcrumbPaths, JSX.Element> = {
     admin: <AdminBreadcrumb />,
     'guide-utilisateur': <FaqBreadcrumb />,
-    resultats: <SimulationsBreadcrumb />,
     simulation: <CreateSimulationBreadcrumb />,
+    resultats: <SimulationsBreadcrumb />,
     modifier: <UpdateSimulationBreadcrumb />,
   }
 

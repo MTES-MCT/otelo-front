@@ -2,15 +2,40 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
+import { Select } from '@codegouvfr/react-dsfr/Select'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
-import { parseAsString, useQueryStates } from 'nuqs'
+import { parseAsString, useQueryState, useQueryStates } from 'nuqs'
 import { tss } from 'tss-react'
+import { useEpcis } from '~/hooks/use-epcis'
 
 type DemographicSettingsHeaderProps = {
   children: React.ReactNode[]
+  epcis?: string[]
 }
 
-export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeaderProps) => {
+export const DemographicSettingsSelectEpci = ({ epcis }: { epcis?: string[] }) => {
+  const { data: customEpcis } = useEpcis(epcis)
+  const options = customEpcis?.filter((item) => !!item)
+
+  const [displayedEpci, setDisplayedEpci] = useQueryState('epciChart', parseAsString)
+  return (
+    <Select
+      label=""
+      nativeSelectProps={{
+        value: displayedEpci as string,
+        onChange: (event) => setDisplayedEpci(event.target.value),
+      }}
+    >
+      {(options || []).map((option) => (
+        <option key={option?.code} value={option?.code}>
+          {option?.name}
+        </option>
+      ))}
+    </Select>
+  )
+}
+
+export const DemographicSettingsHeader = ({ children, epcis }: DemographicSettingsHeaderProps) => {
   const [queryState, setQueryState] = useQueryStates({
     population: parseAsString,
     scenario: parseAsString,
@@ -44,7 +69,10 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
         },
       ]}
     >
-      <h5>{title}</h5>
+      <div className={classes.titleContainer}>
+        <h5 className={classes.title}>{title}</h5>
+        <DemographicSettingsSelectEpci epcis={epcis} />
+      </div>
       {queryState.scenario === 'population' && (
         <div className={fr.cx('fr-my-2w')}>
           <Alert
@@ -63,6 +91,13 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
 }
 
 const useStyles = tss.withParams<{ population: string | null }>().create(({ population }) => ({
+  title: {
+    width: '75%',
+  },
+  titleContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   tab: {
     '&[class*="ri-home-2-line"]': {
       cursor: !population ? 'not-allowed' : 'pointer',

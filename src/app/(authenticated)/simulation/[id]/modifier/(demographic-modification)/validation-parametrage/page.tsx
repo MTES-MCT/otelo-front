@@ -7,11 +7,7 @@ import styles from './validation-parametrage.module.css'
 
 export default async function ValidationParametrage({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
-  const epci = simulation.scenario.epciScenarios.find((e) => e.default)
-
-  if (!epci) {
-    throw new Error('Default EPCI of the simulation not found')
-  }
+  const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>
@@ -25,7 +21,7 @@ export default async function ValidationParametrage({ params }: { params: { id: 
         <h4>Projection d&apos;évolution démographique</h4>
         <ValidationDemographicOmphale />
       </div>
-      <ValidationSettingsRates epci={epci.epciCode} />
+      <ValidationSettingsRates epcis={epcisCodes} />
       <UpdateSimulationForm id={params.id} />
     </div>
   )

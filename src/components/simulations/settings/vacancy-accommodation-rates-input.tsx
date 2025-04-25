@@ -3,7 +3,7 @@
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { LongTermAccomodationRange } from '~/components/simulations/settings/long-term-accomodation-range'
 
 type VacancyAccommodationRatesInputProps = {
@@ -13,7 +13,7 @@ type VacancyAccommodationRatesInputProps = {
 }
 
 export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, longTermValue, shortTermValue }) => {
-  const { rates } = useBassinRates()
+  const { rates } = useEpcisRates()
   const { classes } = useStyles()
   const ratesByEpci = rates[epci]
   const txLv = ratesByEpci.txLV

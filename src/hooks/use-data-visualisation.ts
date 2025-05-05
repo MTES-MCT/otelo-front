@@ -3,13 +3,13 @@ import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
 
 export const useDataVisualisation = () => {
   const [queryStates] = useQueryStates({
-    epci: parseAsInteger,
+    epcis: parseAsInteger,
     type: parseAsString,
   })
 
   const fetchDataVisualisation = async () => {
     try {
-      const response = await fetch(`/api/data-visualisation?epci=${queryStates.epci}&type=${queryStates.type}`)
+      const response = await fetch(`/api/data-visualisation?epci=${queryStates.epcis}&type=${queryStates.type}`)
       if (!response.ok) {
         throw new Error('Failed to fetch data visualisation')
       }
@@ -20,9 +20,9 @@ export const useDataVisualisation = () => {
     }
   }
   const { data, isLoading } = useQuery({
-    enabled: !!queryStates.epci && !!queryStates.type,
+    enabled: !!queryStates.epcis && !!queryStates.type,
     queryFn: () => fetchDataVisualisation(),
-    queryKey: ['data-visualisation', queryStates.epci, queryStates.type],
+    queryKey: ['data-visualisation', queryStates.epcis, queryStates.type],
   })
   return { data, isLoading }
 }

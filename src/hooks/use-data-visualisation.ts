@@ -5,11 +5,14 @@ export const useDataVisualisation = () => {
   const [queryStates] = useQueryStates({
     epci: parseAsInteger,
     type: parseAsString,
+    populationType: parseAsString.withDefault('haute'),
   })
 
   const fetchDataVisualisation = async () => {
     try {
-      const response = await fetch(`/api/data-visualisation?epci=${queryStates.epci}&type=${queryStates.type}`)
+      const response = await fetch(
+        `/api/data-visualisation?epci=${queryStates.epci}&type=${queryStates.type}&populationType=${queryStates.populationType}`,
+      )
       if (!response.ok) {
         throw new Error('Failed to fetch data visualisation')
       }
@@ -22,7 +25,7 @@ export const useDataVisualisation = () => {
   const { data, isLoading } = useQuery({
     enabled: !!queryStates.epci && !!queryStates.type,
     queryFn: () => fetchDataVisualisation(),
-    queryKey: ['data-visualisation', queryStates.epci, queryStates.type],
+    queryKey: ['data-visualisation', queryStates.epci, queryStates.type, queryStates.populationType],
   })
   return { data, isLoading }
 }

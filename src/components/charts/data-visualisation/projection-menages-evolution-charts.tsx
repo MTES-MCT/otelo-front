@@ -148,7 +148,7 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
                 { color: barChartColors[2], type: 'rect', value: 'Décohabitation basse' },
               ]}
             />
-            <XAxis dataKey="period" />
+            <XAxis dataKey="period" ticks={['2021-2030', '2030-2040', '2040-2050']} />
             <YAxis />
             <Tooltip
               formatter={(value: number, name: string) => {

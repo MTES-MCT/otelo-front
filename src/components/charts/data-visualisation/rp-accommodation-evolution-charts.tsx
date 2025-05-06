@@ -1,39 +1,68 @@
+import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
-import { TRPPopulationEvolution } from '~/schemas/population-evolution'
+import { TAccommodationEvolution } from '~/schemas/accommodation-evolution'
+import styles from './accommodation-evolution-charts.module.css'
 
-export type PopulationEvolutionChartProps = {
-  data: TRPPopulationEvolution
+export type RPAccommodationEvolutionChart = {
+  data: TAccommodationEvolution
   type: string | null
 }
 
-export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ data: chartData, type }) => {
-  const [queryStates] = useQueryStates({
+export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = ({ data: chartData, type }) => {
+  const [queryStates, setQueryStates] = useQueryStates({
+    type: parseAsString,
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    source: parseAsString.withDefault('rp'),
   })
+  const SOURCE_OPTIONS = [
+    { label: 'RP (INSEE)', value: 'rp' },
+    // todo : reenable as soon as filocom data is available
+    // ...(type === 'residences-secondaires' ? [{ label: 'FILOCOM', value: 'filocom' }] : []),
+    ...(type === 'logements-vacants' ? [{ label: 'LOVAC', value: 'lovac' }] : []),
+  ]
   const { classes } = useStyles()
+
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
-  const linearDataKey = type?.split('-')[0]
+  const linearDataKey = type === 'residences-secondaires' ? 'secondaryAccommodation' : 'vacant'
   const epciName = chartData.tableData[queryStates.epcis[0] as string]?.name
   const barChartData = Object.entries(chartData.tableData)
     .filter(([key]) => queryStates.epcis.includes(key))
-    .map(([key, value]) => ({
-      '2010-2015': value.annualEvolution?.['2010-2015']?.value ?? 0,
-      '2015-2021': value.annualEvolution?.['2015-2021']?.value ?? 0,
-      epciCode: key,
-      name: value.name,
-    }))
+    .map(([key, value]) => {
+      return {
+        '2010-2015': value.annualEvolution?.['2010-2015']?.value ?? 0,
+        '2015-2021': value.annualEvolution?.['2015-2021']?.value ?? 0,
+        epciCode: key,
+        name: value.name,
+      }
+    })
 
-  const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
+  const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === queryStates.type)?.label
+
   return (
     <>
-      <h5>
-        {title} - {epciName}
-      </h5>
+      <div className={styles.headerContainer}>
+        <h5>
+          {title} - {epciName}
+        </h5>
+        <Select
+          label=""
+          nativeSelectProps={{
+            onChange: (event) => setQueryStates({ source: event.target.value }),
+            value: queryStates.source || '',
+          }}
+        >
+          {SOURCE_OPTIONS.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
+      </div>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={500} margin={{ left: 20, right: 20 }}>

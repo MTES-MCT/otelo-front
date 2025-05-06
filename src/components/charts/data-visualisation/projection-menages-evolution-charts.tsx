@@ -1,3 +1,4 @@
+import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf } from 'nuqs'
 import { parseAsString } from 'nuqs'
 import { useQueryStates } from 'nuqs'
@@ -7,16 +8,25 @@ import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TDemographicProjectionEvolution } from '~/schemas/population-evolution'
+import styles from './projection-menages-evolution-charts.module.css'
 
-export type ProjectionPopulationEvolutionChartProps = {
+export const MENAGES_TYPE_OPTIONS = [
+  { label: 'Population haute', value: 'haute' },
+  { label: 'Population centrale', value: 'central' },
+  { label: 'Population basse', value: 'basse' },
+]
+
+export type ProjectionMenagesEvolutionChartProps = {
   data: TDemographicProjectionEvolution
   type: string | null
 }
 
-export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutionChartProps> = ({ data: chartData, type }) => {
-  const [queryStates] = useQueryStates({
+export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChartProps> = ({ data: chartData, type }) => {
+  const [queryStates, setQueryStates] = useQueryStates({
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    populationType: parseAsString.withDefault('haute'),
   })
+
   const { classes } = useStyles()
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
   const epciName = chartData.tableData[queryStates.epcis[0] as string]?.name
@@ -48,15 +58,33 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
         },
       ]
     })
+
     .flat()
     .sort((a, b) => a.period.localeCompare(b.period))
 
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
+  const dataKeyPrefix = queryStates.populationType === 'haute' ? 'ph' : queryStates.populationType === 'central' ? 'central' : 'pb'
+
   return (
     <>
-      <h5>
-        {title} - {epciName}
-      </h5>
+      <div className={styles.headerContainer}>
+        <h5>
+          {title} - {epciName}
+        </h5>
+        <Select
+          label=""
+          nativeSelectProps={{
+            onChange: (event) => setQueryStates({ populationType: event.target.value }),
+            value: queryStates.populationType || '',
+          }}
+        >
+          {MENAGES_TYPE_OPTIONS.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
+      </div>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={500} margin={{ left: 20, right: 20 }}>
@@ -83,24 +111,24 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
               return (
                 <>
                   <Line
-                    dataKey="haute"
+                    dataKey={`${dataKeyPrefix}H`}
                     stroke={barChartColors[index]}
                     data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Haute`}
+                    name={`${chartData.linearChart[epci].epci.name} - Décohabitation haute`}
                     key={epci}
                   />
                   <Line
-                    dataKey="central"
+                    dataKey={`${dataKeyPrefix}C`}
                     stroke={barChartColors[index]}
                     data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Central`}
+                    name={`${chartData.linearChart[epci].epci.name} - Décohabitation tendanciel`}
                     key={epci}
                   />
                   <Line
-                    dataKey="basse"
+                    dataKey={`${dataKeyPrefix}B`}
                     stroke={barChartColors[index]}
                     data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Basse`}
+                    name={`${chartData.linearChart[epci].epci.name} - Décohabitation basse`}
                     key={epci}
                   />
                 </>
@@ -115,9 +143,9 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
               align="right"
               verticalAlign="top"
               payload={[
-                { color: barChartColors[0], type: 'rect', value: 'Population haute' },
-                { color: barChartColors[1], type: 'rect', value: 'Population centrale' },
-                { color: barChartColors[2], type: 'rect', value: 'Population basse' },
+                { color: barChartColors[0], type: 'rect', value: 'Décohabitation haute' },
+                { color: barChartColors[1], type: 'rect', value: 'Décohabitation tendanciel' },
+                { color: barChartColors[2], type: 'rect', value: 'Décohabitation basse' },
               ]}
             />
             <XAxis dataKey="period" ticks={['2021-2030', '2030-2040', '2040-2050']} />
@@ -136,9 +164,9 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
                 return label
               }}
             />
-            <Bar dataKey="haute" name="Population haute" fill={barChartColors[0]} />
-            <Bar dataKey="central" name="Population centrale" fill={barChartColors[1]} />
-            <Bar dataKey="basse" name="Population basse" fill={barChartColors[2]} />
+            <Bar dataKey="haute" name="Décohabitation haute" fill={barChartColors[0]} />
+            <Bar dataKey="central" name="Décohabitation tendanciel" fill={barChartColors[1]} />
+            <Bar dataKey="basse" name="Décohabitation basse" fill={barChartColors[2]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

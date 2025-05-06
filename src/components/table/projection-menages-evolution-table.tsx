@@ -5,11 +5,11 @@ import styles from './projection-evolution-table.module.css'
 
 type ScenarioKey = 'basse' | 'central' | 'haute'
 
-export type ProjectionPopulationEvolutionTableProps = {
+export type ProjectionMenagesEvolutionTableProps = {
   data: TDemographicProjectionDataTable
 }
 
-export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutionTableProps> = ({ data }) => {
+export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTableProps> = ({ data }) => {
   const dataTable = Object.entries(data).map(([, rowValue]) => {
     const typedRowValue = rowValue as unknown as TDemographicProjectionDataTableRow
     return {
@@ -65,9 +65,9 @@ export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutio
               const territoryName = Object.keys(row)[0]
               const territoryData = Object.values(row)[0]
               const scenarios: Array<{ key: ScenarioKey; name: string }> = [
-                { key: 'haute', name: 'Population Haute' },
-                { key: 'central', name: 'Population Centrale' },
-                { key: 'basse', name: 'Population Basse' },
+                { key: 'haute', name: 'Décohabitation haute' },
+                { key: 'central', name: 'Décohabitation tendanciel' },
+                { key: 'basse', name: 'Décohabitation basse' },
               ]
 
               return scenarios.map((scenario, scenarioIndex) => (

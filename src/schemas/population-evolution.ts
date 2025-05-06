@@ -107,3 +107,25 @@ export const ZDemographicProjectionEvolution = z.object({
 })
 
 export type TDemographicProjectionEvolution = z.infer<typeof ZDemographicProjectionEvolution>
+
+export const ZDemographicMenagesByEpci = z.object({
+  centralB: z.number().optional(),
+  centralC: z.number().optional(),
+  centralH: z.number().optional(),
+  pbB: z.number().optional(),
+  pbC: z.number().optional(),
+  pbH: z.number().optional(),
+  phB: z.number().optional(),
+  phC: z.number().optional(),
+  phH: z.number().optional(),
+  year: z.number(),
+})
+
+export type TDemographicMenagesByEpci = z.infer<typeof ZDemographicMenagesByEpci>
+
+export const ZDemographicMenagesEvolution = z.object({
+  linearChart: z.record(z.string(), ZDemographicMenagesByEpci),
+  tableData: ZDemographicProjectionDataTable,
+})
+
+export type TDemographicMenagesEvolution = z.infer<typeof ZDemographicMenagesEvolution>

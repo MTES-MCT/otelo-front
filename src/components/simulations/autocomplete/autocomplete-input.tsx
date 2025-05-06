@@ -10,9 +10,10 @@ import { GeoApiCommuneResult, GeoApiEpciResult, useGeoApiSearch } from '~/hooks/
 type AutocompleteInputProps = {
   hintText: string
   label?: string
+  onClick?: (item: GeoApiEpciResult | GeoApiCommuneResult) => void
 }
 
-export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label }: AutocompleteInputProps) => {
+export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label, onClick }: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
   const [queryState, setSearchQueryState] = useQueryStates({
@@ -32,6 +33,9 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
     const region = 'codesRegions' in item ? item.codesRegions[0] : item.codeRegion
+    if (onClick) {
+      onClick(item)
+    }
     if (!queryState.type || queryState.type === 'bh') {
       setSearchQueryState({ epcis: [code], region, epciChart: code })
     } else {

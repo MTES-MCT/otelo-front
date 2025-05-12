@@ -18,18 +18,23 @@ export const DataVisualisationTable: FC<{
   type: string | null
   source: string | null
 }> = ({ data, type, source }) => {
-  const isPopulationEvolution = ['population-evolution', 'menage-evolution'].includes(type ?? '')
+  const isPopulationOrMenageEvolution = ['population-evolution', 'menage-evolution'].includes(type ?? '')
   const isProjectionPopulationEvolution = ['projection-population-evolution'].includes(type ?? '')
   const isProjectionMenagesEvolution = ['projection-menages-evolution'].includes(type ?? '')
   const isResidencesSecondaires = ['residences-secondaires'].includes(type ?? '')
   const isLogementsVacants = ['logements-vacants'].includes(type ?? '')
 
-  if (isPopulationEvolution) {
+  if (isPopulationOrMenageEvolution) {
     return <PopulationEvolutionTable data={data as TRPPopulationEvolution} type={type} />
   }
 
   if (isProjectionPopulationEvolution) {
-    return <ProjectionPopulationEvolutionTable data={data.tableData as TDemographicProjectionDataTable} />
+    return (
+      <ProjectionPopulationEvolutionTable
+        maxYears={(data as TDemographicProjectionEvolution).maxYears}
+        data={data.tableData as TDemographicProjectionDataTable}
+      />
+    )
   }
 
   if (isProjectionMenagesEvolution) {

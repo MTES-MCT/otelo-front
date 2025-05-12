@@ -14,11 +14,12 @@ export type PopulationEvolutionChartProps = {
 export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ data: chartData, type }) => {
   const [queryStates] = useQueryStates({
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epci: parseAsString.withDefault(''),
   })
   const { classes } = useStyles()
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
   const linearDataKey = type?.split('-')[0]
-  const epciName = chartData.tableData[queryStates.epcis[0] as string]?.name
+  const epciName = chartData.tableData[queryStates.epci as string]?.name
   const barChartData = Object.entries(chartData.tableData)
     .filter(([key]) => queryStates.epcis.includes(key))
     .map(([key, value]) => ({

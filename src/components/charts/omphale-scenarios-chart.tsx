@@ -84,7 +84,7 @@ const SCENARIOS = [
   },
 ]
 
-const CustomTooltip = ({
+export const OmphaleScenariosTooltip = ({
   active,
   basePopulation,
   label,
@@ -192,7 +192,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
             ))}
 
             <XAxis dataKey="year" />
-            <Tooltip content={<CustomTooltip basePopulation={basePopulation} />} />
+            <Tooltip content={<OmphaleScenariosTooltip basePopulation={basePopulation} />} />
 
             <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
           </LineChart>

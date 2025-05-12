@@ -2,11 +2,67 @@ import { parseAsArrayOf } from 'nuqs'
 import { parseAsString } from 'nuqs'
 import { useQueryStates } from 'nuqs'
 import { FC } from 'react'
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
+import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
+import { CustomizedDot } from '~/components/charts/customized-dot'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TDemographicProjectionEvolution } from '~/schemas/population-evolution'
+import { formatNumber } from '~/utils/format-numbers'
+
+const SCENARIOS = [
+  {
+    dataKey: 'haute',
+    stroke: '#666666',
+  },
+  {
+    dataKey: 'central',
+    stroke: '#000091',
+  },
+  {
+    dataKey: 'basse',
+    stroke: '#161616',
+  },
+]
+
+const CustomTooltip = ({ active, label, payload }: TooltipProps<ValueType, NameType>) => {
+  const { classes } = useStyles()
+  if (!active || !payload?.length) return null
+
+  const grouped: Record<string, typeof payload> = {}
+  payload.forEach((item: TooltipPayload<ValueType, NameType>) => {
+    const epciName = item.name ?? 'Inconnu'
+    if (!grouped[epciName]) grouped[epciName] = []
+    grouped[epciName].push(item)
+  })
+
+  return (
+    <div className={classes.tooltipContainer}>
+      <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
+      {Object.entries(grouped).map(([epciName, items]) => (
+        <div key={epciName} style={{ marginBottom: 8 }}>
+          <div className={classes.bold}>{epciName}</div>
+          <ul style={{ margin: 0, paddingLeft: 16 }}>
+            {items.map((item: TooltipPayload<ValueType, NameType>) => {
+              if (!item.dataKey || typeof item.dataKey !== 'string') return null
+              const label = item.dataKey.charAt(0).toUpperCase() + item.dataKey.slice(1)
+              const value = typeof item.value === 'number' ? formatNumber(item.value) : '-'
+              return (
+                <li key={item.dataKey} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span className={classes.tooltipDot} style={{ backgroundColor: item.stroke, marginRight: 6 }} />
+                  <span>
+                    {label}: {value} habitants
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export type ProjectionPopulationEvolutionChartProps = {
   data: TDemographicProjectionEvolution
@@ -16,10 +72,11 @@ export type ProjectionPopulationEvolutionChartProps = {
 export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutionChartProps> = ({ data: chartData, type }) => {
   const [queryStates] = useQueryStates({
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epci: parseAsString.withDefault(''),
   })
   const { classes } = useStyles()
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
-  const epciName = chartData.tableData[queryStates.epcis[0] as string]?.name
+  const epciName = chartData.tableData[queryStates.epci]?.name
 
   const barChartData = Object.entries(chartData.tableData)
     .filter(([key]) => queryStates.epcis.includes(key))
@@ -52,6 +109,12 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
     .sort((a, b) => a.period.localeCompare(b.period))
 
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
+  const displayedScenarios = SCENARIOS.map((scenario) => ({
+    ...scenario,
+    stroke: `${scenario.stroke}33`,
+    strokeWidth: 2,
+  }))
+
   return (
     <>
       <h5>
@@ -77,34 +140,23 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
                 })()}
               />
             )}
-            <Tooltip />
-            {epcisLinearChart.map((epci, index) => {
+            <Tooltip content={<CustomTooltip />} />
+            {epcisLinearChart.map((epci) => {
               const epciData = chartData.linearChart[epci].data
-              return (
-                <>
-                  <Line
-                    dataKey="haute"
-                    stroke={barChartColors[index]}
-                    data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Haute`}
-                    key={epci}
-                  />
-                  <Line
-                    dataKey="central"
-                    stroke={barChartColors[index]}
-                    data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Central`}
-                    key={epci}
-                  />
-                  <Line
-                    dataKey="basse"
-                    stroke={barChartColors[index]}
-                    data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Basse`}
-                    key={epci}
-                  />
-                </>
-              )
+              return displayedScenarios.map(({ dataKey, stroke, strokeWidth }) => (
+                <Line
+                  dataKey={dataKey}
+                  data={epciData}
+                  type="monotone"
+                  stroke={stroke}
+                  strokeWidth={strokeWidth}
+                  name={chartData.linearChart[epci].epci.name}
+                  key={`${epci}-${dataKey}`}
+                  dot={(props) => (
+                    <CustomizedDot {...props} stroke={stroke} year={props.payload.year} key={`${epci}-${dataKey}-${props.payload.year}`} />
+                  )}
+                />
+              ))
             })}
           </LineChart>
         </ResponsiveContainer>
@@ -152,5 +204,29 @@ const useStyles = tss.create({
     gap: '2rem',
     height: '700px',
     width: '100%',
+  },
+  tooltipContainer: {
+    backgroundColor: 'white',
+    border: '1px solid var(--border-default-grey)',
+    borderRadius: '4px',
+    padding: '1rem',
+  },
+  tooltipTitle: {
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+  },
+  tooltipItem: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipDot: {
+    borderRadius: '50%',
+    height: '8px',
+    width: '8px',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 })

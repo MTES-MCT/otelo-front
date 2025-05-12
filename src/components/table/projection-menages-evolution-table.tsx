@@ -18,6 +18,7 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
         '2030': typedRowValue['2030'],
         '2040': typedRowValue['2040'],
         '2050': typedRowValue['2050'],
+        maxYears: typedRowValue.maxYears,
         annualEvolution: typedRowValue.annualEvolution,
       },
     }
@@ -25,7 +26,7 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Tableau descriptif et d&apos;analyse des projections de populations</h2>
+      <h2 className={styles.title}>Tableau descriptif et d'analyse des projections de ménages, sur le bassin d'habitat</h2>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>

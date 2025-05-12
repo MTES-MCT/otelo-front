@@ -1,5 +1,9 @@
 import { FC } from 'react'
-import { TDemographicProjectionDataTable, TDemographicProjectionDataTableRow } from '~/schemas/population-evolution'
+import {
+  TDemographicMaxYearsByEpci,
+  TDemographicProjectionDataTable,
+  TDemographicProjectionDataTableRow,
+} from '~/schemas/population-evolution'
 import { formatNumber } from '~/utils/format-numbers'
 import styles from './projection-evolution-table.module.css'
 
@@ -7,10 +11,11 @@ type ScenarioKey = 'basse' | 'central' | 'haute'
 
 export type ProjectionPopulationEvolutionTableProps = {
   data: TDemographicProjectionDataTable
+  maxYears: TDemographicMaxYearsByEpci
 }
 
-export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutionTableProps> = ({ data }) => {
-  const dataTable = Object.entries(data).map(([, rowValue]) => {
+export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutionTableProps> = ({ data, maxYears }) => {
+  const dataTable = Object.entries(data).map(([key, rowValue]) => {
     const typedRowValue = rowValue as unknown as TDemographicProjectionDataTableRow
     return {
       [typedRowValue.name]: {
@@ -18,6 +23,7 @@ export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutio
         '2030': typedRowValue['2030'],
         '2040': typedRowValue['2040'],
         '2050': typedRowValue['2050'],
+        maxYears: maxYears[key],
         annualEvolution: typedRowValue.annualEvolution,
       },
     }
@@ -88,7 +94,7 @@ export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutio
                   <td className={styles.dataCell}>{territoryData.annualEvolution['2021-2030'][scenario.key].percent || '-'}</td>
                   <td className={styles.dataCell}>{territoryData.annualEvolution['2030-2040'][scenario.key].percent || '-'}</td>
                   <td className={styles.dataCell}>{territoryData.annualEvolution['2040-2050'][scenario.key].percent || '-'}</td>
-                  <td className={styles.dataCell}>-</td>
+                  <td className={styles.dataCell}>{territoryData.maxYears[scenario.key].year || '-'}</td>
                 </tr>
               ))
             })}

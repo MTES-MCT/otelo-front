@@ -1,7 +1,7 @@
 import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
@@ -20,7 +20,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
   })
   const SOURCE_OPTIONS = [
     { label: 'RP (INSEE)', value: 'rp' },
-    { label: 'LOVAC', value: 'lovac' },
+    { label: 'Fichiers Fonciers', value: 'lovac' },
   ]
   const { classes } = useStyles()
 
@@ -87,7 +87,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
           <BarChart
             width={500}
             height={500}
-            margin={{ left: 20, right: 20 }}
+            margin={{ left: 20, right: 20, bottom: 30 }}
             data={(() => {
               // Merge all selected EPCI data by year, with each EPCI's values as separate keys
               const years = [2014, 2019, 2024]
@@ -112,10 +112,12 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
             })()}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" ticks={[2014, 2019, 2024]} />
+            <XAxis dataKey="year" ticks={[2014, 2019, 2024]}>
+              <Label value="Nombre de logements vacants par durée de vacance" offset={-10} position="insideBottom" />
+            </XAxis>
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend align="right" verticalAlign="top" />
             {epcisLinearChart.map((epci, index) => [
               <Bar
                 key={`${epci}-nbLogVac2Less`}
@@ -135,10 +137,12 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
           </BarChart>
         </ResponsiveContainer>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart width={730} height={600} data={barChartData} margin={{ left: 20 }}>
+          <BarChart width={730} height={600} data={barChartData} margin={{ left: 20, bottom: 30 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <Legend align="right" verticalAlign="top" />
-            <XAxis dataKey="period" ticks={['2014-2019', '2019-2024']} />
+            <XAxis dataKey="period" ticks={['2014-2019', '2019-2024']}>
+              <Label value="Évolution annuelle moyenne du nombre de logements vacants" offset={-10} position="insideBottom" />
+            </XAxis>
             <YAxis
               domain={(() => {
                 const minNbLogVac2Less = Math.min(...barChartData.map((d) => d.nbLogVac2Less))

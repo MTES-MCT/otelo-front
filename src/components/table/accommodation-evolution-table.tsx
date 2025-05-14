@@ -21,9 +21,13 @@ export const AccommodationEvolutionTable: FC<AccommodationEvolutionTableProps> =
     }
   })
   const title = type === 'secondaryAccommodation' ? 'Résidences secondaires' : 'Logements vacants'
-
+  const tableTitle =
+    type === 'secondaryAccommodation'
+      ? "Tableau descriptif et d'analyse des résidences secondaires sur le bassin d’habitat"
+      : "Tableau descriptif et d'analyse des logements vacants sur le bassin d’habitat"
   return (
     <div className={styles.container}>
+      <h2 className={styles.title}>{tableTitle}</h2>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -33,7 +37,7 @@ export const AccommodationEvolutionTable: FC<AccommodationEvolutionTableProps> =
             <th colSpan={6} className={styles.headerCell}>
               {title}
             </th>
-            <th colSpan={4} className={styles.headerCell}>
+            <th colSpan={6} className={styles.headerCell}>
               Evolution moyenne annuelle
             </th>
           </tr>
@@ -48,6 +52,9 @@ export const AccommodationEvolutionTable: FC<AccommodationEvolutionTableProps> =
               Volume
             </th>
             <th colSpan={2} className={styles.headerCell}>
+              Pourcentage
+            </th>
+            <th colSpan={2} className={styles.headerCell}>
               point de %
             </th>
           </tr>
@@ -58,6 +65,8 @@ export const AccommodationEvolutionTable: FC<AccommodationEvolutionTableProps> =
             <th className={styles.headerCell}>2010</th>
             <th className={styles.headerCell}>2015</th>
             <th className={styles.headerCell}>2021</th>
+            <th className={styles.headerCell}>2010 - 2015</th>
+            <th className={styles.headerCell}>2015 - 2021</th>
             <th className={styles.headerCell}>2010 - 2015</th>
             <th className={styles.headerCell}>2015 - 2021</th>
             <th className={styles.headerCell}>2010 - 2015</th>
@@ -81,6 +90,8 @@ export const AccommodationEvolutionTable: FC<AccommodationEvolutionTableProps> =
                 <td className={styles.cellMinWidth}>{formatNumber(territoryData.annualEvolution['2015-2021'].value) || '-'}</td>
                 <td className={styles.cellMinWidth}>{territoryData.annualEvolution['2010-2015'].percent || '-'}</td>
                 <td className={styles.cellMinWidth}>{territoryData.annualEvolution['2015-2021'].percent || '-'}</td>
+                <td className={styles.cellMinWidth}>{territoryData.annualEvolution['2010-2015'].percentPoint || '-'}</td>
+                <td className={styles.cellMinWidth}>{territoryData.annualEvolution['2015-2021'].percentPoint || '-'}</td>
               </tr>
             )
           })}

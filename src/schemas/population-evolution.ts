@@ -67,6 +67,11 @@ const ZDemographicProjectionDataTableRow = z.object({
     central: z.number(),
     haute: z.number(),
   }),
+  maxYears: z.object({
+    basse: z.number(),
+    central: z.number(),
+    haute: z.number(),
+  }),
   annualEvolution: z.record(
     z.object({
       basse: z.object({
@@ -101,9 +106,20 @@ const ZDemographicProjectionEvolutionData = z.object({
   metadata: ZMetadata,
 })
 
+export const ZDemographicMaxYearsByEpci = z.record(
+  z.object({
+    central: z.object({ value: z.number(), year: z.number() }),
+    haute: z.object({ value: z.number(), year: z.number() }),
+    basse: z.object({ value: z.number(), year: z.number() }),
+  }),
+)
+
+export type TDemographicMaxYearsByEpci = z.infer<typeof ZDemographicMaxYearsByEpci>
+
 export const ZDemographicProjectionEvolution = z.object({
   linearChart: z.record(z.string(), ZDemographicProjectionEvolutionData),
   tableData: ZDemographicProjectionDataTable,
+  maxYears: ZDemographicMaxYearsByEpci,
 })
 
 export type TDemographicProjectionEvolution = z.infer<typeof ZDemographicProjectionEvolution>
@@ -126,6 +142,7 @@ export type TDemographicMenagesByEpci = z.infer<typeof ZDemographicMenagesByEpci
 export const ZDemographicMenagesEvolution = z.object({
   linearChart: z.record(z.string(), ZDemographicMenagesByEpci),
   tableData: ZDemographicProjectionDataTable,
+  maxYears: ZDemographicMaxYearsByEpci,
 })
 
 export type TDemographicMenagesEvolution = z.infer<typeof ZDemographicMenagesEvolution>

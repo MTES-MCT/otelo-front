@@ -6,14 +6,12 @@ import Button from '@codegouvfr/react-dsfr/Button'
 import Select from '@codegouvfr/react-dsfr/SelectNext'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
-import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { PopulationScenariosCustomTooltip } from '~/components/charts/population-scenarios-custom-tooltip'
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
-import { formatNumber } from '~/utils/format-numbers'
 import { roundPopulation } from '~/utils/round-chart-axis'
-
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
   modification?: boolean
@@ -54,36 +52,6 @@ const selectOptions = [
     value: 'basse',
   },
 ]
-
-const CustomTooltip = ({
-  active,
-  basePopulation,
-  label,
-  payload,
-}: TooltipProps<ValueType, NameType> & { basePopulation: TPopulationEvolution }) => {
-  const { classes } = useStyles()
-  if (!active || !payload?.length) return null
-  return (
-    <div className={classes.tooltipContainer}>
-      <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
-      {/* biome-ignore lint/suspicious/noExplicitAny: TODO */}
-      {payload.map((item: any) => {
-        const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
-        return (
-          <div key={item.dataKey} className={classes.tooltipItem}>
-            <div className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
-            <span>{item.name}:</span>
-            <span>
-              <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
-              <span className={classes.bold}>2021</span>
-            </span>
-            <span className={classes.smallText}>({formatNumber(item.value)} habitants)</span>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
 
 export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ demographicEvolution }) => {
   const { classes } = useStyles()
@@ -145,7 +113,7 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
             ))}
             <XAxis dataKey="year" />
             <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
-            <Tooltip content={<CustomTooltip basePopulation={basePopulation} />} />
+            <Tooltip content={<PopulationScenariosCustomTooltip basePopulation={basePopulation} />} />
           </LineChart>
         </ResponsiveContainer>
       </div>

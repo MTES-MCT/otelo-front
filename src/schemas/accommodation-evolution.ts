@@ -33,6 +33,7 @@ const ZAccommodationEvolutionDataTableRow = z.object({
     z.object({
       percent: z.string(),
       value: z.number(),
+      percentPoint: z.string(),
     }),
   ),
   name: z.string(),

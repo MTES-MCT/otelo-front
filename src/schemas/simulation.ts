@@ -17,6 +17,7 @@ export type TSimulation = z.infer<typeof ZSimulation>
 
 export const ZSimulationWithRelations = ZSimulation.pick({
   createdAt: true,
+  name: true,
   id: true,
   updatedAt: true,
 }).extend({
@@ -26,6 +27,7 @@ export const ZSimulationWithRelations = ZSimulation.pick({
 export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
+  name: z.string().nonempty(),
   epci: z.array(z.object({ code: z.string() })),
   scenario: z.object({
     b2_scenario: z.string(),
@@ -41,6 +43,9 @@ export const ZInitSimulationDto = z.object({
 })
 
 export type TInitSimulationDto = z.infer<typeof ZInitSimulationDto>
+
+export const ZInitSimulationForm = ZInitSimulationDto.pick({ name: true })
+export type TInitSimulationForm = z.infer<typeof ZInitSimulationForm>
 
 export const ZSimulationWithEpciAndScenario = ZSimulationWithRelations.extend({
   scenario: ZScenario,

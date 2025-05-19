@@ -11,7 +11,7 @@ import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rate
 import { ValidationSettingsInputEpci } from '~/components/simulations/validation-settings/validation-settings-input-epci'
 import { ValidationSettingsRates } from '~/components/simulations/validation-settings/validation-settings-rates'
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
-import { TInitSimulationDto, TInitSimulationForm, ZInitSimulationForm } from '~/schemas/simulation'
+import { TInitSimulationDto, ZInitSimulationDto } from '~/schemas/simulation'
 import { getOmphaleLabel } from '~/utils/omphale-label'
 
 export const CreateSimulationForm: FC = () => {
@@ -31,40 +31,45 @@ export const CreateSimulationForm: FC = () => {
 
   const {
     register,
-    formState: { isValid },
+    formState: { errors },
     getValues,
     handleSubmit,
-  } = useForm<TInitSimulationForm>({
-    resolver: zodResolver(ZInitSimulationForm),
+  } = useForm<TInitSimulationDto>({
+    resolver: zodResolver(ZInitSimulationDto),
+    values: {
+      name: '',
+      epci: Object.entries(rates).map(([epci]) => ({ code: epci })),
+      scenario: {
+        b2_scenario: queryStates.omphale as string,
+        epcis: Object.entries(rates).reduce(
+          (acc, [epci, rates]) => {
+            acc[epci] = {
+              b2_tx_rs: rates.txRS ?? undefined,
+              b2_tx_vacance: rates.txLV ?? undefined,
+            }
+            return acc
+          },
+          {} as Record<string, TInitSimulationDto['scenario']['epcis'][string]>,
+        ),
+        projection: (queryStates.projection as number) ?? 2030,
+      },
+    },
   })
 
-  const simulationValues = {
-    epci: Object.entries(rates).map(([epci]) => ({ code: epci })),
-    scenario: {
-      b2_scenario: queryStates.omphale as string,
-      epcis: Object.entries(rates).reduce(
-        (acc, [epci, rates]) => {
-          acc[epci] = {
-            b2_tx_rs: rates.txRS ?? undefined,
-            b2_tx_vacance: rates.txLV ?? undefined,
-          }
-          return acc
-        },
-        {} as Record<string, TInitSimulationDto['scenario']['epcis'][string]>,
-      ),
-      projection: (queryStates.projection as number) ?? 2030,
-    },
-  }
-
-  const payload = { ...getValues(), ...simulationValues }
-  const onSubmitForResults = async () => createSimulationForResults.mutateAsync(payload)
-  const onSubmitForBadHousing = async () => createSimulationForBadHousing.mutateAsync(payload)
+  const onSubmitForResults = async () => createSimulationForResults.mutateAsync(getValues())
+  const onSubmitForBadHousing = async () => createSimulationForBadHousing.mutateAsync(getValues())
 
   return (
     <>
       <div className={classes.subContainer}>
         <h4>Général</h4>
-        <Input label="" hintText="Nom de la simulation" nativeInputProps={{ ...register('name', { required: true }) }} />
+        <Input
+          label=""
+          state={errors.name ? 'error' : 'default'}
+          stateRelatedMessage={errors.name && errors.name.message}
+          hintText="Nom de la simulation"
+          nativeInputProps={{ ...register('name', { required: true }) }}
+        />
       </div>
       <div className={classes.subContainer}>
         <h4>Territoire et horizon temporel</h4>
@@ -91,14 +96,10 @@ export const CreateSimulationForm: FC = () => {
       </div>
       <ValidationSettingsRates />
       <div className={classes.buttonContainer}>
-        <Button
-          priority="secondary"
-          onClick={handleSubmit(onSubmitForBadHousing)}
-          disabled={!isValid || createSimulationForBadHousing.isPending}
-        >
+        <Button priority="secondary" onClick={handleSubmit(onSubmitForBadHousing)} disabled={createSimulationForBadHousing.isPending}>
           Paramétrer le mal-logement
         </Button>
-        <Button onClick={handleSubmit(onSubmitForResults)} disabled={!isValid || createSimulationForResults.isPending}>
+        <Button onClick={handleSubmit(onSubmitForResults)} disabled={createSimulationForResults.isPending}>
           Accéder au résultat
         </Button>
       </div>

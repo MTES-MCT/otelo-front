@@ -9,6 +9,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
 import { defaultColorScheme } from '~/app/default-color-scheme'
+import Matomo from '~/app/matomo'
 import { StartDsfr } from '~/app/start-dsfr'
 import { HeaderComponent } from '~/components/header'
 import { auth } from '~/lib/auth/auth'
@@ -61,6 +62,7 @@ export default async function RootLayout({ children }: { children: JSX.Element }
       <head>
         <StartDsfr />
         <DsfrHead Link={Link} preloadFonts={['Marianne-Regular', 'Marianne-Medium', 'Marianne-Bold']} />
+        <Matomo />
       </head>
       <body>
         <div className={classes.container}>

@@ -1,4 +1,5 @@
 'use client'
+
 import { FC } from 'react'
 import { Bar, Legend, Tooltip, XAxis, YAxis } from 'recharts'
 import { CartesianGrid } from 'recharts'

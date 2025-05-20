@@ -146,3 +146,16 @@ export const ZDemographicMenagesEvolution = z.object({
 })
 
 export type TDemographicMenagesEvolution = z.infer<typeof ZDemographicMenagesEvolution>
+
+export const ZInadequateHousing = z.record(
+  z.object({
+    hosted: z.number(),
+    noAccommodation: z.number(),
+    badQuality: z.number(),
+    financialInadequation: z.number(),
+    physicalInadequation: z.number(),
+    name: z.string(),
+  }),
+)
+
+export type TInadequateHousing = z.infer<typeof ZInadequateHousing>

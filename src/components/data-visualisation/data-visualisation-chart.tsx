@@ -1,14 +1,20 @@
 import { FC } from 'react'
 import { LovacAccommodationEvolutionChart } from '~/components/charts/data-visualisation/lovac-evolution-charts'
+import { MalLogementChart } from '~/components/charts/data-visualisation/mal-logement-charts'
 import { PopulationEvolutionChart } from '~/components/charts/data-visualisation/population-evolution-charts'
 import { ProjectionMenagesEvolutionChart } from '~/components/charts/data-visualisation/projection-menages-evolution-charts'
 import { ProjectionPopulationEvolutionChart } from '~/components/charts/data-visualisation/projection-population-evolution-charts'
 import { RPAccommodationEvolutionChart } from '~/components/charts/data-visualisation/rp-accommodation-evolution-charts'
 import { TAccommodationEvolution, TAccommodationLovacEvolution } from '~/schemas/accommodation-evolution'
-import { TDemographicProjectionEvolution, TRPPopulationEvolution } from '~/schemas/population-evolution'
+import { TDemographicProjectionEvolution, TInadequateHousing, TRPPopulationEvolution } from '~/schemas/population-evolution'
 
 export const DataVisualisationChart: FC<{
-  data: TRPPopulationEvolution | TDemographicProjectionEvolution | TAccommodationEvolution | TAccommodationLovacEvolution
+  data:
+    | TRPPopulationEvolution
+    | TDemographicProjectionEvolution
+    | TAccommodationEvolution
+    | TAccommodationLovacEvolution
+    | TInadequateHousing
   type: string | null
   source: string | null
 }> = ({ data, type, source }) => {
@@ -16,7 +22,7 @@ export const DataVisualisationChart: FC<{
   const isProjectionPopulationEvolution = ['projection-population-evolution'].includes(type ?? '')
   const isProjectionMenagesEvolution = ['projection-menages-evolution'].includes(type ?? '')
   const isAccommodationEvolution = ['residences-secondaires', 'logements-vacants'].includes(type ?? '')
-
+  const isMalLogement = ['mal-logement'].includes(type ?? '')
   if (isPopulationEvolution) {
     return <PopulationEvolutionChart data={data as TRPPopulationEvolution} type={type} />
   }
@@ -37,5 +43,9 @@ export const DataVisualisationChart: FC<{
     if (source === 'lovac') {
       return <LovacAccommodationEvolutionChart data={data as TAccommodationLovacEvolution} />
     }
+  }
+
+  if (isMalLogement) {
+    return <MalLogementChart data={data as TInadequateHousing} />
   }
 }

@@ -11,6 +11,7 @@ export const DATA_TYPE_OPTIONS = [
   { label: 'Projection en ménages', value: 'projection-menages-evolution' },
   { label: 'Résidences secondaires', value: 'residences-secondaires' },
   { label: 'Logements vacants', value: 'logements-vacants' },
+  { label: 'Mal Logement', value: 'mal-logement' },
 ]
 
 export const SelectDataType: FC = () => {

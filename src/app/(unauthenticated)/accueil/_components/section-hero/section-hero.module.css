@@ -1,0 +1,33 @@
+.heroSection {
+  position: relative;
+  padding-block: 4rem;
+  text-wrap: balance;
+}
+
+.title {
+  font-size: 3.5rem;
+  line-height: 1.15;
+}
+
+.description {
+  font-size: 1.375rem;
+  line-height: 1.3;
+}
+
+.heroSide {
+  text-align: center;
+  align-content: center;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.placeholder {
+  background: lightgrey;
+  width: 8rem;
+  height: 12rem;
+  margin: 0 auto;
+}

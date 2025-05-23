@@ -22,7 +22,7 @@ export const SectionServices = () => {
               title="Méthodologie"
               titleAs="h3"
               desc="Découvrez le détail de la méthodologie Otelo, co-construite par la DGALN du Ministère de la Transition Ecologique, et par le Cerema."
-              linkProps={{ href: '#' }}
+              linkProps={{ href: '/methodologie' }}
             />
           </div>
           <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
@@ -34,7 +34,7 @@ export const SectionServices = () => {
               title="Ressources"
               titleAs="h3"
               desc="Mettez à jour vos connaissances sur l'urbanisme et l'habitat grâce aux ressources de nos partenaires et aux replays de nos webinaires."
-              linkProps={{ href: '#' }}
+              linkProps={{ href: '/ressources' }}
             />
           </div>
           <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
@@ -46,7 +46,7 @@ export const SectionServices = () => {
               title="Retours d'expérience"
               titleAs="h3"
               desc="Découvrez des exemples concrets d'autres territoires : diagnostics de leurs besoins en logement, extraits de documents d'urbanisme..."
-              linkProps={{ href: '#' }}
+              linkProps={{ href: 'retours-d-experience' }}
             />
           </div>
         </div>

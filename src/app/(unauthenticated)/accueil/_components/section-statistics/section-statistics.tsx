@@ -39,7 +39,7 @@ export const SectionStatistics: FC = () => {
         </div>
 
         <div className={styles.linkContainer}>
-          <Link href="#" className={fr.cx('fr-link')}>
+          <Link href="/statistiques" className={fr.cx('fr-link')}>
             Voir plus de statistiques
           </Link>
         </div>

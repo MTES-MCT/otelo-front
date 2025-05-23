@@ -17,19 +17,34 @@ export const HeaderNavigation: FC = () => {
       text: 'Accueil',
     },
     {
-      isActive: pathname === '/en-savoir-plus',
-      linkProps: { href: '/en-savoir-plus', target: '_self' },
-      text: 'En savoir plus sur Otelo',
+      isActive: pathname === '/methodologie',
+      linkProps: { href: '/methodologie', target: '_self' },
+      text: 'Méthodologie',
     },
     {
       isActive: pathname === '/ressources',
       linkProps: { href: '/ressources', target: '_self' },
-      text: 'Ressources sur Otelo',
+      text: 'Ressources',
     },
     {
-      isActive: pathname === '/contact',
-      linkProps: { href: '/contact', target: '_self' },
-      text: 'Nous contacter',
+      isActive: pathname === '/retours-d-experience',
+      linkProps: { href: '/retours-d-experience', target: '_self' },
+      text: 'Retours',
+    },
+    {
+      isActive: pathname === '/statistiques',
+      linkProps: { href: '/statistiques', target: '_self' },
+      text: 'Statistiques',
+    },
+    {
+      isActive: pathname === '/a-propos',
+      linkProps: { href: '/a-propos', target: '_self' },
+      text: 'A propos',
+    },
+    {
+      isActive: pathname === '/aide',
+      linkProps: { href: '/aide', target: '_self' },
+      text: 'Aide',
     },
     ...(session
       ? [

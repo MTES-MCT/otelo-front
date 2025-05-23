@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
 import { Footer } from '@codegouvfr/react-dsfr/Footer'
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
@@ -48,7 +49,16 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
-                      bottomItems={[headerFooterDisplayItem]}
+                      termsLinkProps={{ href: '/mentions-legales' }}
+                      bottomItems={[
+                        headerFooterDisplayItem,
+                        <Link className={fr.cx('fr-footer__bottom-link')} href="/donnees-personnelles">
+                          Données personnelles
+                        </Link>,
+                        <Link className={fr.cx('fr-footer__bottom-link')} href="/cgv">
+                          Conditions générales d’utilisation et Gestion des cookies
+                        </Link>,
+                      ]}
                       brandTop="République Française"
                     />
                     <Toaster

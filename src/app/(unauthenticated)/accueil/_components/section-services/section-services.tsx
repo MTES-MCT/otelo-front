@@ -13,7 +13,7 @@ export const SectionServices = () => {
         <h2 className={fr.cx('fr-h2', 'fr-mb-3w')}>Les services en libre accès</h2>
 
         <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-          <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={methodologie.src}
@@ -25,7 +25,7 @@ export const SectionServices = () => {
               linkProps={{ href: '/methodologie' }}
             />
           </div>
-          <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={book.src}
@@ -37,7 +37,7 @@ export const SectionServices = () => {
               linkProps={{ href: '/ressources' }}
             />
           </div>
-          <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={ecosystem.src}

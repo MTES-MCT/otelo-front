@@ -1,6 +1,7 @@
 .heroSection {
   position: relative;
-  padding-block: 4rem;
+  padding-top: 4rem;
+  padding-bottom: 2rem;
   text-wrap: balance;
 }
 
@@ -15,19 +16,18 @@
 }
 
 .heroSide {
-  text-align: center;
-  align-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .heroContent {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 2rem;
 }
 
-.placeholder {
-  background: lightgrey;
-  width: 8rem;
-  height: 12rem;
-  margin: 0 auto;
+.logo {
+  width: 200px;
 }

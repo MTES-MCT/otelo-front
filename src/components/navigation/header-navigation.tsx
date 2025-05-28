@@ -1,19 +1,16 @@
 'use client'
 
 import { MainNavigation, MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation'
-import dayjs from 'dayjs'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useSimulations } from '~/hooks/use-simulations'
 import { TSession } from '~/types/next-auth'
 
 export const HeaderNavigation: FC = () => {
   const pathname = usePathname()
   const { data: session } = useSession() as { data: TSession | null }
   const { classes } = useStyles()
-  const { data } = useSimulations()
 
   const items: MainNavigationProps.Item[] = [
     {
@@ -40,37 +37,8 @@ export const HeaderNavigation: FC = () => {
       ? [
           {
             className: classes.margin,
-            megaMenu: {
-              categories:
-                data && data.length > 0
-                  ? [
-                      {
-                        categoryMainLink: {
-                          linkProps: {
-                            href: '#',
-                          },
-                          text: 'Historique des simulations',
-                        },
-                        links: (data || []).map((simulation) => ({
-                          linkProps: {
-                            href: `/simulation/${simulation.id}/resultats`,
-                          },
-                          text: `${simulation.name} - ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`,
-                        })),
-                      },
-                    ]
-                  : [],
-              leader: {
-                link: {
-                  linkProps: {
-                    href: '/simulation',
-                  },
-                  text: 'Démarrer une nouvelle simulation',
-                },
-                paragraph: 'À travers ce menu, vous pouvez accéder à vos simulations précédentes et retrouver leurs résultats.',
-                title: 'Mes simulations',
-              },
-            },
+            isActive: pathname === '/mes-simulations',
+            linkProps: { href: '/mes-simulations', target: '_self' },
             text: 'Mes simulations',
           },
           {

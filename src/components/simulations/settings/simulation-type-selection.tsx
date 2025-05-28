@@ -26,8 +26,8 @@ export const SimulationTypeSelection = () => {
           },
         },
         {
-          hintText: 'Les EPCIs sélectionnés seront inclus dans la simulation.',
-          label: "Je souhaite simuler à l'échelle d'un ou plusieurs EPCIs",
+          hintText: "L'EPCI sélectionné sera inclus dans la simulation.",
+          label: "Je souhaite simuler à l'échelle d'un EPCI",
           nativeInputProps: {
             value: 'epcis',
             onChange: () => setQueryStates({ type: 'epcis', epciChart: '', epcis: [], region: '' }),

@@ -12,12 +12,12 @@ type PageProps = {
 }
 
 export default async function TargetRatesHousing({ searchParams }: PageProps) {
-  const { epcis } = await searchParamsCache.parse(searchParams)
+  const { epcis, type } = await searchParamsCache.parse(searchParams)
   let simulationsEpcis = []
-  if (epcis.length === 1) {
-    simulationsEpcis = await getBassinEpcis(epcis[0])
-  } else {
+  if (type === 'epcis') {
     simulationsEpcis = await getEpcis(epcis)
+  } else {
+    simulationsEpcis = await getBassinEpcis(epcis[0])
   }
   const href = `/simulation/validation-parametrage`
 

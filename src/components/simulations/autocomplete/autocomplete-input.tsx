@@ -16,7 +16,7 @@ type AutocompleteInputProps = {
 export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label, onClick }: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
-  const [queryState, setSearchQueryState] = useQueryStates({
+  const [_, setSearchQueryState] = useQueryStates({
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
     q: parseAsString.withDefault(''),
     region: parseAsString.withDefault(''),
@@ -36,15 +36,7 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label,
     if (onClick) {
       onClick(item)
     }
-    if (!queryState.type || queryState.type === 'bh') {
-      setSearchQueryState({ epcis: [code], region, epciChart: code })
-    } else {
-      setSearchQueryState({
-        epcis: queryState.epcis.filter((e) => e !== code).concat(code),
-        region,
-        epciChart: code,
-      })
-    }
+    setSearchQueryState({ epcis: [code], region, epciChart: code })
 
     setSearchQuery(item.nom)
     setIsResultsVisible(false)

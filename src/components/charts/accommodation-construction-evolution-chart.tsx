@@ -1,7 +1,7 @@
 'use client'
 
 import { FC } from 'react'
-import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, CartesianGrid, ComposedChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from 'recharts'
 import { tss } from 'tss-react'
 import { TChartData, TNewConstructionsChartData } from '~/schemas/results'
 

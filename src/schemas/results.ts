@@ -51,15 +51,30 @@ export const ZChartDataResult = z.object({
 })
 export type TChartDataResult = z.infer<typeof ZChartDataResult>
 
+export const ZNewConstructionsChartData = z.object({
+  code: z.string(),
+  data: z.object({
+    housingNeeds: z.record(z.number()),
+    surplusHousing: z.record(z.number()),
+  }),
+  metadata: z.object({ max: z.number(), min: z.number() }),
+})
+export type TNewConstructionsChartData = z.infer<typeof ZNewConstructionsChartData>
+
+export const ZNewConstructionsChartDataResult = z.object({
+  epcis: z.array(ZNewConstructionsChartData),
+})
+export type TNewConstructionsChartDataResult = z.infer<typeof ZNewConstructionsChartDataResult>
+
 export const ZResults = z.object({
   badQuality: ZCalculationResult,
   demographicEvolution: ZCalculationResult,
   epcisTotals: z.array(z.object({ epciCode: z.string(), total: z.number(), totalFlux: z.number(), totalStock: z.number() })),
   financialInadequation: ZCalculationResult,
   hosted: ZCalculationResult,
-  newConstructions: ZChartDataResult,
   noAccomodation: ZCalculationResult,
   physicalInadequation: ZCalculationResult,
+  newConstructions: ZNewConstructionsChartDataResult,
   renewalNeeds: ZCalculationResult,
   secondaryResidenceAccomodationEvolution: ZCalculationResult,
   sitadel: ZChartDataResult,

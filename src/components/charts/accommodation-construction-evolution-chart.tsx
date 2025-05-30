@@ -1,7 +1,7 @@
 'use client'
 
 import { FC } from 'react'
-import { Bar, CartesianGrid, ComposedChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from 'recharts'
+import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { TChartData, TNewConstructionsChartData } from '~/schemas/results'
 
@@ -9,14 +9,12 @@ interface AccommodationContructionEvolutionChartProps {
   newConstructionsResults: TNewConstructionsChartData
   sitadelResults: TChartData
   horizon: number
-  projection: number
 }
 
 export const AccommodationContructionEvolutionChart: FC<AccommodationContructionEvolutionChartProps> = ({
   newConstructionsResults,
   sitadelResults,
   horizon,
-  projection,
 }) => {
   const { classes } = useStyles()
   const { data: sitadelData } = sitadelResults
@@ -45,7 +43,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
 
   return (
     <div className={classes.container}>
-      <h5>Résultats annualisés de l'estimation</h5>
+      <h5>Besoins en construction neuves annualisées</h5>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
@@ -65,19 +63,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
               stroke="#666"
               strokeDasharray="3 3"
               label={{
-                value: 'Horizon',
-                position: 'top',
-                fill: '#666',
-                fontSize: 12,
-                offset: 10,
-              }}
-            />
-            <ReferenceLine
-              x={projection}
-              stroke="#666"
-              strokeDasharray="3 3"
-              label={{
-                value: 'Projection',
+                value: 'Horizon de projection',
                 position: 'top',
                 fill: '#666',
                 fontSize: 12,

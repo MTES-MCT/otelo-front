@@ -78,7 +78,6 @@ export default async function Resultats({ params }: { params: { id: string } }) 
             sitadelResults={sitadelResults}
             newConstructionsResults={newConstructionsResults}
             horizon={simulation.scenario.b1_horizon_resorption}
-            projection={simulation.scenario.projection}
           />
         </>
       ),

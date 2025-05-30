@@ -11,7 +11,7 @@ export const SelectResorptionHorizonPeriod: FC = () => {
 
   const { horizon } = badHousingSettings
 
-  const handleChange = (value: string) => setBadHousingSettings({ ...badHousingSettings, horizon: Number(value) - currentYear })
+  const handleChange = (value: string) => setBadHousingSettings({ ...badHousingSettings, horizon: Number(value) })
 
   return (
     <Range
@@ -21,7 +21,7 @@ export const SelectResorptionHorizonPeriod: FC = () => {
       min={currentYear}
       nativeInputProps={{
         onChange: (e) => handleChange(e.target.value),
-        value: horizon + currentYear,
+        value: horizon,
       }}
     />
   )

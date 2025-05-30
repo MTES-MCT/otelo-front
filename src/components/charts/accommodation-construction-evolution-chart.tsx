@@ -52,8 +52,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
             data={mergedData}
             margin={{
               bottom: 5,
-              left: 20,
-              right: 30,
+              right: 50,
               top: 20,
             }}
           >

@@ -6,13 +6,12 @@ import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
 import { ExportSimulationSettings } from '~/components/simulations/results/export/export-simulation-settings'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
-import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult } from '~/schemas/results'
+import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TNewConstructionsChartData } from '~/schemas/results'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 import styles from './resultats.module.css'
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
-
   const results = {
     badQuality: simulation.results.badQuality.total,
     total: simulation.results.total,
@@ -60,7 +59,9 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     }
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
-    const newConstructionsResults = simulation.results.newConstructions.epcis.find((e) => e.code === epci.code) as TChartData
+    const newConstructionsResults = simulation.results.newConstructions.epcis.find(
+      (e) => e.code === epci.code,
+    ) as TNewConstructionsChartData
     return {
       content: (
         <>
@@ -73,7 +74,12 @@ export default async function Resultats({ params }: { params: { id: string } }) 
             </div>
           </div>
           <StockEvolutionChart results={stockResults} />
-          <AccommodationContructionEvolutionChart sitadelResults={sitadelResults} newConstructionsResults={newConstructionsResults} />
+          <AccommodationContructionEvolutionChart
+            sitadelResults={sitadelResults}
+            newConstructionsResults={newConstructionsResults}
+            horizon={simulation.scenario.b1_horizon_resorption}
+            projection={simulation.scenario.projection}
+          />
         </>
       ),
       iconId: 'ri-road-map-line' as RiIconClassName,

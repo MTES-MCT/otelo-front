@@ -13,7 +13,7 @@ export default async function AuthenticatedLayout({ children }: { children: Reac
   return (
     <main>
       <AuthenticatedBreadcrumb />
-      <div className={fr.cx('fr-p-md-4w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>
+      <div className={fr.cx('fr-p-md-4w', 'fr-py-2w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>
         {children}
       </div>
     </main>

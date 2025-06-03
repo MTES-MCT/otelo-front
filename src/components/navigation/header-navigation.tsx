@@ -4,13 +4,11 @@ import { MainNavigation, MainNavigationProps } from '@codegouvfr/react-dsfr/Main
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'
-import { tss } from 'tss-react'
 import { TSession } from '~/types/next-auth'
 
 export const HeaderNavigation: FC = () => {
   const pathname = usePathname()
   const { data: session } = useSession() as { data: TSession | null }
-  const { classes } = useStyles()
 
   const items: MainNavigationProps.Item[] = [
     {
@@ -36,7 +34,6 @@ export const HeaderNavigation: FC = () => {
     ...(session
       ? [
           {
-            className: classes.margin,
             isActive: pathname === '/mes-simulations',
             linkProps: { href: '/mes-simulations', target: '_self' },
             text: 'Mes simulations',
@@ -65,9 +62,3 @@ export const HeaderNavigation: FC = () => {
 
   return <MainNavigation items={items} />
 }
-
-const useStyles = tss.create({
-  margin: {
-    marginLeft: 'auto',
-  },
-})

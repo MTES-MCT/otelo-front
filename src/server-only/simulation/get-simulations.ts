@@ -15,7 +15,7 @@ export const getSimulations = async () => {
     },
   })
   if (!res.ok) {
-    throw new Error('Failed to get simulation with results')
+    throw new Error('Failed to get simulations')
   }
   return res.json() as Promise<TSimulationWithRelations[]>
 }

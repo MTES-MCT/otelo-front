@@ -2,14 +2,19 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Badge from '@codegouvfr/react-dsfr/Badge'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { NoResults } from '~/app/(authenticated)/mes-simulations/no-results'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 import { getSimulations } from '~/server-only/simulation/get-simulations'
 
 export default async function MesSimulations() {
   const results = await getSimulations()
 
+  if (results.length === 0) {
+    return <NoResults />
+  }
+
   const groupedResults = results.reduce<Record<string, TSimulationWithRelations[]>>((acc, simulation) => {
-    const groupName = simulation.epcis.length > 1 ? simulation.epcis[0].bassinName || 'Autre' : simulation.epcis[0].name
+    const groupName = simulation.epcis.length > 1 ? simulation.epcis[0].bassinName || 'Autre' : simulation.epcis?.[0]?.name
 
     return {
       ...acc,

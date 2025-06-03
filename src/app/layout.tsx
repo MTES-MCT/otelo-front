@@ -72,7 +72,7 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                 <NuqsAdapter>
                   <NextAuthProvider session={session}>
                     <HeaderComponent />
-                    <div className={classes.main}>{children}</div>
+                    <main className={classes.main}>{children}</main>
                     <Footer
                       accessibility="partially compliant"
                       homeLinkProps={{

@@ -8,16 +8,17 @@ import { CreateSimulationBreadcrumb } from '~/components/simulations/breadcrumbs
 import { UpdateSimulationBreadcrumb } from '~/components/simulations/breadcrumbs/modify-simulation-breadcrumb'
 import { SimulationsBreadcrumb } from '~/components/simulations/breadcrumbs/simulations-breadcrumb'
 
-type BreadcrumbPaths = 'admin' | 'guide-utilisateur' | 'resultats' | 'simulation' | 'modifier'
+type BreadcrumbPaths = 'admin' | 'guide-utilisateur' | 'resultats' | 'simulation' | 'modifier' | 'mes-simulations'
 
 export const AuthenticatedBreadcrumb = () => {
   const pathname = usePathname()
-  const breadcrumbComponents: Record<BreadcrumbPaths, JSX.Element> = {
+  const breadcrumbComponents: Record<BreadcrumbPaths, JSX.Element | null> = {
     admin: <AdminBreadcrumb />,
     'guide-utilisateur': <FaqBreadcrumb />,
     simulation: <CreateSimulationBreadcrumb />,
     resultats: <SimulationsBreadcrumb />,
     modifier: <UpdateSimulationBreadcrumb />,
+    'mes-simulations': null,
   }
 
   // Check if the pathname matches any of our breadcrumb paths

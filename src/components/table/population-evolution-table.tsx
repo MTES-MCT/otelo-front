@@ -17,9 +17,13 @@ export const PopulationEvolutionTable: FC<PopulationEvolutionChartProps> = ({ da
     }
   })
   const title = type === 'population-evolution' ? 'Population' : 'Menage'
-
+  const tableTitle =
+    type === 'population-evolution'
+      ? "Tableau descriptif et d'analyse des projections de population, sur le bassin d‘habitat"
+      : "Tableau descriptif et d'analyse des projections de ménages, sur le bassin d‘habitat"
   return (
     <div className={styles.container}>
+      <h2 className={styles.title}>{tableTitle}</h2>
       <table className={styles.table}>
         <thead>
           <tr>

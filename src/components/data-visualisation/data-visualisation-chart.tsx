@@ -44,7 +44,6 @@ export const DataVisualisationChart: FC<{
       return <LovacAccommodationEvolutionChart data={data as TAccommodationLovacEvolution} />
     }
   }
-
   if (isMalLogement) {
     return <MalLogementChart data={data as TInadequateHousing} />
   }

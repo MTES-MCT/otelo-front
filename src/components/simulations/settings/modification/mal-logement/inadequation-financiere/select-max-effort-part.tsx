@@ -8,8 +8,8 @@ export const SelectMaxEffortPart = () => {
   return (
     <Range
       label="Taux net maximal"
-      max={100}
-      min={0}
+      max={40}
+      min={20}
       nativeInputProps={{
         onChange: (e) =>
           setBadHousingSettings({

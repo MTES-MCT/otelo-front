@@ -30,58 +30,88 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
     }))
 
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
+  const barChartTitle =
+    type === 'menage-evolution' ? (
+      <>
+        Evolution décennal du nombre de ménages <br />
+        par scenario de décohabitation
+      </>
+    ) : (
+      <>
+        Evolution décennal de la population <br />
+        en fonction des scenarios de décohabitation
+      </>
+    )
+  const lineChartTitle =
+    type === 'menage-evolution' ? (
+      <>
+        Evolution du nombre de ménages <br />
+        en fonction des scenarios de décohabitation
+      </>
+    ) : (
+      <>
+        Evolution de la population <br />
+        en fonction des scenarios de décohabitation
+      </>
+    )
   return (
     <>
       <h5>
         {title} - {epciName}
       </h5>
       <div className={classes.chartContainer}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart width={500} height={500} margin={{ left: 20, right: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" allowDuplicatedCategory={false} />
+        <div className={classes.chartLabelContainer}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart width={500} height={500} margin={{ left: 20, right: 20, bottom: 30 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" allowDuplicatedCategory={false} />
 
-            {epcisLinearChart.length > 0 && (
-              <YAxis
-                dataKey={linearDataKey}
-                domain={(() => {
-                  const allMetadata = epcisLinearChart.map((epci) => chartData.linearChart[epci].metadata)
-                  const minValues = allMetadata.map((m) => m.min)
-                  const maxValues = allMetadata.map((m) => m.max)
-                  const globalMin = Math.min(...minValues)
-                  const globalMax = Math.max(...maxValues)
-
-                  const padding = (globalMax - globalMin) * 0.05
-                  return [Math.max(0, Math.round(globalMin - padding)), Math.round(globalMax + padding)]
-                })()}
-              />
-            )}
-            <Tooltip />
-            {epcisLinearChart.map((epci, index) => {
-              const data = chartData.linearChart[epci].data
-              return (
-                <Line
+              {epcisLinearChart.length > 0 && (
+                <YAxis
                   dataKey={linearDataKey}
-                  stroke={barChartColors[index]}
-                  data={data}
-                  name={chartData.linearChart[epci].epci.name}
-                  key={epci}
+                  domain={(() => {
+                    const allMetadata = epcisLinearChart.map((epci) => chartData.linearChart[epci].metadata)
+                    const minValues = allMetadata.map((m) => m.min)
+                    const maxValues = allMetadata.map((m) => m.max)
+                    const globalMin = Math.min(...minValues)
+                    const globalMax = Math.max(...maxValues)
+
+                    const padding = (globalMax - globalMin) * 0.05
+                    return [Math.max(0, Math.round(globalMin - padding)), Math.round(globalMax + padding)]
+                  })()}
                 />
-              )
-            })}
-          </LineChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart width={730} height={600} data={barChartData} margin={{ bottom: 100, left: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <Legend align="right" verticalAlign="top" />
-            <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} tick={{ fontSize: 12 }} />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="2010-2015" name="2010-2015" fill={barChartColors[0]} key="2010-2015" />
-            <Bar dataKey="2015-2021" name="2015-2021" fill={barChartColors[1]} key="2015-2021" />
-          </BarChart>
-        </ResponsiveContainer>
+              )}
+              <Tooltip />
+              {epcisLinearChart.map((epci, index) => {
+                const data = chartData.linearChart[epci].data
+                return (
+                  <Line
+                    dataKey={linearDataKey}
+                    stroke={barChartColors[index]}
+                    data={data}
+                    name={chartData.linearChart[epci].epci.name}
+                    key={epci}
+                  />
+                )
+              })}
+            </LineChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>{lineChartTitle}</div>
+        </div>
+        <div className={classes.chartLabelContainer}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart width={730} height={600} data={barChartData} margin={{ bottom: 130, left: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <Legend align="right" verticalAlign="top" />
+              <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} tick={{ fontSize: 12 }} />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="2010-2015" name="2010-2015" fill={barChartColors[0]} key="2010-2015" />
+              <Bar dataKey="2015-2021" name="2015-2021" fill={barChartColors[1]} key="2015-2021" />
+            </BarChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>{barChartTitle}</div>
+        </div>
       </div>
     </>
   )
@@ -93,5 +123,9 @@ const useStyles = tss.create({
     gap: '2rem',
     height: '700px',
     width: '100%',
+  },
+  chartLabelContainer: {
+    width: '100%',
+    marginBottom: '2rem',
   },
 })

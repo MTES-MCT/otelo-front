@@ -10,9 +10,15 @@ type VacancyAccommodationRatesInputProps = {
   epci: string
   longTermValue: number
   shortTermValue: number
+  creationMode: boolean
 }
 
-export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, longTermValue, shortTermValue }) => {
+export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({
+  epci,
+  longTermValue,
+  shortTermValue,
+  creationMode,
+}) => {
   const { rates } = useEpcisRates()
   const { classes } = useStyles()
   const ratesByEpci = rates[epci]
@@ -32,7 +38,7 @@ export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputPr
         />
       </div>
       <div className={classes.flex}>
-        <LongTermAccomodationRange epci={epci} longTermValue={longTermValue} shortTermValue={shortTermValue} />
+        <LongTermAccomodationRange creationMode={creationMode} epci={epci} longTermValue={longTermValue} shortTermValue={shortTermValue} />
       </div>
     </div>
   )

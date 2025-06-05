@@ -12,6 +12,7 @@ import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
 import { defaultColorScheme } from '~/app/default-color-scheme'
 import Matomo from '~/app/matomo'
 import { StartDsfr } from '~/app/start-dsfr'
+import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
 import { auth } from '~/lib/auth/auth'
 import { NextAuthProvider } from '~/providers/next-auth'
@@ -45,6 +46,7 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                     <main className={classes.main}>{children}</main>
                     <Footer
                       accessibility="partially compliant"
+                      brandTop={<BrandTop />}
                       homeLinkProps={{
                         href: '/',
                         title: 'Accueil - Otelo',
@@ -59,7 +61,6 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                           Conditions générales d’utilisation et Gestion des cookies
                         </Link>,
                       ]}
-                      brandTop="République Française"
                     />
                     <Toaster
                       toastOptions={{

@@ -11,7 +11,7 @@ export function NoResults() {
           Accueil
         </Button>
         <Button iconId="fr-icon-arrow-right-line" linkProps={{ href: '/simulation/choix-du-territoire' }}>
-          Démarrer une simulation
+          Élaborer un scénario
         </Button>
       </div>
     </div>

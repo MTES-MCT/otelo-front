@@ -20,7 +20,7 @@ export default function ValidationParametragePage() {
               disabled
               label=""
               hintText="Horizon de résorption"
-              nativeInputProps={{ value: `${badHousingSettings.horizon} ans` }}
+              nativeInputProps={{ value: `${badHousingSettings.horizon}` }}
               className={styles.inputFlex}
             />
           </div>

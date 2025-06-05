@@ -50,16 +50,16 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
   const title = DATA_TYPE_OPTIONS.find((option) => option.value === queryStates.type)?.label
 
   const epciColorPairs: [string, string][] = [
-    ['#2563eb', '#60a5fa'], // blue
-    ['#16a34a', '#4ade80'], // green
-    ['#b91c1c', '#f87171'], // red
-    ['#a21caf', '#e879f9'], // purple
-    ['#ca8a04', '#fde047'], // yellow
-    ['#0e7490', '#67e8f9'], // cyan
-    ['#be185d', '#f472b6'], // pink
-    ['#7c3aed', '#c4b5fd'], // indigo
-    ['#ea580c', '#fdba74'], // orange
-    ['#15803d', '#bbf7d0'], // emerald
+    ['#2563eb', '#60a5fa'],
+    ['#16a34a', '#4ade80'],
+    ['#b91c1c', '#f87171'],
+    ['#a21caf', '#e879f9'],
+    ['#ca8a04', '#fde047'],
+    ['#0e7490', '#67e8f9'],
+    ['#be185d', '#f472b6'],
+    ['#7c3aed', '#c4b5fd'],
+    ['#ea580c', '#fdba74'],
+    ['#15803d', '#bbf7d0'],
   ]
 
   return (

@@ -10,6 +10,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
     },
   })
 

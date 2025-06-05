@@ -17,7 +17,7 @@ export const SectionHero = async () => {
         href: '/simulation/choix-du-territoire',
       }}
     >
-      Démarrer une simulation
+      Élaborer un scénario
     </Button>
   ) : (
     <SignInButton />

@@ -3,9 +3,9 @@ import { DatavisualisationAutocomplete } from '~/components/data-visualisation/d
 import { DataVisualisationFilters } from '~/components/data-visualisation/data-visualisation-filters'
 import { DataVisualisationPage } from '~/components/data-visualisation/data-visualisation-page'
 import { SelectDataType } from '~/components/data-visualisation/select-data-type'
-import styles from './visualiser-les-donnees.module.css'
+import styles from './infographies.module.css'
 
-export default function VisualiserLesDonnees() {
+export default function InfographiesPage() {
   return (
     <div className={fr.cx('fr-container')}>
       <div className={styles.container}>

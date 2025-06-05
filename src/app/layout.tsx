@@ -1,5 +1,6 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
-import { Footer, FooterProps } from '@codegouvfr/react-dsfr/Footer'
+import { Footer } from '@codegouvfr/react-dsfr/Footer'
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider'
 import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes'
@@ -26,37 +27,6 @@ export default async function RootLayout({ children }: { children: JSX.Element }
   const lang = 'fr'
   const session = await auth()
 
-  const linkList: NonNullable<FooterProps['linkList']> = [
-    {
-      links: [
-        {
-          linkProps: {
-            href: '/accueil',
-          },
-          text: 'Accueil',
-        },
-        {
-          linkProps: {
-            href: '/ressources',
-          },
-          text: 'Ressources',
-        },
-        {
-          linkProps: {
-            href: '/en-savoir-plus',
-          },
-          text: 'En savoir plus',
-        },
-        {
-          linkProps: {
-            href: '/contact',
-          },
-          text: 'Nous contacter',
-        },
-      ],
-    },
-  ]
-
   return (
     <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
       <head>
@@ -79,8 +49,16 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
-                      linkList={linkList}
-                      bottomItems={[headerFooterDisplayItem]}
+                      termsLinkProps={{ href: '/mentions-legales' }}
+                      bottomItems={[
+                        headerFooterDisplayItem,
+                        <Link className={fr.cx('fr-footer__bottom-link')} href="/donnees-personnelles">
+                          Données personnelles
+                        </Link>,
+                        <Link className={fr.cx('fr-footer__bottom-link')} href="/cgv">
+                          Conditions générales d’utilisation et Gestion des cookies
+                        </Link>,
+                      ]}
                       brandTop="République Française"
                     />
                     <Toaster

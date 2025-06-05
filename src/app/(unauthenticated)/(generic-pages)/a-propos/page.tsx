@@ -1,3 +1,3 @@
 export default function AProposPage() {
-  return <div>À propos d'Otelo</div>
+  return <h1>À propos d'Otelo</h1>
 }

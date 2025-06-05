@@ -20,7 +20,9 @@ export default function GenericPagesLayout({ children, summary }: { children: Re
             </Button>
           </div>
           <div className={styles.padRight}>
-            <CallOut>Contactez l’équipe Otelo à l’adresse : XXXX</CallOut>
+            <CallOut>
+              Contactez l’équipe Otelo à l’adresse : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
+            </CallOut>
           </div>
         </div>
         <div className={fr.cx('fr-col-12', 'fr-col-md-8')}>{children}</div>

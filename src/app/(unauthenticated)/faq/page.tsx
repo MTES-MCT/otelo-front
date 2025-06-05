@@ -2,9 +2,9 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Accordion from '@codegouvfr/react-dsfr/Accordion'
 import CallOut from '@codegouvfr/react-dsfr/CallOut'
 import classNames from 'classnames'
-import styles from './aide.module.css'
+import styles from './faq.module.css'
 
-export default function AidePage() {
+export default function FaqPage() {
   return (
     <section className={fr.cx('fr-container')}>
       <h1 className={fr.cx('fr-mb-16v')}>Besoin d'aide ?</h1>
@@ -17,7 +17,7 @@ export default function AidePage() {
           </div>
 
           <CallOut className={fr.cx('fr-mb-12v')} title="Nous n’avons pas répondu à votre question ?">
-            Contactez l’équipe Otelo à l’adresse : XXXX
+            Contactez l’équipe Otelo à l’adresse : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
           </CallOut>
 
           <p>N°version (mis à jour le 12/12/1212) : Otelo xxxxx</p>

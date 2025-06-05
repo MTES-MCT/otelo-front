@@ -8,11 +8,12 @@ export const UnauthenticatedBreadcrumb = () => {
   const pathname = usePathname()
 
   const labelsMap: Record<string, string> = {
-    methodologie: 'Méthodologie',
+    guide: 'Guide Otelo',
     ressources: 'Ressources',
-    aide: "Besoin d'aide",
+    faq: "Besoin d'aide",
     statistiques: 'Statistiques',
-    'a-propos': "À propos d'otelo",
+    contact: 'Nous contacter',
+    'a-propos': "À propos d'Otelo",
     'mentions-legales': 'Mentions légales',
     'donnees-personnelles': 'Données personnelles',
     'retours-d-experience': "Retours d'expériences",

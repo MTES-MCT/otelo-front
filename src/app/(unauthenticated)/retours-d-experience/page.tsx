@@ -42,7 +42,9 @@ export default function RetoursDExperiencePage() {
           ))}
       </div>
 
-      <CallOut title="Des questions ? Prêt à rejoindre Otelo ?">Contactez l’équipe Otelo à l’adresse : XXXX</CallOut>
+      <CallOut title="Des questions ? Prêt à rejoindre Otelo ?">
+        Contactez l’équipe Otelo à l’adresse : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
+      </CallOut>
     </section>
   )
 }

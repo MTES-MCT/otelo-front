@@ -1,7 +1,7 @@
-export default function MethodologiePage() {
+export default function GuidePage() {
   return (
     <>
-      <h1>Méthodologie Otelo</h1>
+      <h1>Guide Otelo</h1>
 
       <h2>Titre 2</h2>
 

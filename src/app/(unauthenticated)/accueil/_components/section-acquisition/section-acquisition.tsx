@@ -1,6 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import classNames from 'classnames'
+import { QUIZ_URL } from '~/utils/resources'
 import styles from './section-acquisition.module.css'
 
 export const SectionAcquisition = () => {
@@ -24,7 +25,12 @@ export const SectionAcquisition = () => {
                 Testez vos connaissances <br />
                 en urbanisme
               </p>
-              <Button priority="secondary" className={styles.button} size="large">
+              <Button
+                priority="secondary"
+                className={styles.button}
+                size="large"
+                linkProps={{ href: QUIZ_URL, target: '_blank', rel: 'noreferrer' }}
+              >
                 Faire le test
               </Button>
             </div>

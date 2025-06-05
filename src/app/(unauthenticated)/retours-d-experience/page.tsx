@@ -3,6 +3,7 @@ import Badge from '@codegouvfr/react-dsfr/Badge'
 import Button from '@codegouvfr/react-dsfr/Button'
 import CallOut from '@codegouvfr/react-dsfr/CallOut'
 import { Card } from '@codegouvfr/react-dsfr/Card'
+import { CONTACT_EMAIL } from '~/utils/resources'
 
 export default function RetoursDExperiencePage() {
   return (
@@ -43,7 +44,7 @@ export default function RetoursDExperiencePage() {
       </div>
 
       <CallOut title="Des questions ? Prêt à rejoindre Otelo ?">
-        Contactez l’équipe Otelo à l’adresse : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
+        Contactez l’équipe Otelo à l’adresse : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
       </CallOut>
     </section>
   )

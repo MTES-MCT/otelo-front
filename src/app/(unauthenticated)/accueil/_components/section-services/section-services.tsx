@@ -19,10 +19,10 @@ export const SectionServices = () => {
               imageUrl={methodologie.src}
               small
               orientation="vertical"
-              title="Méthodologie"
+              title="Guide d'utilisation"
               titleAs="h3"
               desc="Découvrez le détail de la méthodologie Otelo, co-construite par la DGALN du Ministère de la Transition Ecologique, et par le Cerema."
-              linkProps={{ href: '/methodologie' }}
+              linkProps={{ href: '/guide' }}
             />
           </div>
           <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>

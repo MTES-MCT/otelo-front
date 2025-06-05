@@ -2,6 +2,7 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Accordion from '@codegouvfr/react-dsfr/Accordion'
 import CallOut from '@codegouvfr/react-dsfr/CallOut'
 import classNames from 'classnames'
+import { CONTACT_EMAIL } from '~/utils/resources'
 import styles from './faq.module.css'
 
 export default function FaqPage() {
@@ -451,7 +452,7 @@ export default function FaqPage() {
                 <li>👥 Rejoignez les webinaires et formations collectives</li>
                 <li>📧 Participez aux permanences d'accompagnement</li>
                 <li>
-                  📞 Contactez l'équipe support : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
+                  📞 Contactez l'équipe support : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
                 </li>
               </ul>
 
@@ -463,7 +464,7 @@ export default function FaqPage() {
           </div>
 
           <CallOut className={fr.cx('fr-mb-12v')} title="Nous n'avons pas répondu à votre question ?">
-            Contactez l'équipe Otelo à l'adresse : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
+            Contactez l'équipe Otelo à l'adresse : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
           </CallOut>
         </div>
       </div>

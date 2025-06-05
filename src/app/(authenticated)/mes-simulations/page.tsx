@@ -13,12 +13,27 @@ export default async function MesSimulations() {
     return <NoResults />
   }
 
-  const groupedResults = results.reduce<Record<string, TSimulationWithRelations[]>>((acc, simulation) => {
-    const groupName = simulation.epcis.length > 1 ? simulation.epcis[0].bassinName || 'Autre' : simulation.epcis?.[0]?.name
+  const groupedResults = results.reduce<
+    Record<
+      string,
+      {
+        isBassin: boolean
+        epciCode: string
+        simulations: TSimulationWithRelations[]
+      }
+    >
+  >((acc, simulation) => {
+    const isBassin = simulation.epcis.length > 1
+    const groupName = isBassin ? simulation.epcis[0].bassinName || 'Autre' : simulation.epcis?.[0]?.name
+    const epciCode = simulation.epcis?.[0]?.code
 
     return {
       ...acc,
-      [groupName]: [...(acc[groupName] || []), simulation],
+      [groupName]: {
+        isBassin,
+        epciCode,
+        simulations: [...(acc[groupName]?.simulations || []), simulation],
+      },
     }
   }, {})
 
@@ -26,31 +41,36 @@ export default async function MesSimulations() {
     <div className={fr.cx('fr-container')}>
       <h1>Mes Simulations</h1>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-        {Object.keys(groupedResults).map((groupName) => (
-          <div key={groupName} className={fr.cx('fr-col-12', 'fr-col-md-4', 'fr-mb-3w')}>
-            <div className={fr.cx('fr-p-2w')}>
-              <h6>{groupName}</h6>
-              <div>
-                {groupedResults[groupName].map((simulation) => (
-                  <div key={simulation.id} className={fr.cx('fr-mb-2w')}>
-                    <div className={fr.cx('fr-grid-row', 'fr-grid-row--middle')}>
-                      <div className={fr.cx('fr-col')}>
-                        <Link href={`/simulation/${simulation.id}/resultats`} className={fr.cx('fr-link')}>
-                          {simulation.name}
-                        </Link>
-                      </div>
-                      <div>
-                        <Badge severity="info" small>
-                          {dayjs(simulation.createdAt).format('DD/MM/YYYY')}
-                        </Badge>
+        {Object.keys(groupedResults).map((groupName) => {
+          const { simulations, isBassin, epciCode } = groupedResults[groupName]
+          return (
+            <div key={groupName} className={fr.cx('fr-col-12', 'fr-col-md-4', 'fr-mb-3w')}>
+              <div className={fr.cx('fr-p-2w')}>
+                <h6>
+                  <Link href={`/tableau-de-bord/${isBassin ? 'bassin' : 'territoire'}/${epciCode}`}>{groupName}</Link>
+                </h6>
+                <div>
+                  {simulations.map((simulation) => (
+                    <div key={simulation.id} className={fr.cx('fr-mb-2w')}>
+                      <div className={fr.cx('fr-grid-row', 'fr-grid-row--middle')}>
+                        <div className={fr.cx('fr-col')}>
+                          <Link href={`/simulation/${simulation.id}/resultats`} className={fr.cx('fr-link')}>
+                            {simulation.name}
+                          </Link>
+                        </div>
+                        <div>
+                          <Badge severity="info" small>
+                            {dayjs(simulation.createdAt).format('DD/MM/YYYY')}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

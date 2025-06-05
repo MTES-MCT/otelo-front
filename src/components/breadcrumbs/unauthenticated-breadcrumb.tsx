@@ -10,7 +10,7 @@ export const UnauthenticatedBreadcrumb = () => {
   const labelsMap: Record<string, string> = {
     guide: 'Guide Otelo',
     ressources: 'Ressources',
-    faq: "Besoin d'aide",
+    faq: 'FAQ',
     statistiques: 'Statistiques',
     contact: 'Nous contacter',
     'a-propos': "À propos d'Otelo",

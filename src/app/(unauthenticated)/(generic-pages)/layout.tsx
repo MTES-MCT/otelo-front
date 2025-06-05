@@ -15,7 +15,11 @@ export default function GenericPagesLayout({ children, summary }: { children: Re
             <Button priority="tertiary" className={styles.button}>
               S'inscrire à une formation Otelo
             </Button>
-            <Button priority="tertiary" className={styles.button}>
+            <Button
+              priority="tertiary"
+              className={styles.button}
+              linkProps={{ href: 'https://tally.so/r/3qe2z9', target: '_blank', rel: 'noopener noreferrer' }}
+            >
               Testez vos connaissances
             </Button>
           </div>

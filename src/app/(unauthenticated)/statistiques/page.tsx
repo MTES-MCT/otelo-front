@@ -1,5 +1,8 @@
+import AccesCollectivitesImg from '@assets/img/Acces_collectivites_juin_2025_trimmed.png'
+import OteloDdtImg from '@assets/img/Otelo_ddt_Juin_2025_trimmed.png'
 import { fr } from '@codegouvfr/react-dsfr'
 import classNames from 'classnames'
+import Image from 'next/image'
 import styles from './statistiques.module.css'
 
 export default function StatistiquesPage() {
@@ -12,24 +15,40 @@ export default function StatistiquesPage() {
           <div className={classNames(fr.cx('fr-col-12', 'fr-col-md-8'), styles.section1)}>
             <div className={classNames(styles.cardStat)}>
               <h6 className={fr.cx('fr-mb-2v')}>Départements utilisant Otelo</h6>
-
-              <div className={classNames(fr.cx('fr-card--shadow'), styles.cardStatContent)}>YO</div>
+              <div className={classNames(fr.cx('fr-card--shadow'), styles.cardStatContent)}>
+                <Image
+                  src={OteloDdtImg}
+                  alt="Carte des DDT utilisant Otelo en juin 2025"
+                  className={fr.cx('fr-mb-1v')}
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
+                <Image
+                  src={AccesCollectivitesImg}
+                  alt="Carte des collectivités ayant accès à Otelo en juin 2025"
+                  className={fr.cx('fr-mb-1v')}
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </div>
             </div>
           </div>
           <div className={classNames(fr.cx('fr-col-12', 'fr-col-md-4'), styles.cardStatContainer)}>
-            <StatCard title="Statistique 1" stat="100 000" metric="notices ajoutées" />
-            <StatCard title="Statistique 2" stat="1201" metric="notices modifiées" />
-            <StatCard title="Statistique 3" stat="1" metric="notice supprimée" />
+            <StatCard title="# de DDT (départements) engagées" stat="82/89" metric="ddt engagées" />
+            <StatCard title="# de scénarii réalisés par l'utilisateur" stat="2,5" metric="scenarii / utilisateur 'déployé'" />
+            <StatCard title="# de territoires (EPCI ou bassins d'habitat) utilisateurs d'Otelo" stat="220" metric="territoires" />
+            <StatCard title="NPS utilisateurs déployés (territoires / agences / bureaux d'étude)" stat="57%" />
           </div>
         </div>
       </section>
       <div className={fr.cx('fr-container')}>
-        <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-          <div className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-            <StatCard title="Nombre de producteur actif" stat="10" metric="producteurs ont contribué" />
+        <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')} style={{ minHeight: '320px' }}>
+          <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
+            <StatCard title="Volume total d'engagement de remobilisation de logements vacants au cours des 12 derniers mois" stat="7.500" />
           </div>
-          <div className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-            <StatCard title="Nombre d'illustrations ajoutées" stat="10" metric="illustrations ajoutées" />
+          <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
+            <StatCard title="Volume total d'engagement de lutte contre le mal logement au cours des 12 derniers mois" stat="14.000" />
+          </div>
+          <div className={fr.cx('fr-col-12', 'fr-col-md-4')}>
+            <StatCard title="Ecart entre les prévisions initiales de constructions (volonté des élus) vs. fin de parcours" stat="-10.000" />
           </div>
         </div>
       </div>
@@ -40,7 +59,7 @@ export default function StatistiquesPage() {
 type StatCardProps = {
   title: string
   stat: string
-  metric: string
+  metric?: string
 }
 
 const StatCard = ({ title, stat, metric }: StatCardProps) => {
@@ -49,7 +68,7 @@ const StatCard = ({ title, stat, metric }: StatCardProps) => {
       <h6 className={fr.cx('fr-mb-2v')}>{title}</h6>
       <div className={classNames(fr.cx('fr-card--shadow'), styles.cardStatContent)}>
         <strong className={styles.stat}>{stat}</strong>
-        <span className={styles.metric}>{metric}</span>
+        {metric && <span className={styles.metric}>{metric}</span>}
       </div>
     </div>
   )

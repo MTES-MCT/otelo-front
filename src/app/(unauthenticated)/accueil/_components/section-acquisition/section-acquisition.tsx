@@ -1,7 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import classNames from 'classnames'
-import { QUIZ_URL } from '~/utils/resources'
+import { QUIZ_URL, WEBINAIRE_URL } from '~/utils/resources'
 import styles from './section-acquisition.module.css'
 
 export const SectionAcquisition = () => {
@@ -14,7 +14,12 @@ export const SectionAcquisition = () => {
               Formez-vous à l'outil Otelo grâce à nos
               <br /> webinaires (sur inscription)
             </p>
-            <Button priority="primary" className={styles.button} size="large">
+            <Button
+              priority="primary"
+              className={styles.button}
+              size="large"
+              linkProps={{ href: WEBINAIRE_URL, target: '_blank', rel: 'noreferrer' }}
+            >
               Voir le calendrier
             </Button>
           </div>

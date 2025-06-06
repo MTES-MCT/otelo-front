@@ -2,10 +2,16 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
 import CallOut from '@codegouvfr/react-dsfr/CallOut'
 import classNames from 'classnames'
-import { CONTACT_EMAIL, QUIZ_URL } from '~/utils/resources'
+import { CONTACT_EMAIL, QUIZ_URL, WEBINAIRE_URL } from '~/utils/resources'
 import styles from './layout.module.css'
 
-export default function GenericPagesLayout({ children, summary }: { children: React.ReactNode; summary: React.ReactNode }) {
+export default function GenericPagesLayout({
+  children,
+  summary,
+}: {
+  children: React.ReactNode
+  summary: React.ReactNode
+}) {
   return (
     <div className={fr.cx('fr-container')}>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
@@ -13,7 +19,11 @@ export default function GenericPagesLayout({ children, summary }: { children: Re
           {summary}
 
           <div className={classNames(styles.ctaContainer, styles.padRight)}>
-            <Button priority="tertiary" className={styles.button}>
+            <Button
+              priority="tertiary"
+              className={styles.button}
+              linkProps={{ href: WEBINAIRE_URL, target: '_blank', rel: 'noopener noreferrer' }}
+            >
               S'inscrire à une formation Otelo
             </Button>
             <Button

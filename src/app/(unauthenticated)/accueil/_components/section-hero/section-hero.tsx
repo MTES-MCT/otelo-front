@@ -44,8 +44,10 @@ export const SectionHero = async () => {
             Une petite révolution <br />
             créée par :
           </p>
-          <Image src={logoMinistere} className={styles.logo} alt="Ministère de la Transition Écologique" />
-          <Image src={logoCerema} className={styles.logo} alt="Ministère de la Transition Écologique" />
+          <div className={styles.heroSideImgs}>
+            <Image src={logoMinistere} className={styles.logo} alt="Ministère de la Transition Écologique" />
+            <Image src={logoCerema} className={styles.logo} alt="Cerema" />
+          </div>
         </div>
       </div>
     </section>

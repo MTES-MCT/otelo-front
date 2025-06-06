@@ -3,13 +3,11 @@ import { CONTACT_EMAIL } from '~/utils/resources'
 export default function MentionsLegalesPage() {
   return (
     <div>
-      <h1 className="fr-pt-2w" id="contactez-nous">
-        Contactez-nous
-      </h1>
+      <h1 className="fr-pt-2w">Contactez-nous</h1>
       <p>
         Des questions ? Une difficulté ? Envoyez-nous un email à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
-      <h1 id="mentions-legales">Mentions légales</h1>
+      <h1>Mentions légales</h1>
       <h3>Éditeur de la Plateforme</h3>
       <p>
         L'outil Otelo est éditée par le <b>Ministère de la transition écologique</b> (Direction Habitat, Urbanisme et Paysages).
@@ -72,7 +70,7 @@ export default function MentionsLegalesPage() {
         d’envoi de courriels pour demander la saisie d’informations personnelles.
       </p>
       <hr />
-      <div className="fr-pt-3w" id="gestion-cookies">
+      <div className="fr-pt-3w">
         <h3>Gestion des cookies</h3>
         <p>
           Un cookie est une information déposée sur votre disque dur par le serveur du site que vous visitez. Les cookies sont notamment

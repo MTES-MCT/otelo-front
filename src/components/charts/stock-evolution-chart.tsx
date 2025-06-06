@@ -56,7 +56,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
 
     return (
       <g>
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontSize: '24px' }}>
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontSize: '20px' }}>
           {payload.name}
         </text>
         <Sector
@@ -92,7 +92,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
       <h5>Besoin en stock - Evolution du besoin en stock</h5>
       <div className={classes.rowContainer}>
         <div className={classes.chartContainer}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer height="100%">
             <PieChart>
               <Pie
                 activeIndex={activeIndex}
@@ -101,10 +101,10 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
                 activeShape={renderActiveShape}
                 cx="50%"
                 cy="50%"
-                outerRadius={150}
+                outerRadius={180}
                 fill="#8884d8"
                 dataKey="value"
-                innerRadius={130}
+                innerRadius={160}
               >
                 {chartData.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -146,7 +146,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
 const useStyles = tss.create({
   chartContainer: {
     display: 'flex',
-    height: '600px',
+    height: '500px',
     width: '100%',
   },
   container: {
@@ -158,13 +158,12 @@ const useStyles = tss.create({
   },
   rowContainer: {
     display: 'flex',
-    flexDirection: 'row',
-    gap: '2rem',
+    flexDirection: 'column',
+    gap: '1rem',
   },
   tableContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: '50%',
   },
 })

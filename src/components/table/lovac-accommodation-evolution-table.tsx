@@ -26,6 +26,7 @@ export const LovacAccommodationEvolutionTable: FC<LovacAccommodationEvolutionTab
   ]
   return (
     <div className={styles.container}>
+      <h2 className={styles.title}>Tableau descriptif et d'analyse des logements vacants sur le bassin d’habitat</h2>
       <table className={styles.table}>
         <thead>
           <tr>

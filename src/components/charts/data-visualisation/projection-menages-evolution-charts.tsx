@@ -236,7 +236,7 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
               })}
             </LineChart>
           </ResponsiveContainer>
-          <span className={classes.title}>Évolution du nombre de ménages en fonction des scenarios de décohabitation</span>
+          <span className={classes.title}>Évolution du nombre de ménages en fonction des scénarios de décohabitation</span>
         </div>
         <div className={classes.chartContainer}>
           <ResponsiveContainer width="100%" height="100%">
@@ -272,7 +272,7 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
               <Bar dataKey="basse" name="Décohabitation basse" fill={barChartColors[2]} />
             </BarChart>
           </ResponsiveContainer>
-          <span className={classes.title}>Évolution décennal du nombre de ménages, par scenario de décohabitation</span>
+          <span className={classes.title}>Évolution décennal du nombre de ménages, par scénario de décohabitation</span>
         </div>
       </div>
     </>

@@ -27,7 +27,7 @@ export const ZSimulationWithRelations = ZSimulation.pick({
 export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
-  name: z.string().nonempty('Veuillez donner un nom pour cette simulation'),
+  name: z.string().nonempty('Veuillez donner un nom pour cette simulation').max(100, 'Le nom ne doit pas dépasser 100 caractères'),
   epci: z.array(z.object({ code: z.string() })),
   scenario: z.object({
     b2_scenario: z.string(),

@@ -10,6 +10,9 @@ import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TNewCo
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 import styles from './resultats.module.css'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
   const results = {
@@ -77,7 +80,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
           <AccommodationContructionEvolutionChart
             sitadelResults={sitadelResults}
             newConstructionsResults={newConstructionsResults}
-            horizon={simulation.scenario.b1_horizon_resorption}
+            horizon={simulation.scenario.projection}
           />
         </>
       ),

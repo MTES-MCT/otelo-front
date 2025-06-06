@@ -13,6 +13,7 @@ export const getSimulationWithResults = async (id: string) => {
       Authorization: `Bearer ${session.accessToken}`,
       'Content-Type': 'application/json',
     },
+    cache: 'no-store',
   })
   if (!res.ok) {
     throw new Error('Failed to get simulation with results')

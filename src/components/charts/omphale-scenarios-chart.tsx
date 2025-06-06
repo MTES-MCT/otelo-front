@@ -103,7 +103,7 @@ export const OmphaleScenariosTooltip = ({
             <div className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
             <span>{item.name}:</span>
             <span>
-              <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
+              <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> ménages par rapport à{' '}
               <span className={classes.bold}>2021</span>
             </span>
             <span className={classes.smallText}>({formatNumber(item.value)} habitants)</span>

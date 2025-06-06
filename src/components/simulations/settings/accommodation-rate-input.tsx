@@ -22,6 +22,13 @@ export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ disabl
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value.replace(',', '.'))
     setValueInput(e.target.value)
+    if (value > 100) {
+      setValueInput('100')
+    } else if (value < 0) {
+      setValueInput('0')
+    } else {
+      setValueInput(e.target.value)
+    }
     updateRates(epci, { [txKey]: value / 100 })
   }
 

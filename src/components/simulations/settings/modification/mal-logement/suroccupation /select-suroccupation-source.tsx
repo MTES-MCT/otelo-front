@@ -19,7 +19,7 @@ export const SelectSuroccupationSource = () => {
         Selectionnez une option
       </option>
       <option value="RP">Recensement INSEE</option>
-      <option value="FF">PPPI Noyau dur (CGDD/SDES à partir de données fiscales)</option>
+      <option value="Filo">CGDD/SDES à partir de données fiscales</option>
     </Select>
   )
 }

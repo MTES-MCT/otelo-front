@@ -1,29 +1,48 @@
 'use client'
 
+import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TInadequateHousing } from '~/schemas/population-evolution'
+import styles from './accommodation-evolution-charts.module.css'
 
 interface MalLogementChartProps {
   data: TInadequateHousing
 }
 
 export const MalLogementChart: FC<MalLogementChartProps> = ({ data }) => {
-  const [queryStates] = useQueryStates({
+  const [queryStates, setQueryStates] = useQueryStates({
     type: parseAsString,
     epci: parseAsString,
   })
   const { classes } = useStyles()
+
   const chartData = [data[queryStates.epci as string]]
   const title = DATA_TYPE_OPTIONS.find((option) => option.value === queryStates.type)?.label
+  const EPCIS_OPTIONS = Object.entries(data).map(([key, value]) => ({ label: value.name, value: key }))
   return (
     <>
-      <h5>
-        {title} - {chartData[0].name}
-      </h5>
+      <div className={styles.headerContainer}>
+        <h5>
+          {title} - {chartData[0].name}
+        </h5>
+        <Select
+          label=""
+          nativeSelectProps={{
+            onChange: (event) => setQueryStates({ epci: event.target.value }),
+            value: queryStates.epci || '',
+          }}
+        >
+          {EPCIS_OPTIONS.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
+      </div>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart width={500} height={300} data={chartData}>

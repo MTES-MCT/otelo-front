@@ -5,6 +5,10 @@ import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/mod
 
 export const SelectConfortSource = () => {
   const { badHousingSettings, setBadHousingSettings } = useBadHousingSettings()
+  if (badHousingSettings.badQuality.source === 'Filo') {
+    return null
+  }
+
   return (
     <Select
       label="Confort"

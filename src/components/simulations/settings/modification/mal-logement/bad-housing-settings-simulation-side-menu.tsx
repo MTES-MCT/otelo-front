@@ -17,7 +17,7 @@ export default function BadHousingSettingsSimulationSideMenu({ id }: BadHousingS
       label: 'Horizon de résorption',
       path: `/simulation/${id}/modifier/mal-logement/horizon-de-resorption`,
       title: <span>Déterminer l&apos;horizon de résorption</span>,
-      value: `${badHousingSettings.horizon} ans`,
+      value: `${badHousingSettings.horizon}`,
     },
     {
       label: 'Hors logement',

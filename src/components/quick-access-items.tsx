@@ -22,7 +22,7 @@ export const QuickAccessItems: FC = () => {
   if (session) {
     return [
       <Link key="access-app" href="/simulation/choix-du-territoire">
-        <Button iconId="fr-icon-arrow-right-line">Démarrer une simulation</Button>
+        <Button iconId="fr-icon-arrow-right-line">Élaborer un scénario</Button>
       </Link>,
       <Button key="logout" iconId="fr-icon-logout-box-r-line" priority="tertiary" onClick={handleSignOut}>
         Se déconnecter

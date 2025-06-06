@@ -43,17 +43,14 @@ export const UpdateBadHousingSimulationForm: FC = () => {
         b14_occupation: badHousingSettings.badQuality.occupation,
         // todo
         b14_qualite: '',
-
         b14_taux_reallocation: badHousingSettings.badQuality.part,
         b15_loc_hors_hlm: badHousingSettings.suroccupation.plp,
         b15_proprietaire: badHousingSettings.suroccupation.proprietaire,
-
         b15_surocc: badHousingSettings.suroccupation.surocc,
         b15_taux_reallocation: badHousingSettings.suroccupation.part,
         b1_horizon_resorption: badHousingSettings.horizon,
         id: badHousingSettings.id,
         source_b11: badHousingSettings.horsLogement.source as ESourceB11,
-
         source_b14: badHousingSettings.badQuality.source as ESourceB14,
         source_b15: badHousingSettings.suroccupation.source as ESourceB15,
       },

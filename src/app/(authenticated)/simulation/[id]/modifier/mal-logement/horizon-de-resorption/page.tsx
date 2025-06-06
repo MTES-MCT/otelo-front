@@ -15,11 +15,11 @@ export default async function ResorptionHorizonPage({ params }: { params: { id: 
           <>
             <p>
               Otelo vous permet d&apos;estimer un volume de mal logement. Sa prise en compte dans le besoin en logement se fait à travers un
-              &apos;horizon de résorption&apos;, qui correspond au nombre d&apos;années que l&apos;on estime nécessaire pour répondre au mal
-              logement à un rythme annuel constant.
+              &laquo; horizon de résorption &raquo;, qui correspond au nombre d&apos;années que l&apos;on estime nécessaire pour répondre au
+              mal logement à un rythme annuel constant.
             </p>
             <p>
-              Par défaut, il est de 20 ans. Dans ce cas, pour un volume de mal logement estimé à 1000, le besoin annuel en stock sera de
+              Par défaut, il est de 25 ans. Dans ce cas, pour un volume de mal logement estimé à 1000, le besoin annuel en stock sera de
               1000/20 soit 50 logements/an.
             </p>
           </>

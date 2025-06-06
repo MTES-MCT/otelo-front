@@ -26,7 +26,6 @@ export const ListEpcis: FC = () => {
 
   return (
     <div className={fr.cx('fr-py-5w')}>
-      <p>En sélectionnant ce territoire, les EPCIs suivant seront inclus dans la simulation.</p>
       <div>
         Les territoires inclus dans la simulation sont :
         <ul>

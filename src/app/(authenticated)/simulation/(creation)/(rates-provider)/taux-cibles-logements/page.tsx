@@ -23,7 +23,7 @@ export default async function TargetRatesHousing({ searchParams }: PageProps) {
 
   return (
     <div className={styles.container}>
-      <EpcisAccommodationRates epcis={simulationsEpcis} />
+      <EpcisAccommodationRates creationMode={true} epcis={simulationsEpcis} />
 
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w', 'fr-my-auto')}>
         <NextStepLink href={href} query="omphale" />

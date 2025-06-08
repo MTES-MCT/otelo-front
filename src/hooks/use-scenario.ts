@@ -25,6 +25,7 @@ export const useScenario = () => {
     enabled: !!session,
     queryFn: () => fetchSimulationScenario(id as string),
     queryKey: ['simulation-scenario', id],
+    staleTime: 0,
   })
 
   return { data, isLoading }

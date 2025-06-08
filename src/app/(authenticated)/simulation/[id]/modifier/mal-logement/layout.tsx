@@ -3,6 +3,9 @@ import { BadHousingSettingsFormContextWrapper } from '~/components/simulations/s
 import BadHousingSettingsSimulationSideMenu from '~/components/simulations/settings/modification/mal-logement/bad-housing-settings-simulation-side-menu'
 import { BadHousingSettingsSimulationStepper } from '~/components/simulations/settings/modification/mal-logement/bad-housing-settings-simulation-stepper'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 type PageProps = {
   children: React.ReactNode
   params: {

@@ -2,6 +2,7 @@ import { fr } from '@codegouvfr/react-dsfr'
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
 import Button from '@codegouvfr/react-dsfr/Button'
 import { Card } from '@codegouvfr/react-dsfr/Card'
+import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { Select } from '@codegouvfr/react-dsfr/SelectNext'
 import Tag from '@codegouvfr/react-dsfr/Tag'
@@ -15,6 +16,7 @@ type TableauDeBordProps = {
 }
 
 export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
+  const notEnoughSimulations = simulations.length < 3
   return (
     <div>
       <Breadcrumb
@@ -75,14 +77,22 @@ export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
             />
           </div>
 
-          <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>
-            Il faut avoir paramétré au moins 3 scénarios dans la simulation pour pouvoir la télécharger.
-          </p>
+          {notEnoughSimulations && (
+            <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>
+              Il faut avoir paramétré au moins 3 scénarios dans la simulation pour pouvoir la télécharger.
+            </p>
+          )}
 
           <div className={styles.actions}>
-            <Button priority="secondary">Télécharger en csv (excel)</Button>
-            <Button>Recevoir le powerpoint éditable</Button>
+            <Button priority="secondary" disabled={notEnoughSimulations}>
+              Télécharger en csv (excel)
+            </Button>
+            <Button disabled={notEnoughSimulations}>Recevoir le powerpoint éditable</Button>
           </div>
+
+          {!notEnoughSimulations && (
+            <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 24h ouvrées.</p>
+          )}
         </div>
       </div>
     </div>

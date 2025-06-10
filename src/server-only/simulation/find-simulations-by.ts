@@ -26,8 +26,6 @@ export const findSimulationsBy = async ({
   const url = `${process.env.NEXT_OTELO_API_URL}/simulations/find-by`
   const urlWithParams = searchParams.toString() ? `${url}?${searchParams.toString()}` : url
 
-  console.log('MAX urlWithParams', urlWithParams)
-
   const res = await fetch(urlWithParams, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,

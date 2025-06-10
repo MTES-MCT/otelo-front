@@ -61,9 +61,9 @@ const getMenuConnected = (pathname: string, isAdmin = false): MainNavigationProp
     text: 'Accueil',
   },
   {
-    isActive: pathname === '/mes-simulations',
-    linkProps: { href: '/mes-simulations', target: '_self' },
-    text: 'Mes simulations',
+    isActive: pathname === '/tableaux-de-bord',
+    linkProps: { href: '/tableaux-de-bord', target: '_self' },
+    text: 'Tableaux de bord',
   },
   {
     isActive: pathname === '/infographies',

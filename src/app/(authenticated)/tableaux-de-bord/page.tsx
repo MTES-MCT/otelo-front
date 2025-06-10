@@ -2,11 +2,11 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Badge from '@codegouvfr/react-dsfr/Badge'
 import dayjs from 'dayjs'
 import Link from 'next/link'
-import { NoResults } from '~/app/(authenticated)/mes-simulations/no-results'
+import { NoResults } from '~/app/(authenticated)/tableaux-de-bord/no-results'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 import { getSimulations } from '~/server-only/simulation/get-simulations'
 
-export default async function MesSimulations() {
+export default async function TableauxDeBordPage() {
   const results = await getSimulations()
 
   if (results.length === 0) {
@@ -39,7 +39,7 @@ export default async function MesSimulations() {
 
   return (
     <div className={fr.cx('fr-container')}>
-      <h1>Mes Simulations</h1>
+      <h1>Tableaux de bord</h1>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         {Object.keys(groupedResults).map((groupName) => {
           const { simulations, isBassin, epciCode } = groupedResults[groupName]

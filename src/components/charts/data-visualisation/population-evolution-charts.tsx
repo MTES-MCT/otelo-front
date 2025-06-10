@@ -32,27 +32,15 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
   const barChartTitle =
     type === 'menage-evolution' ? (
-      <>
-        Evolution décennal du nombre de ménages <br />
-        par scenario de décohabitation
-      </>
+      <>Comparaison de l'évolution moyenne du nombre de ménages entre 2010-2015 et 2015-2021</>
     ) : (
-      <>
-        Evolution décennal de la population <br />
-        en fonction des scenarios de décohabitation
-      </>
+      <>Comparaison de l'évolution moyenne du nombre d'habitants entre 2010-2015 et 2015-2021</>
     )
   const lineChartTitle =
     type === 'menage-evolution' ? (
-      <>
-        Evolution du nombre de ménages <br />
-        en fonction des scenarios de décohabitation
-      </>
+      <>Evolution du nombre de ménages entre 2010 et 2021</>
     ) : (
-      <>
-        Evolution de la population <br />
-        en fonction des scenarios de décohabitation
-      </>
+      <>Évolution de la population entre 2010 et 2021</>
     )
   return (
     <>

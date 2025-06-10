@@ -1,5 +1,12 @@
+'use client'
+
+import { parseAsString, useQueryState } from 'nuqs'
 import { FC } from 'react'
-import { TDemographicProjectionDataTable, TDemographicProjectionDataTableRow } from '~/schemas/population-evolution'
+import {
+  TDemographicMenagesMaxYearsByEpci,
+  TDemographicProjectionDataTable,
+  TDemographicProjectionDataTableRow,
+} from '~/schemas/population-evolution'
 import { formatNumber } from '~/utils/format-numbers'
 import styles from './projection-evolution-table.module.css'
 
@@ -7,10 +14,13 @@ type ScenarioKey = 'basse' | 'central' | 'haute'
 
 export type ProjectionMenagesEvolutionTableProps = {
   data: TDemographicProjectionDataTable
+  maxYears: TDemographicMenagesMaxYearsByEpci
 }
 
-export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTableProps> = ({ data }) => {
-  const dataTable = Object.entries(data).map(([, rowValue]) => {
+export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTableProps> = ({ data, maxYears }) => {
+  const [populationType] = useQueryState('populationType', parseAsString.withDefault('haute'))
+
+  const dataTable = Object.entries(data).map(([key, rowValue]) => {
     const typedRowValue = rowValue as unknown as TDemographicProjectionDataTableRow
     return {
       [typedRowValue.name]: {
@@ -18,11 +28,13 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
         '2030': typedRowValue['2030'],
         '2040': typedRowValue['2040'],
         '2050': typedRowValue['2050'],
-        maxYears: typedRowValue.maxYears,
+        maxYears: maxYears[key],
         annualEvolution: typedRowValue.annualEvolution,
       },
     }
   })
+
+  console.log('dataTable', dataTable)
 
   return (
     <div className={styles.container}>
@@ -70,6 +82,21 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
                 { key: 'central', name: 'Décohabitation tendanciel' },
                 { key: 'basse', name: 'Décohabitation basse' },
               ]
+              const prefix = populationType === 'haute' ? 'ph' : populationType === 'central' ? 'central' : 'pb'
+              console.log('prefix', populationType)
+
+              function getMaxYearsKey(scenario: ScenarioKey): keyof typeof territoryData.maxYears {
+                switch (scenario) {
+                  case 'haute':
+                    return `${prefix}H`
+                  case 'central':
+                    return `${prefix}C`
+                  case 'basse':
+                    return `${prefix}B`
+                  default:
+                    return `${prefix}C`
+                }
+              }
 
               return scenarios.map((scenario, scenarioIndex) => (
                 <tr key={`${territoryName}-${scenario.key}`}>
@@ -89,7 +116,11 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
                   <td className={styles.dataCell}>{territoryData.annualEvolution['2021-2030'][scenario.key].percent || '-'}</td>
                   <td className={styles.dataCell}>{territoryData.annualEvolution['2030-2040'][scenario.key].percent || '-'}</td>
                   <td className={styles.dataCell}>{territoryData.annualEvolution['2040-2050'][scenario.key].percent || '-'}</td>
-                  <td className={styles.dataCell}>-</td>
+                  <td className={styles.dataCell}>
+                    {territoryData.maxYears && territoryData.maxYears[getMaxYearsKey(scenario.key)]
+                      ? territoryData.maxYears[getMaxYearsKey(scenario.key)].year
+                      : '-'}
+                  </td>
                 </tr>
               ))
             })}

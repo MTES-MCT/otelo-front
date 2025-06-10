@@ -31,7 +31,7 @@ export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutio
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Tableau descriptif et d&apos;analyse des projections de populations</h2>
+      <h2 className={styles.title}>Tableau descriptif et d'analyse des projections de population, sur le bassin d'habitat</h2>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>

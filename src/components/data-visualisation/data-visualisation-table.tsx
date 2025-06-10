@@ -11,10 +11,20 @@ import {
   TAccommodationLovacEvolution,
   TAccommodationLovacEvolutionDataTable,
 } from '~/schemas/accommodation-evolution'
-import { TDemographicProjectionDataTable, TDemographicProjectionEvolution, TRPPopulationEvolution } from '~/schemas/population-evolution'
+import {
+  TDemographicMenagesEvolution,
+  TDemographicProjectionDataTable,
+  TDemographicProjectionEvolution,
+  TRPPopulationEvolution,
+} from '~/schemas/population-evolution'
 
 export const DataVisualisationTable: FC<{
-  data: TRPPopulationEvolution | TDemographicProjectionEvolution | TAccommodationEvolution | TAccommodationLovacEvolution
+  data:
+    | TRPPopulationEvolution
+    | TDemographicProjectionEvolution
+    | TDemographicMenagesEvolution
+    | TAccommodationEvolution
+    | TAccommodationLovacEvolution
   type: string | null
   source: string | null
 }> = ({ data, type, source }) => {
@@ -38,7 +48,12 @@ export const DataVisualisationTable: FC<{
   }
 
   if (isProjectionMenagesEvolution) {
-    return <ProjectionMenagesEvolutionTable data={data.tableData as TDemographicProjectionDataTable} />
+    return (
+      <ProjectionMenagesEvolutionTable
+        maxYears={(data as TDemographicMenagesEvolution).maxYears}
+        data={data.tableData as TDemographicProjectionDataTable}
+      />
+    )
   }
 
   if (isResidencesSecondaires) {

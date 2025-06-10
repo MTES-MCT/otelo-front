@@ -15,8 +15,8 @@ export const UpdateProjectionPeriod: FC = () => {
 
   return (
     <Range
-      hintText="Faites glisser le curseur pour définir l'horizon de résorption de la simulation."
-      label="Horizon de résorption de la simulation"
+      hintText="Faites glisser le curseur pour définir l'horizon de projection de la simulation."
+      label="Horizon de projection"
       max={2050}
       min={currentYear}
       nativeInputProps={{

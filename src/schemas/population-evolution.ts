@@ -106,7 +106,7 @@ const ZDemographicProjectionEvolutionData = z.object({
   metadata: ZMetadata,
 })
 
-export const ZDemographicMaxYearsByEpci = z.record(
+export const ZDemographicPopulationMaxYearsByEpci = z.record(
   z.object({
     central: z.object({ value: z.number(), year: z.number() }),
     haute: z.object({ value: z.number(), year: z.number() }),
@@ -114,12 +114,12 @@ export const ZDemographicMaxYearsByEpci = z.record(
   }),
 )
 
-export type TDemographicMaxYearsByEpci = z.infer<typeof ZDemographicMaxYearsByEpci>
+export type TDemographicMaxYearsByEpci = z.infer<typeof ZDemographicPopulationMaxYearsByEpci>
 
 export const ZDemographicProjectionEvolution = z.object({
   linearChart: z.record(z.string(), ZDemographicProjectionEvolutionData),
   tableData: ZDemographicProjectionDataTable,
-  maxYears: ZDemographicMaxYearsByEpci,
+  maxYears: ZDemographicPopulationMaxYearsByEpci,
 })
 
 export type TDemographicProjectionEvolution = z.infer<typeof ZDemographicProjectionEvolution>
@@ -139,10 +139,26 @@ export const ZDemographicMenagesByEpci = z.object({
 
 export type TDemographicMenagesByEpci = z.infer<typeof ZDemographicMenagesByEpci>
 
+export const ZDemographicMenagesMaxYearsByEpci = z.record(
+  z.object({
+    centralB: z.object({ value: z.number(), year: z.number() }),
+    centralC: z.object({ value: z.number(), year: z.number() }),
+    centralH: z.object({ value: z.number(), year: z.number() }),
+    pbB: z.object({ value: z.number(), year: z.number() }),
+    pbC: z.object({ value: z.number(), year: z.number() }),
+    pbH: z.object({ value: z.number(), year: z.number() }),
+    phC: z.object({ value: z.number(), year: z.number() }),
+    phB: z.object({ value: z.number(), year: z.number() }),
+    phH: z.object({ value: z.number(), year: z.number() }),
+  }),
+)
+
+export type TDemographicMenagesMaxYearsByEpci = z.infer<typeof ZDemographicMenagesMaxYearsByEpci>
+
 export const ZDemographicMenagesEvolution = z.object({
   linearChart: z.record(z.string(), ZDemographicMenagesByEpci),
   tableData: ZDemographicProjectionDataTable,
-  maxYears: ZDemographicMaxYearsByEpci,
+  maxYears: ZDemographicMenagesMaxYearsByEpci,
 })
 
 export type TDemographicMenagesEvolution = z.infer<typeof ZDemographicMenagesEvolution>

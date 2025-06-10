@@ -236,7 +236,7 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
               })}
             </LineChart>
           </ResponsiveContainer>
-          <span className={classes.title}>Évolution du nombre de ménages en fonction des scénarios de décohabitation</span>
+          <span className={classes.title}>Évolution du nombre de ménages, en fonction des scénarios de décohabitation</span>
         </div>
         <div className={classes.chartContainer}>
           <ResponsiveContainer width="100%" height="100%">

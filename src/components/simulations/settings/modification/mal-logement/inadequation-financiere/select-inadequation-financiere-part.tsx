@@ -7,7 +7,7 @@ export const SelectInadequationFinancierePart = () => {
   const { badHousingSettings, setBadHousingSettings } = useBadHousingSettings()
   return (
     <Range
-      label="Part prise en compte"
+      label="Part des logements réalloués"
       max={100}
       min={0}
       nativeInputProps={{

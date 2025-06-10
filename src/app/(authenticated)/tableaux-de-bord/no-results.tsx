@@ -6,7 +6,7 @@ export function NoResults() {
     <div className={fr.cx('fr-container', 'fr-my-12w')} style={{ textAlign: 'center' }}>
       <h1>Aucune simulation créé</h1>
       <p>Vous n'avez pas encore enregistré de simulations.</p>
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button priority="secondary" linkProps={{ href: '/accueil' }} style={{ marginRight: '1rem' }}>
           Accueil
         </Button>

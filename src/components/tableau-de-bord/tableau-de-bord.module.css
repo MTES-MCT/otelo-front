@@ -4,3 +4,17 @@
   gap: 1rem;
   margin: 2rem 0 2rem;
 }
+
+.tagContainer {
+  position: relative;
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.checkbox {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

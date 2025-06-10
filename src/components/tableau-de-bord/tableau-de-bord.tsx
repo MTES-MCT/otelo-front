@@ -1,11 +1,11 @@
 import { fr } from '@codegouvfr/react-dsfr'
+import Badge from '@codegouvfr/react-dsfr/Badge'
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
 import Button from '@codegouvfr/react-dsfr/Button'
 import { Card } from '@codegouvfr/react-dsfr/Card'
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { Select } from '@codegouvfr/react-dsfr/SelectNext'
-import Tag from '@codegouvfr/react-dsfr/Tag'
 import dayjs from 'dayjs'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 import styles from './tableau-de-bord.module.css'
@@ -17,6 +17,7 @@ type TableauDeBordProps = {
 
 export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
+
   return (
     <div>
       <Breadcrumb
@@ -39,12 +40,25 @@ export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
                 <Card
                   background
                   start={
-                    <ul className="fr-tags-group">
-                      <li>
-                        <Tag small>{dayjs(simulation.createdAt).format('DD/MM/YYYY')}</Tag>
-                      </li>
-                    </ul>
+                    <div className={styles.tagContainer}>
+                      <Badge small severity="info">
+                        Horizon {simulation.scenario.projection}
+                      </Badge>
+                      <Badge small>{getPopulationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
+                      <Badge small>{getDecohabitationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
+                      <Checkbox
+                        small
+                        className={styles.checkbox}
+                        options={[
+                          {
+                            label: '',
+                            nativeInputProps: {},
+                          },
+                        ]}
+                      />
+                    </div>
                   }
+                  endDetail={`Créée le ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`}
                   border
                   linkProps={{
                     href: `/simulation/${simulation.id}/resultats`,
@@ -97,4 +111,38 @@ export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
       </div>
     </div>
   )
+}
+
+const getPopulationScenarioLabel = (scenario: string) => {
+  switch (scenario) {
+    case 'Central_B':
+    case 'Central_C':
+    case 'Central_H':
+      return 'Population Centrale'
+    case 'PB_B':
+    case 'PB_C':
+    case 'PB_H':
+      return 'Population Basse'
+    case 'PH_B':
+    case 'PH_C':
+    case 'PH_H':
+      return 'Population Haute'
+  }
+}
+
+const getDecohabitationScenarioLabel = (scenario: string) => {
+  switch (scenario) {
+    case 'Central_B':
+    case 'PB_B':
+    case 'PH_B':
+      return 'Décohabitation décélération'
+    case 'Central_C':
+    case 'PB_C':
+    case 'PH_C':
+      return 'Décohabitation tendanciel'
+    case 'Central_H':
+    case 'PB_H':
+    case 'PH_H':
+      return 'Décohabitation accélération'
+  }
 }

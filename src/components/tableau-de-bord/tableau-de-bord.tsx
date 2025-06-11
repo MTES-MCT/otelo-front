@@ -1,13 +1,17 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
+import Alert from '@codegouvfr/react-dsfr/Alert'
 import Badge from '@codegouvfr/react-dsfr/Badge'
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
 import Button from '@codegouvfr/react-dsfr/Button'
 import { Card } from '@codegouvfr/react-dsfr/Card'
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Input from '@codegouvfr/react-dsfr/Input'
+import { createModal } from '@codegouvfr/react-dsfr/Modal'
 import { Select } from '@codegouvfr/react-dsfr/SelectNext'
+import Table from '@codegouvfr/react-dsfr/Table'
+import Tag from '@codegouvfr/react-dsfr/Tag'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -20,16 +24,23 @@ import styles from './tableau-de-bord.module.css'
 type TableauDeBordProps = {
   simulations: TSimulationWithRelations[]
   name: string
+  userEmail: string
 }
 
-export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
+const modalActions = createModal({
+  id: 'form-confirmation-modal',
+  isOpenedByDefault: false,
+})
+
+export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
-  const [formSubmitted, setFormSubmitted] = useState(false)
+  const [actionType, setActionType] = useState<'submit' | 'download' | null>(null)
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitted },
+    reset,
     getValues,
   } = useForm<TTableauDeBordForm>({
     resolver: zodResolver(ZTableauDeBordForm),
@@ -43,11 +54,17 @@ export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
 
   const onSubmit = (data: TTableauDeBordForm) => {
     console.log('Form submitted:', data)
-    setFormSubmitted(true)
+
+    reset()
   }
 
   const onCSVDownload = () => {
     console.log('CSV Download', getValues())
+  }
+
+  const handleModalOpen = (type: 'submit' | 'download') => {
+    setActionType(type)
+    modalActions.open()
   }
 
   return (
@@ -175,27 +192,85 @@ export function TableauDeBord({ simulations, name }: TableauDeBordProps) {
               </p>
             )}
 
+            {isSubmitted && (
+              <Alert
+                closable
+                description={
+                  <>
+                    Votre présentation PowerPoint personnalisée avec les simulations sélectionnées est en cours de préparation. Vous la
+                    recevrez à l'adresse e-mail <Tag>{userEmail}</Tag> dans un délai de 24h ouvrées.
+                  </>
+                }
+                severity="success"
+                title="Demande de présentation bien reçue !"
+              />
+            )}
+
             <div className={styles.actions}>
-              <Button priority="secondary" type="button" onClick={onCSVDownload} disabled={notEnoughSimulations || !isValid}>
+              <Button
+                priority="secondary"
+                type="button"
+                onClick={() => handleModalOpen('download')}
+                disabled={notEnoughSimulations || !isValid}
+              >
                 Télécharger en csv (excel)
               </Button>
-              <Button type="submit" disabled={notEnoughSimulations || !isValid}>
+              <Button type="button" onClick={() => handleModalOpen('submit')} disabled={notEnoughSimulations || !isValid}>
                 Recevoir le powerpoint éditable
               </Button>
             </div>
 
-            {formSubmitted && (
-              <p className={fr.cx('fr-info-text', 'fr-grid-row--center', 'fr-mt-2w')}>
-                Formulaire soumis avec succès ! Le powerpoint vous sera envoyé par e-mail sous 24h ouvrées.
-              </p>
-            )}
-
-            {!notEnoughSimulations && !formSubmitted && (
+            {!notEnoughSimulations && !isSubmitted && (
               <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 24h ouvrées.</p>
             )}
           </form>
         </div>
       </div>
+
+      <modalActions.Component
+        title={actionType === 'submit' ? "Confirmation d'envoi du powerpoint" : 'Confirmation de téléchargement CSV'}
+        buttons={[
+          {
+            doClosesModal: true,
+            children: 'Annuler',
+          },
+          {
+            doClosesModal: true,
+            children: actionType === 'submit' ? "Confirmer l'envoi" : 'Confirmer le téléchargement',
+            onClick: () => {
+              actionType === 'submit' ? handleSubmit(onSubmit)() : onCSVDownload()
+            },
+          },
+        ]}
+      >
+        <div>
+          {actionType === 'submit' && (
+            <div>
+              <strong>Email: </strong>
+              <Tag>{userEmail}</Tag>
+            </div>
+          )}
+          <Table
+            caption="Récapitulatif des données"
+            data={[
+              [
+                'Simulation(s)',
+                getValues().selectedSimulations.map((simId) => {
+                  const simulation = simulations.find((sim) => sim.id === simId)
+                  return simulation ? (
+                    <Badge small key={simId}>
+                      {simulation.name} (Horizon {simulation.scenario.projection})
+                    </Badge>
+                  ) : null
+                }),
+              ],
+              ['Prochaine étape', getValues().nextStep],
+              ['Date de restitution prévue', getValues().resultDate ? dayjs(getValues().resultDate).format('DD/MM/YYYY') : 'Non spécifiée'],
+            ]}
+            headers={['Paramétrage', '']}
+          />
+        </div>
+      </modalActions.Component>
     </div>
   )
 }

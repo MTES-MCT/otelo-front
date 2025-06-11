@@ -95,3 +95,11 @@ export const ZSimulationExportDto = ZSimulation.pick({
 })
 
 export type TSimulationExportDto = z.infer<typeof ZSimulationExportDto>
+
+export const ZRequestPowerpoint = z.object({
+  nextStep: z.string().min(1, { message: 'Veuillez sélectionner la prochaine étape' }),
+  resultDate: z.string().min(1, { message: 'Veuillez sélectionner une date' }),
+  selectedSimulations: z.array(z.string()).min(1, { message: 'Veuillez sélectionner au moins 1 simulation' }),
+})
+
+export type TRequestPowerpoint = z.infer<typeof ZRequestPowerpoint>

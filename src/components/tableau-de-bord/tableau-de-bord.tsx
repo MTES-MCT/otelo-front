@@ -17,8 +17,8 @@ import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { TTableauDeBordForm, ZTableauDeBordForm } from '~/components/tableau-de-bord/tableau-de-bord-form'
-import { TSimulationWithRelations } from '~/schemas/simulation'
+import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
+import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
 import styles from './tableau-de-bord.module.css'
 
 type TableauDeBordProps = {
@@ -35,15 +35,16 @@ const modalActions = createModal({
 export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
   const [actionType, setActionType] = useState<'submit' | 'download' | null>(null)
+  const { mutateAsync, isError, isSuccess, isPending } = useRequestPowerpoint()
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitted },
+    formState: { errors, isValid },
     reset,
     getValues,
-  } = useForm<TTableauDeBordForm>({
-    resolver: zodResolver(ZTableauDeBordForm),
+  } = useForm<TRequestPowerpoint>({
+    resolver: zodResolver(ZRequestPowerpoint),
     defaultValues: {
       nextStep: '',
       resultDate: '',
@@ -51,15 +52,25 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
     },
     mode: 'onChange',
   })
+  const { nextStep, selectedSimulations, resultDate } = getValues()
 
-  const onSubmit = (data: TTableauDeBordForm) => {
-    console.log('Form submitted:', data)
+  const onRequestPowerpoint = async (data: TRequestPowerpoint) => {
+    try {
+      await mutateAsync(data)
 
-    reset()
+      modalActions.close()
+      reset()
+    } catch (_) {
+      modalActions.close()
+    }
   }
 
-  const onCSVDownload = () => {
+  const onCSVDownload = async () => {
     console.log('CSV Download', getValues())
+  }
+
+  const onConfirmAction = async () => {
+    actionType === 'submit' ? await handleSubmit(onRequestPowerpoint)() : await onCSVDownload()
   }
 
   const handleModalOpen = (type: 'submit' | 'download') => {
@@ -70,7 +81,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
   return (
     <div>
       <Breadcrumb
-        currentPageLabel="Modification de votre simulation"
+        currentPageLabel={name}
         homeLinkProps={{
           href: '/',
         }}
@@ -83,9 +94,9 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
 
           <h2>{name}</h2>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form>
             <div className={fr.cx('fr-mb-6w')}>
-              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des simulations à inclure:</p>
+              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des simulations à inclure :</p>
               <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mb-2w')}>
                 {simulations.map((simulation) => (
                   <div key={simulation.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>
@@ -192,7 +203,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
               </p>
             )}
 
-            {isSubmitted && (
+            {isSuccess && (
               <Alert
                 closable
                 description={
@@ -204,6 +215,10 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
                 severity="success"
                 title="Demande de présentation bien reçue !"
               />
+            )}
+
+            {isError && (
+              <Alert closable description="Veuillez réessayer ultérieurement." severity="error" title="Une erreur est survenue" />
             )}
 
             <div className={styles.actions}>
@@ -220,7 +235,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
               </Button>
             </div>
 
-            {!notEnoughSimulations && !isSubmitted && (
+            {!notEnoughSimulations && (
               <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 24h ouvrées.</p>
             )}
           </form>
@@ -233,13 +248,13 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
           {
             doClosesModal: true,
             children: 'Annuler',
+            disabled: isPending,
           },
           {
-            doClosesModal: true,
+            doClosesModal: false,
             children: actionType === 'submit' ? "Confirmer l'envoi" : 'Confirmer le téléchargement',
-            onClick: () => {
-              actionType === 'submit' ? handleSubmit(onSubmit)() : onCSVDownload()
-            },
+            onClick: onConfirmAction,
+            disabled: isPending,
           },
         ]}
       >
@@ -255,7 +270,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
             data={[
               [
                 'Simulation(s)',
-                getValues().selectedSimulations.map((simId) => {
+                selectedSimulations.map((simId) => {
                   const simulation = simulations.find((sim) => sim.id === simId)
                   return simulation ? (
                     <Badge small key={simId}>
@@ -264,8 +279,8 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
                   ) : null
                 }),
               ],
-              ['Prochaine étape', getValues().nextStep],
-              ['Date de restitution prévue', getValues().resultDate ? dayjs(getValues().resultDate).format('DD/MM/YYYY') : 'Non spécifiée'],
+              ['Prochaine étape', nextStep],
+              ['Date de restitution prévue', resultDate ? dayjs(resultDate).format('DD/MM/YYYY') : 'Non spécifiée'],
             ]}
             headers={['Paramétrage', '']}
           />

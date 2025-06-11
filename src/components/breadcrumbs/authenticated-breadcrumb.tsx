@@ -8,7 +8,7 @@ import { CreateSimulationBreadcrumb } from '~/components/simulations/breadcrumbs
 import { UpdateSimulationBreadcrumb } from '~/components/simulations/breadcrumbs/modify-simulation-breadcrumb'
 import { SimulationsBreadcrumb } from '~/components/simulations/breadcrumbs/simulations-breadcrumb'
 
-type BreadcrumbPaths = 'admin' | 'guide' | 'resultats' | 'simulation' | 'modifier' | 'mes-simulations'
+type BreadcrumbPaths = 'admin' | 'guide' | 'resultats' | 'simulation' | 'modifier'
 
 export const AuthenticatedBreadcrumb = () => {
   const pathname = usePathname()
@@ -18,7 +18,6 @@ export const AuthenticatedBreadcrumb = () => {
     simulation: <CreateSimulationBreadcrumb />,
     resultats: <SimulationsBreadcrumb />,
     modifier: <UpdateSimulationBreadcrumb />,
-    'mes-simulations': null,
   }
 
   // Check if the pathname matches any of our breadcrumb paths

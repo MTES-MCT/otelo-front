@@ -5,16 +5,23 @@
   margin: 2rem 0 2rem;
 }
 
-.tagContainer {
-  position: relative;
-  display: inline-flex;
+.labelCards {
+  font-weight: bold;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 0.4rem;
-  flex-wrap: wrap;
   margin-bottom: 1rem;
 }
 
+.tagContainer {
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
 .checkbox {
-  position: absolute;
-  top: 0;
-  right: 0;
 }

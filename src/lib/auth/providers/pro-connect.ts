@@ -39,7 +39,7 @@ export const ProConnectProvider = () =>
           grant_type: 'authorization_code',
           client_id: process.env.NEXT_PRIVATE_OAUTH_PROCONNECT_CLIENT_ID || '',
           client_secret: process.env.NEXT_PRIVATE_OAUTH_PROCONNECT_CLIENT_SECRET || '',
-          redirect_uri: `${process.env.AUTH_URL}/api/auth/callback/proconnect`,
+          redirect_uri: `${process.env.NEXT_PRIVATE_OAUTH_PROCONNECT_REDIRECT}/api/auth/callback/proconnect`,
           code: context.params.code || 'undefined',
         })
 

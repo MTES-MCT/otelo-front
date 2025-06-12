@@ -12,18 +12,17 @@
     "lint:format": "biome check src --fix"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.7.3",
     "@codegouvfr/react-dsfr": "1.20.2",
     "@hookform/resolvers": "^3.9.1",
-    "@prisma/client": "^6.5.0",
     "@socialgouv/matomo-next": "^1.9.2",
     "@tanstack/react-query": "^5.59.0",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
+    "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "next": "14.2.26",
-    "next-auth": "^5.0.0-beta.25",
+    "next-auth": "4.24.11",
     "nuqs": "^2.0.0",
     "react": "^18",
     "react-dom": "^18",
@@ -40,22 +39,15 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@tanstack/eslint-plugin-query": "^5.59.1",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/leaflet": "^1.9.12",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "prisma": "^6.5.0",
     "typescript": "^5"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
-      "prisma"
-    ],
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ]
+    "ignoredBuiltDependencies": ["esbuild"]
   }
 }

@@ -3,11 +3,12 @@
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import { signIn } from 'next-auth/react'
 import { FC } from 'react'
+import { proConnectProviderId } from '~/lib/auth/providers/pro-connect'
 
 export const SignInButton: FC = () => {
   const onSignIn = async () => {
     try {
-      await signIn('cerema-oidc')
+      await signIn(proConnectProviderId)
     } catch (error) {
       console.error('Error signing in', error)
     }

@@ -5,6 +5,7 @@ import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider'
 import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes'
 import type { Metadata } from 'next'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
@@ -14,7 +15,7 @@ import Matomo from '~/app/matomo'
 import { StartDsfr } from '~/app/start-dsfr'
 import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
-import { auth } from '~/lib/auth/auth'
+import { authOptions } from '~/lib/auth/auth.config'
 import { NextAuthProvider } from '~/providers/next-auth'
 import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
 import classes from './layout.module.css'
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: JSX.Element }) {
   const lang = 'fr'
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   return (
     <html {...getHtmlAttributes({ defaultColorScheme, lang })}>

@@ -1,8 +1,16 @@
-import type { NextAuthConfig, Session, User } from 'next-auth'
+import type { AuthOptions, NextAuthOptions, Session, User } from 'next-auth'
+import { ProConnectProvider, proConnectProviderId } from '~/lib/auth/providers/pro-connect'
 
-type CustomUser = User & { role: 'USER' | 'ADMIN' }
+type CustomUser = User & {
+  firstName: string
+  lastName: string
+  sub: string
+  id: string
+  email: string
+  provider: string
+}
 
-export default {
+export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ account, token, user }) {
       if (account) {
@@ -11,6 +19,11 @@ export default {
           const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
             body: JSON.stringify({
               email: user.email,
+              provider: proConnectProviderId,
+              firstname: (user as CustomUser).firstName,
+              lastname: (user as CustomUser).lastName,
+              sub: (user as CustomUser).sub,
+              id: (user as CustomUser).id,
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -61,9 +74,6 @@ export default {
       }
       return token
     },
-    async redirect({ baseUrl }) {
-      return baseUrl
-    },
     async session({ session, token }) {
       ;(session as Session).accessToken = token.accessToken as string
       ;(session as Session).user = token.user as CustomUser
@@ -72,27 +82,5 @@ export default {
       return session
     },
   },
-  providers: [
-    {
-      authorization: { params: { scope: 'openid email profile' } },
-      checks: ['none'],
-      clientId: process.env.NEXT_PRIVATE_OAUTH_CEREMA_CLIENT_ID,
-      clientSecret: process.env.NEXT_PRIVATE_OAUTH_CEREMA_CLIENT_SECRET,
-      id: 'cerema-oidc',
-      issuer: process.env.CEREMA_OIDC_ISSUER,
-      name: 'Cerema OIDC',
-      async profile(profile) {
-        return {
-          email: profile.email,
-          firstname: profile.given_name,
-          id: profile.sub,
-          lastname: profile.family_name,
-          role: 'USER',
-          sub: profile.sub,
-        }
-      },
-      type: 'oidc',
-      wellKnown: `${process.env.CEREMA_OIDC_ISSUER}/.well-known/openid-configuration`,
-    },
-  ],
-} satisfies NextAuthConfig
+  providers: [ProConnectProvider()],
+} satisfies AuthOptions

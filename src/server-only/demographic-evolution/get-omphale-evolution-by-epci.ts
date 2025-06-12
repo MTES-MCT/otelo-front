@@ -1,8 +1,9 @@
-import { auth } from '~/lib/auth/auth'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '~/lib/auth/auth.config'
 import { TOmphaleDemographicEvolution } from '~/schemas/demographic-evolution'
 
 export const getOmphaleDemographicEvolutionByEpci = async (epcis: string[]) => {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   if (!session?.accessToken) {
     throw new Error('Unauthorized')

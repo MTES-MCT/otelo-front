@@ -34,8 +34,6 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
     }
   })
 
-  console.log('dataTable', dataTable)
-
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Tableau descriptif et d'analyse des projections de ménages, sur le bassin d'habitat</h2>
@@ -83,7 +81,6 @@ export const ProjectionMenagesEvolutionTable: FC<ProjectionMenagesEvolutionTable
                 { key: 'basse', name: 'Décohabitation basse' },
               ]
               const prefix = populationType === 'haute' ? 'ph' : populationType === 'central' ? 'central' : 'pb'
-              console.log('prefix', populationType)
 
               function getMaxYearsKey(scenario: ScenarioKey): keyof typeof territoryData.maxYears {
                 switch (scenario) {

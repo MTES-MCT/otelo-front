@@ -3,13 +3,14 @@ import logoMinistere from '@assets/img/logo-ministere.svg'
 import { fr } from '@codegouvfr/react-dsfr'
 import { Button } from '@codegouvfr/react-dsfr/Button'
 import classNames from 'classnames'
+import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import { SignInButton } from '~/components/sign-in-button'
-import { auth } from '~/lib/auth/auth'
+import { authOptions } from '~/lib/auth/auth.config'
 import styles from './section-hero.module.css'
 
 export const SectionHero = async () => {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   const ctaComponent = session ? (
     <Button

@@ -1,8 +1,9 @@
+import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import { auth } from '~/lib/auth/auth'
+import { authOptions } from '~/lib/auth/auth.config'
 
 export async function GET(request: Request) {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   const url = new URL(request.url)
   const q = url.searchParams.get('q')

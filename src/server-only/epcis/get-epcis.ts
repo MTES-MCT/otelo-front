@@ -1,8 +1,9 @@
-import { auth } from '~/lib/auth/auth'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '~/lib/auth/auth.config'
 import { TEpci } from '~/schemas/epci'
 
 export const getEpcis = async (epcis: Array<string>) => {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   if (!session?.accessToken) {
     throw new Error('Unauthorized')

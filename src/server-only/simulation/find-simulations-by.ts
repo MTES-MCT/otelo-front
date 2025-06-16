@@ -1,4 +1,5 @@
-import { auth } from '~/lib/auth/auth'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '~/lib/auth/auth.config'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 
 export const findSimulationsBy = async ({
@@ -8,7 +9,7 @@ export const findSimulationsBy = async ({
   epciCode?: string
   isBassin?: boolean
 }) => {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   if (!session?.accessToken) {
     throw new Error('Unauthorized')

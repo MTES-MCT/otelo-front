@@ -15,7 +15,6 @@ import Tag from '@codegouvfr/react-dsfr/Tag'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
-import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
 import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
@@ -34,7 +33,6 @@ const modalActions = createModal({
 
 export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
-  const [actionType, setActionType] = useState<'submit' | 'download' | null>(null)
   const { mutateAsync, isError, isSuccess, isPending } = useRequestPowerpoint()
 
   const {
@@ -65,16 +63,11 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
     }
   }
 
-  const onCSVDownload = async () => {
-    console.log('CSV Download', getValues())
-  }
-
   const onConfirmAction = async () => {
-    actionType === 'submit' ? await handleSubmit(onRequestPowerpoint)() : await onCSVDownload()
+    await handleSubmit(onRequestPowerpoint)()
   }
 
-  const handleModalOpen = (type: 'submit' | 'download') => {
-    setActionType(type)
+  const handleModalOpen = () => {
     modalActions.open()
   }
 
@@ -222,15 +215,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
             )}
 
             <div className={styles.actions}>
-              <Button
-                priority="secondary"
-                type="button"
-                onClick={() => handleModalOpen('download')}
-                disabled={notEnoughSimulations || !isValid}
-              >
-                Télécharger en csv (excel)
-              </Button>
-              <Button type="button" onClick={() => handleModalOpen('submit')} disabled={notEnoughSimulations || !isValid}>
+              <Button type="button" onClick={() => handleModalOpen()} disabled={notEnoughSimulations || !isValid}>
                 Recevoir le powerpoint éditable
               </Button>
             </div>
@@ -243,7 +228,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
       </div>
 
       <modalActions.Component
-        title={actionType === 'submit' ? "Confirmation d'envoi du powerpoint" : 'Confirmation de téléchargement CSV'}
+        title="Confirmation d'envoi du powerpoint"
         buttons={[
           {
             doClosesModal: true,
@@ -252,19 +237,17 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
           },
           {
             doClosesModal: false,
-            children: actionType === 'submit' ? "Confirmer l'envoi" : 'Confirmer le téléchargement',
+            children: "Confirmer l'envoi",
             onClick: onConfirmAction,
             disabled: isPending,
           },
         ]}
       >
         <div>
-          {actionType === 'submit' && (
-            <div>
-              <strong>Email: </strong>
-              <Tag>{userEmail}</Tag>
-            </div>
-          )}
+          <div>
+            <strong>Email: </strong>
+            <Tag>{userEmail}</Tag>
+          </div>
           <Table
             caption="Récapitulatif des données"
             data={[

@@ -1,0 +1,24 @@
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0 2rem;
+}
+
+.labelCards {
+  font-weight: bold;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.tagContainer {
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}

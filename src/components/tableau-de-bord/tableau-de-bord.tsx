@@ -22,7 +22,7 @@ import styles from './tableau-de-bord.module.css'
 
 type TableauDeBordProps = {
   simulations: TSimulationWithRelations[]
-  name: string
+  groupName: string
   userEmail: string
 }
 
@@ -31,7 +31,7 @@ const modalActions = createModal({
   isOpenedByDefault: false,
 })
 
-export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordProps) {
+export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
   const { mutateAsync, isError, isSuccess, isPending } = useRequestPowerpoint()
 
@@ -74,7 +74,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
   return (
     <div>
       <Breadcrumb
-        currentPageLabel={name}
+        currentPageLabel={groupName}
         homeLinkProps={{
           href: '/',
         }}
@@ -85,7 +85,7 @@ export function TableauDeBord({ simulations, name, userEmail }: TableauDeBordPro
         <div className={fr.cx('fr-col-lg-8', 'fr-col-12')}>
           <h1 className={fr.cx('fr-col-12')}>Tableau de bord</h1>
 
-          <h2>{name}</h2>
+          <h2>{groupName}</h2>
 
           <form>
             <div className={fr.cx('fr-mb-6w')}>

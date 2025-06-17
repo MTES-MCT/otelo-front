@@ -21,7 +21,7 @@ import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
 import classes from './layout.module.css'
 
 export const metadata: Metadata = {
-  description: 'Otelo - Votre assistant pour la transition écologique - v4.0',
+  description: "Otelo - votre assistant pour l'estimation des besoins en logements",
   title: 'Otelo',
 }
 

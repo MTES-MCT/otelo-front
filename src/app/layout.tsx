@@ -1,6 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
 import { Footer } from '@codegouvfr/react-dsfr/Footer'
+import { StartDsfrOnHydration } from '@codegouvfr/react-dsfr/next-app-router'
 import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
@@ -10,13 +11,12 @@ import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
 import Matomo from '~/app/matomo'
 import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
+import { DsfrHead, getHtmlAttributes } from '~/dsfr/dsfr-head'
+import { DsfrProvider } from '~/dsfr/dsfr-provider'
 import { authOptions } from '~/lib/auth/auth.config'
 import { NextAuthProvider } from '~/providers/next-auth'
 import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
 import classes from './layout.module.css'
-import { StartDsfrOnHydration } from '@codegouvfr/react-dsfr/next-app-router'
-import { DsfrHead, getHtmlAttributes } from '~/dsfr/dsfr-head'
-import { DsfrProvider } from '~/dsfr/dsfr-provider'
 
 export const metadata: Metadata = {
   description: "Otelo - votre assistant pour l'estimation des besoins en logements",

@@ -1,17 +1,43 @@
 import type { AuthOptions, NextAuthOptions, Session, User } from 'next-auth'
 import { ProConnectProvider, proConnectProviderId } from '~/lib/auth/providers/pro-connect'
 
-type CustomUser = User & {
+export type CustomUser = User & {
   firstName: string
   lastName: string
   sub: string
+  hasAccess: boolean
   id: string
   email: string
   provider: string
+  role: 'ADMIN' | 'USER'
 }
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    async signIn(params) {
+      try {
+        const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: params.user?.email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        if (!hasUserAccess.ok) {
+          throw new Error('Failed to check user access')
+        }
+
+        const data = await hasUserAccess.json()
+        if (data) {
+          return true
+        }
+        return '/unauthorized'
+      } catch {
+        return false
+      }
+    },
     async jwt({ account, token, user }) {
       if (account) {
         // First time coming from SSO

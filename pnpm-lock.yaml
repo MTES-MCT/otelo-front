@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@codegouvfr/react-dsfr':
-        specifier: 1.20.2
-        version: 1.20.2
+        specifier: ^1.25.1
+        version: 1.25.3
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.55.0(react@18.3.1))
@@ -202,8 +202,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@codegouvfr/react-dsfr@1.20.2':
-    resolution: {integrity: sha512-BE2VUqoLdn1XLWs1Nu+0DAr+YzmV6q6EVBvEusSTSX/mYcfJzsWu8tPrF9isPojPWxW53ToYgVk1ui3E3jjZpQ==}
+  '@codegouvfr/react-dsfr@1.25.3':
+    resolution: {integrity: sha512-u+imx35b6cSXYw8I+t9IOEPI7WlvtLY2Ta1Y5XJC/0SdMiAVZjmjIlp6w7MdkLKYcKq8+1jVBfDR4EQhXwjFPg==}
     hasBin: true
     peerDependencies:
       '@gouvfr/dsfr-chart': ^1.0.0
@@ -1874,7 +1874,7 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@codegouvfr/react-dsfr@1.20.2':
+  '@codegouvfr/react-dsfr@1.25.3':
     dependencies:
       tsafe: 1.8.5
       yargs-parser: 21.1.1

@@ -16,7 +16,7 @@ export const UsersTable: FC = () => {
   const { data: usersSearchResponse } = useSearchUsers()
   const [searchQuery] = useQueryState('q')
 
-  const headers = ['Nom et Prénom', 'Email', 'Role', 'Date de création', 'Date de dernière connexion', 'Supprimer']
+  const headers = ['Nom et Prénom', 'Email', 'Role', 'Date de création', 'Date de dernière connexion', 'Démarches simplifiées', 'Supprimer']
   const data = searchQuery ? usersSearchResponse?.users : usersResponse?.users
 
   const userModals = (data || []).map((user) => {
@@ -55,6 +55,7 @@ export const UsersTable: FC = () => {
                 </td>
                 <td>{dayjs(user.createdAt).format('DD/MM/YYYY')}</td>
                 <td>{dayjs(user.lastLoginAt).format('DD/MM/YYYY - HH:mm')}</td>
+                <td>{user.hasAccess ? '✅' : '❌'}</td>
                 <td>
                   <div className={classes.actions}>
                     <i style={{ cursor: 'pointer' }} onClick={modalActions.open} className="ri-delete-bin-5-fill" />

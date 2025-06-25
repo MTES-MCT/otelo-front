@@ -10,7 +10,13 @@ export const ZSession = z.object({
     email: z.string().nullable(),
     image: z.string().nullable(),
     name: z.string().nullable(),
-    role: z.enum(['ADMIN', 'USER']),
+    firstName: z.string(),
+    lastName: z.string(),
+    sub: z.string(),
+    hasAccess: z.boolean(),
+    id: z.string(),
+    provider: z.string(),
+    role: z.enum(['ADMIN', 'USER']).optional(),
   }),
 })
 
@@ -18,4 +24,14 @@ export type TSession = z.infer<typeof ZSession>
 
 declare module 'next-auth' {
   interface Session extends TSession {}
+
+  interface User {
+    firstName: string
+    lastName: string
+    sub: string
+    id: string
+    email: string
+    provider: string
+    role?: 'ADMIN' | 'USER'
+  }
 }

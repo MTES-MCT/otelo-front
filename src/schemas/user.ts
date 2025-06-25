@@ -9,6 +9,7 @@ export const ZUser = ZCommonDateFields.extend({
   lastname: z.string(),
   role: z.enum(['ADMIN', 'USER']),
   sub: z.string(),
+  hasAccess: z.boolean(),
 })
 
 export type TUser = z.infer<typeof ZUser>

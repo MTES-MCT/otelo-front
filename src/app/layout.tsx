@@ -1,20 +1,18 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
 import { Footer } from '@codegouvfr/react-dsfr/Footer'
-import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
-import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider'
-import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes'
+import { StartDsfrOnHydration } from '@codegouvfr/react-dsfr/next-app-router'
 import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
-import { defaultColorScheme } from '~/app/default-color-scheme'
 import Matomo from '~/app/matomo'
-import { StartDsfr } from '~/app/start-dsfr'
 import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
+import { DsfrHead, getHtmlAttributes } from '~/dsfr/dsfr-head'
+import { DsfrProvider } from '~/dsfr/dsfr-provider'
 import { authOptions } from '~/lib/auth/auth.config'
 import { NextAuthProvider } from '~/providers/next-auth'
 import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
@@ -30,15 +28,15 @@ export default async function RootLayout({ children }: { children: JSX.Element }
   const session = await getServerSession(authOptions)
 
   return (
-    <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
+    <html {...getHtmlAttributes({ lang })}>
       <head>
-        <StartDsfr />
-        <DsfrHead Link={Link} preloadFonts={['Marianne-Regular', 'Marianne-Medium', 'Marianne-Bold']} />
+        <DsfrHead preloadFonts={['Marianne-Regular', 'Marianne-Medium', 'Marianne-Bold']} />
         <Matomo />
       </head>
       <body>
         <div className={classes.container}>
           <NextAppDirEmotionCacheProvider options={{ key: 'css' }}>
+            <StartDsfrOnHydration />
             <DsfrProvider lang={lang}>
               <TanstackQueryClientProvider>
                 <NuqsAdapter>

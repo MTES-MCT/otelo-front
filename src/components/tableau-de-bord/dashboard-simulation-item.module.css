@@ -1,0 +1,16 @@
+/* Delete button styling */
+.deleteIcon {
+  cursor: pointer;
+  color: var(--text-action-high-red-marianne);
+}
+
+.deleteIcon:hover {
+  opacity: 0.8;
+}
+
+/* Modal actions container */
+.modalActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-around;
+}

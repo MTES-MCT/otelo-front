@@ -3,9 +3,14 @@ import Badge from '@codegouvfr/react-dsfr/Badge'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
+import { NoResults } from './no-results'
 
 export default async function TableauxDeBordPage() {
   const dashboard = await getDashboardList()
+
+  if (Object.keys(dashboard).length === 0) {
+    return <NoResults />
+  }
 
   return (
     <div className={fr.cx('fr-container')}>
@@ -30,7 +35,7 @@ export default async function TableauxDeBordPage() {
                         </div>
                         <div>
                           <Badge severity="info" small>
-                            {dayjs(simulation.createdAt).format('DD/MM/YYYY')}
+                            {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}
                           </Badge>
                         </div>
                       </div>

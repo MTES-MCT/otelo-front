@@ -8,7 +8,7 @@ interface PageProps {
   params: { groupName: string }
 }
 
-export default async function TableauDeBordVisualisationPage({ params }: PageProps) {
+export default async function TableauDeBordPage({ params }: PageProps) {
   const { groupName } = params
 
   // Redirect if no EPCIs are provided

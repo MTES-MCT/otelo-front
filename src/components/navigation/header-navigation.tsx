@@ -61,7 +61,7 @@ const getMenuConnected = (pathname: string, isAdmin = false): MainNavigationProp
     text: 'Accueil',
   },
   {
-    isActive: pathname === '/tableaux-de-bord',
+    isActive: /tableaux?-de-bord/.test(pathname),
     linkProps: { href: '/tableaux-de-bord', target: '_self' },
     text: 'Tableaux de bord',
   },

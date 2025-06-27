@@ -7,6 +7,7 @@ import { createModal } from '@codegouvfr/react-dsfr/Modal'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { useDeleteSimulation } from '~/hooks/use-delete-simulation'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 import styles from './dashboard-simulation-item.module.css'
@@ -28,7 +29,15 @@ export function DashboardSimulationItem({ simulation }: DashboardSimulationItemP
     deleteSimulationMutation.mutate(simulation.id, {
       onSuccess: () => {
         modalActions.close()
+        toast.success('Scénario supprimé avec succès.', {
+          description: `Le scénario "${simulation.name}" a été définitivement supprimé.`,
+        })
         router.refresh()
+      },
+      onError: () => {
+        toast.error('Erreur lors de la suppression', {
+          description: `Impossible de supprimer le scénario "${simulation.name}". Veuillez réessayer.`,
+        })
       },
     })
   }
@@ -55,9 +64,9 @@ export function DashboardSimulationItem({ simulation }: DashboardSimulationItemP
         </div>
       </div>
 
-      <modalActions.Component title="Êtes vous sûr de vouloir supprimer cette simulation ?" concealingBackdrop>
+      <modalActions.Component title="Êtes vous sûr de vouloir supprimer ce scénario ?" concealingBackdrop>
         <p>
-          Cette action est irréversible. La simulation <strong>&quot;{simulation.name}&quot;</strong> sera définitivement supprimée.
+          Cette action est irréversible. Le scénario <strong>&quot;{simulation.name}&quot;</strong> sera définitivement supprimé.
         </p>
         <div className={styles.modalActions}>
           <Button priority="secondary" onClick={modalActions.close}>

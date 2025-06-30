@@ -5,7 +5,6 @@ import Alert from '@codegouvfr/react-dsfr/Alert'
 import Badge from '@codegouvfr/react-dsfr/Badge'
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
 import Button from '@codegouvfr/react-dsfr/Button'
-import { Card } from '@codegouvfr/react-dsfr/Card'
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { createModal } from '@codegouvfr/react-dsfr/Modal'
@@ -15,6 +14,7 @@ import Tag from '@codegouvfr/react-dsfr/Tag'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
 import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
@@ -78,7 +78,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
         homeLinkProps={{
           href: '/',
         }}
-        segments={[{ label: 'Tableau de bord', linkProps: { href: '/tableaux-de-bord' } }]}
+        segments={[{ label: 'Tableaux de bord', linkProps: { href: '/tableaux-de-bord' } }]}
       />
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         <div className={fr.cx('fr-col-offset-lg-2')} />
@@ -89,13 +89,12 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
 
           <form>
             <div className={fr.cx('fr-mb-6w')}>
-              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des simulations à inclure :</p>
+              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des scénarios à inclure :</p>
               <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mb-2w')}>
                 {simulations.map((simulation) => (
                   <div key={simulation.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-                    <Card
-                      background
-                      start={
+                    <div className={styles.card}>
+                      <div className={styles.cardUpperBody}>
                         <div className={styles.cardHeader}>
                           <div className={styles.tagContainer}>
                             <Badge small severity="info">
@@ -130,16 +129,20 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                             )}
                           />
                         </div>
-                      }
-                      endDetail={`Créée le ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`}
-                      border
-                      linkProps={{
-                        href: `/simulation/${simulation.id}/resultats`,
-                      }}
-                      size="small"
-                      title={simulation.name}
-                      titleAs="h3"
-                    />
+                        <h3 className={styles.cardTitle}>
+                          <Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>
+                        </h3>
+                        <ul className={styles.cardList}>
+                          {simulation.epcis.map((epci) => (
+                            <li className={styles.cardListItem} key={epci.code}>
+                              {epci.name}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>
+                    </div>
                   </div>
                 ))}
               </div>

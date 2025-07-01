@@ -19,20 +19,19 @@ interface RatesProviderProps {
   initialRates: Record<string, TAccommodationRates>
 }
 
-export const getComputedTxLv = (value: number, tauxLVLD: number): number => value - ((tauxLVLD && tauxLVLD / 100) || 0)
+export const getComputedTxLv = (value: number, tauxLVLD: number): number => value - tauxLVLD
 
 export const RatesProvider = ({ children, initialRates }: RatesProviderProps) => {
-  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates).reduce(
-    (acc, [epciId, rates]) => ({
+  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates).reduce((acc, [epciId, rates]) => {
+    return {
       ...acc,
       [epciId]: {
-        txLV: getComputedTxLv(rates.txLv, rates.vacancy.txLvLongue),
-        txLVLD: rates.vacancy.txLvLongue,
+        txLV: getComputedTxLv(rates.txLv, (15 / 100) * rates.txLvLD),
+        txLVLD: rates.txLvLD,
         txRS: rates.txRs,
       },
-    }),
-    {},
-  )
+    }
+  }, {})
 
   const [rates, setRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
   const updateRates = (epciId: string, newRates: Partial<RateSettings>) => {

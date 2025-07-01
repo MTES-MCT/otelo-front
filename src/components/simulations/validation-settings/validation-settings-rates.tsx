@@ -30,7 +30,7 @@ const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
         hintText="Taux cible de logements vacants"
         nativeInputProps={{ value: (Number(txLV) * 100).toFixed(2) }}
         className={classes.flex}
-        stateRelatedMessage={`dont ${Number(txLVLD).toFixed(2)}% de logements vacants de longue durée`}
+        stateRelatedMessage={`dont ${Number(txLVLD * 100).toFixed(2)}% de logements vacants de longue durée`}
         state="info"
       />
       <Input
@@ -53,7 +53,6 @@ export const ValidationSettingsRates: FC<ValidationSettingsRatesProps> = ({ epci
   const { data: bassinEpcis } = useBassinEpcis()
 
   const { rates } = useEpcisRates()
-
   const tabs = Object.entries(rates).map(([epci, rates]) => ({
     content: <TabChildren epci={epci} rates={rates} />,
     iconId: 'ri-road-map-line' as RiIconClassName,

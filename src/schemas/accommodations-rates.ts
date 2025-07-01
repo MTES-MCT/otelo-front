@@ -3,6 +3,8 @@ import { z } from 'zod'
 const ZAccommodationRates = z.object({
   txLv: z.number(),
   txRs: z.number(),
+  txLvLD: z.number(),
+  txLvCD: z.number(),
   vacancy: z.object({
     nbAccommodation: z.number(),
     txLvLongue: z.number(),

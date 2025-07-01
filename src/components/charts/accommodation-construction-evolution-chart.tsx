@@ -3,10 +3,10 @@
 import { FC } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
-import { TChartData, TNewConstructionsChartData } from '~/schemas/results'
+import { TChartData, TFlowRequirementChartData } from '~/schemas/results'
 
 interface AccommodationContructionEvolutionChartProps {
-  newConstructionsResults: TNewConstructionsChartData
+  newConstructionsResults: TFlowRequirementChartData
   sitadelResults: TChartData
   horizon: number
 }

@@ -60,10 +60,21 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
     projection: parseAsString,
     scenario: parseAsString,
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
-    epciChart: parseAsString.withDefault(''),
+    epciChart: parseAsString,
   })
 
-  const { data, metadata } = demographicEvolution[queryStates.epciChart ?? queryStates.epcis[0]]
+  const selectedEpci = queryStates.epciChart ?? queryStates.epcis[0]
+  const selectedData = selectedEpci ? demographicEvolution[selectedEpci] : null
+
+  if (!selectedData) {
+    return (
+      <div className={classes.chartContainer}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Chargement...</div>
+      </div>
+    )
+  }
+
+  const { data, metadata } = selectedData
 
   const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.map((scenario) => ({

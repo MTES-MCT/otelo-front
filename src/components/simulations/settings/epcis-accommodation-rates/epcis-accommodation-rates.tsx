@@ -34,11 +34,10 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
           description={
             <>
               <span>
-                Le volume de logements vacants longue durée est de {formatNumber(epciRates.vacancy.nbAccommodation)} logements en{' '}
+                Le volume de logements vacants longue durée est de {formatNumber(epciRates.vacancy.nbAccommodation)} logements en&nbsp;
                 {epciRates.vacancy.year}.
                 <span className={classes.smallText}>
-                  {' '}
-                  (soit <span className={classes.bold}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
+                  &nbsp;(soit <span className={classes.bold}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
                 </span>
               </span>
               <p>Le taux de vacance courte durée est de {(Number(epciRates.txLv) * 100).toFixed(2)}%. Il n'est pas modifiable.</p>
@@ -52,7 +51,7 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
         <VacancyAccommodationRatesInput
           creationMode={creationMode}
           epci={epci}
-          longTermValue={epciRates.vacancy.txLvLongue}
+          longTermValue={epciRates.txLvLD}
           shortTermValue={epciRates.txLv}
         />
         <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
@@ -69,7 +68,7 @@ export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ epci
   if (!rates) return null
 
   const tabs = epcis.map((epci) => ({
-    content: <TabChildren epci={epci.code} rates={rates} creationMode={creationMode} />,
+    content: <TabChildren creationMode={creationMode} epci={epci.code} rates={rates} />,
     iconId: 'ri-road-map-line' as RiIconClassName,
     label: epci.name,
   }))

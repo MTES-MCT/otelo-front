@@ -51,38 +51,44 @@ export const ZChartDataResult = z.object({
 })
 export type TChartDataResult = z.infer<typeof ZChartDataResult>
 
-export const ZNewConstructionsChartData = z.object({
+export const ZFlowRequirementChartData = z.object({
   code: z.string(),
   data: z.object({
+    parcEvolution: z.record(z.number()),
     housingNeeds: z.record(z.number()),
     surplusHousing: z.record(z.number()),
   }),
+  totals: z.object({
+    demographicEvolution: z.number(),
+    renewalNeeds: z.number(),
+    secondaryResidenceAccomodationEvolution: z.number(),
+    surplusHousing: z.number(),
+    housingNeeds: z.number(),
+    vacantAccomodation: z.number(),
+  }),
   metadata: z.object({ max: z.number(), min: z.number() }),
 })
-export type TNewConstructionsChartData = z.infer<typeof ZNewConstructionsChartData>
+export type TFlowRequirementChartData = z.infer<typeof ZFlowRequirementChartData>
 
-export const ZNewConstructionsChartDataResult = z.object({
-  epcis: z.array(ZNewConstructionsChartData),
+export const ZFlowRequirementChartDataResult = z.object({
+  epcis: z.array(ZFlowRequirementChartData),
 })
-export type TNewConstructionsChartDataResult = z.infer<typeof ZNewConstructionsChartDataResult>
+export type TFlowRequirementChartDataResult = z.infer<typeof ZFlowRequirementChartDataResult>
 
 export const ZResults = z.object({
   badQuality: ZCalculationResult,
-  demographicEvolution: ZCalculationResult,
   epcisTotals: z.array(z.object({ epciCode: z.string(), total: z.number(), totalFlux: z.number(), totalStock: z.number() })),
   financialInadequation: ZCalculationResult,
   hosted: ZCalculationResult,
   noAccomodation: ZCalculationResult,
   physicalInadequation: ZCalculationResult,
-  newConstructions: ZNewConstructionsChartDataResult,
-  renewalNeeds: ZCalculationResult,
-  secondaryResidenceAccomodationEvolution: ZCalculationResult,
+  flowRequirement: ZFlowRequirementChartDataResult,
   sitadel: ZChartDataResult,
   socialParc: ZCalculationResult,
   total: z.number(),
   totalFlux: z.number(),
   totalStock: z.number(),
-  vacantAccomodationEvolution: ZCalculationResult,
+  vacantAccomodation: z.number(),
 })
 
 export type TResults = z.infer<typeof ZResults>

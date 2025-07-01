@@ -6,7 +6,7 @@ import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
 import { ExportSimulationSettings } from '~/components/simulations/results/export/export-simulation-settings'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
-import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TNewConstructionsChartData } from '~/schemas/results'
+import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData } from '~/schemas/results'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 import styles from './resultats.module.css'
 
@@ -20,7 +20,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     total: simulation.results.total,
     totalFlux: simulation.results.totalFlux,
     totalStock: simulation.results.totalStock,
-    vacancy: simulation.results.vacantAccomodationEvolution.total,
+    vacancy: simulation.results.vacantAccomodation,
   }
 
   const epciTabs = simulation.epcis.map((epci) => {
@@ -32,7 +32,8 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       total: (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).total,
       totalFlux,
       totalStock,
-      vacancy: (simulation.results.vacantAccomodationEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      vacancy: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
+        .vacantAccomodation,
     }
 
     const stockResults = {
@@ -49,22 +50,20 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     }
 
     const flowResults = {
-      demographicEvolution: (simulation.results.demographicEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult)
-        .value,
-      renewalNeeds: (simulation.results.renewalNeeds.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      demographicEvolution: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
+        .demographicEvolution,
+      renewalNeeds: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
+        .renewalNeeds,
       secondaryResidenceAccomodationEvolution: (
-        simulation.results.secondaryResidenceAccomodationEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult
-      ).value,
+        simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
+      ).totals.secondaryResidenceAccomodationEvolution,
       totalFlux,
-      vacantAccomodationEvolution: (
-        simulation.results.vacantAccomodationEvolution.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult
-      ).value,
+      vacantAccomodationEvolution: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
+        .totals.vacantAccomodation,
     }
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
-    const newConstructionsResults = simulation.results.newConstructions.epcis.find(
-      (e) => e.code === epci.code,
-    ) as TNewConstructionsChartData
+    const newConstructionsResults = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
     return {
       content: (
         <>

@@ -4,15 +4,14 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import { useRouter } from 'next/navigation'
-import { parseAsArrayOf, useQueryStates } from 'nuqs'
-import { parseAsString } from 'nuqs/server'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { useEffect, useState } from 'react'
-import { CheckboxEpcis } from '~/app/(authenticated)/simulation/(creation)/choix-du-territoire/checkbox-epcis'
 import { AutocompleteInput } from '~/components/simulations/autocomplete/autocomplete-input'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { useEpcis } from '~/hooks/use-epcis'
 import { GeoApiCommuneResult, GeoApiEpciResult } from '~/hooks/use-geoapi-search'
 import { TEpci } from '~/schemas/epci'
+import { CheckboxEpcis } from './checkbox-epcis'
 import { ContiguousEpcisCheckboxes } from './contiguous-epcis-checkboxes'
 
 type WrapperSimulationTypePageProps = {
@@ -31,10 +30,16 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
   const href = `/simulation/cadrage-temporel`
 
   useEffect(() => {
-    if (baseEpci && epcis.length === 0) {
-      setQueryStates({ epcis: bassinEpcis?.map((epci) => epci.code) ?? [] })
+    // Only set epcis if we have a baseEpci, bassinEpcis data, and epcis is empty
+    // Also check that the bassinEpcis actually corresponds to the current baseEpci
+    if (baseEpci && epcis.length === 0 && bassinEpcis.length > 0) {
+      // Verify that at least one of the bassinEpcis matches our baseEpci
+      const isCorrectBassin = bassinEpcis.some((epci) => epci.code === baseEpci)
+      if (isCorrectBassin) {
+        setQueryStates({ epcis: bassinEpcis.map((epci) => epci.code) })
+      }
     }
-  }, [baseEpci, epcis, bassinEpcis, setQueryStates])
+  }, [baseEpci, epcis.length, bassinEpcis, setQueryStates])
 
   const onEditClick = () => {
     setIsEditing(!isEditing)
@@ -42,6 +47,9 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
 
   const onSelectEpci = async (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
+
+    // Reset editing state when selecting a new EPCI
+    setIsEditing(false)
 
     await setQueryStates({ baseEpci: code, epcis: [] })
 

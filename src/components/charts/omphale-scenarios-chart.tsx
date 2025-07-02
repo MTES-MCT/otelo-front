@@ -134,7 +134,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     epciChart: parseAsString.withDefault(''),
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
   })
-  const { data, metadata } = demographicEvolution[queryStates.epciChart ?? queryStates.epcis[0]]
+  const { data, metadata } = demographicEvolution[queryStates.epciChart || queryStates.epcis[0]]
 
   const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.filter((scenario) => scenario.id === queryStates.population).map((scenario) => ({

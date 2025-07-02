@@ -1,8 +1,7 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
-import { parseAsArrayOf, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { tss } from 'tss-react'
 import { AutocompleteResults } from '~/components/simulations/autocomplete/autocomplete-results'
 import { GeoApiCommuneResult, GeoApiEpciResult, useGeoApiSearch } from '~/hooks/use-geoapi-search'
@@ -11,19 +10,19 @@ type AutocompleteInputProps = {
   hintText: string
   label?: string
   onClick?: (item: GeoApiEpciResult | GeoApiCommuneResult) => void
+  defaultValue?: string
 }
 
-export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label, onClick }: AutocompleteInputProps) => {
+export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label, onClick, defaultValue }: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
-  const [_, setSearchQueryState] = useQueryStates({
-    epcis: parseAsArrayOf(parseAsString).withDefault([]),
-    q: parseAsString.withDefault(''),
-    region: parseAsString.withDefault(''),
-    type: parseAsStringEnum(['bh', 'epcis']),
-    epciChart: parseAsString.withDefault(''),
-  })
   const [isResultsVisible, setIsResultsVisible] = useState(false)
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSearchQuery(defaultValue)
+    }
+  }, [defaultValue])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
@@ -31,12 +30,9 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label,
   }
 
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
-    const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
-    const region = 'codesRegions' in item ? item.codesRegions[0] : item.codeRegion
     if (onClick) {
       onClick(item)
     }
-    setSearchQueryState({ epcis: [code], region, epciChart: code })
 
     setSearchQuery(item.nom)
     setIsResultsVisible(false)

@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { TEpci } from '~/schemas/epci'
 
-export const useContiguousEpcis = (epciCode?: string) => {
+export const useContiguousEpcis = (epciCodes?: string | string[]) => {
   const getContiguousEpcis = async (): Promise<TEpci[]> => {
-    if (!epciCode) return []
+    if (!epciCodes || (Array.isArray(epciCodes) && epciCodes.length === 0)) return []
 
     try {
-      const response = await fetch(`/api/epci/${epciCode}/contiguous`)
+      const codes = Array.isArray(epciCodes) ? epciCodes : [epciCodes]
+      const response = await fetch(`/api/epci/contiguous?codes=${codes.join(',')}`)
 
       if (!response.ok) {
         throw new Error('Failed to get contiguous epcis')
@@ -19,10 +20,12 @@ export const useContiguousEpcis = (epciCode?: string) => {
     }
   }
 
+  const codesKey = Array.isArray(epciCodes) ? epciCodes.join(',') : epciCodes
+
   const { data, isLoading } = useQuery({
-    enabled: !!epciCode,
+    enabled: !!epciCodes && (Array.isArray(epciCodes) ? epciCodes.length > 0 : true),
     queryFn: () => getContiguousEpcis(),
-    queryKey: ['contiguous-epcis', epciCode],
+    queryKey: ['contiguous-epcis', codesKey],
   })
 
   return { data: data || [], isLoading }

@@ -1,6 +1,6 @@
 'use client'
 
-import { parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
 import { AutocompleteInput } from '~/components/simulations/autocomplete/autocomplete-input'
 import { GeoApiCommuneResult, GeoApiEpciResult } from '~/hooks/use-geoapi-search'
 
@@ -13,11 +13,18 @@ export const DatavisualisationAutocomplete = () => {
       'population-evolution',
       'menage-evolution',
     ]),
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    region: parseAsString.withDefault(''),
+    epciChart: parseAsString.withDefault(''),
   })
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
+    const region = 'codesRegions' in item ? item.codesRegions[0] : item.codeRegion
     setSearchQueryState({
       epci: code,
+      epcis: [code],
+      region,
+      epciChart: code,
     })
   }
   return (

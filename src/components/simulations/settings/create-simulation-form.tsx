@@ -3,7 +3,7 @@
 import Button from '@codegouvfr/react-dsfr/Button'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
@@ -13,6 +13,7 @@ import { ValidationSettingsRates } from '~/components/simulations/validation-set
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
 import { TInitSimulationDto, ZInitSimulationDto } from '~/schemas/simulation'
 import { getOmphaleLabel } from '~/utils/omphale-label'
+import { useCreateEpciGroup } from '~/hooks/use-create-epci-group'
 
 export const CreateSimulationForm: FC = () => {
   const { classes } = useStyles()
@@ -21,12 +22,15 @@ export const CreateSimulationForm: FC = () => {
     redirectUri: '/simulation/{{id}}/modifier/mal-logement/horizon-de-resorption',
   })
   const { rates } = useEpcisRates()
+  const createEpciGroup = useCreateEpciGroup()
 
   const [queryStates] = useQueryStates({
     epci: parseAsString,
     omphale: parseAsString,
     projection: parseAsInteger,
     region: parseAsString,
+    epciGroupName: parseAsString,
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
   })
 
   const {
@@ -56,8 +60,29 @@ export const CreateSimulationForm: FC = () => {
     },
   })
 
-  const onSubmitForResults = async () => createSimulationForResults.mutateAsync(getValues())
-  const onSubmitForBadHousing = async () => createSimulationForBadHousing.mutateAsync(getValues())
+  const onSubmitForResults = async () => {
+    // Create EPCI group if a custom name was provided
+    if (queryStates.epciGroupName && queryStates.epcis.length > 0) {
+      await createEpciGroup.mutateAsync({
+        name: queryStates.epciGroupName,
+        epciCodes: queryStates.epcis,
+      })
+    }
+    
+    return createSimulationForResults.mutateAsync(getValues())
+  }
+  
+  const onSubmitForBadHousing = async () => {
+    // Create EPCI group if a custom name was provided
+    if (queryStates.epciGroupName && queryStates.epcis.length > 0) {
+      await createEpciGroup.mutateAsync({
+        name: queryStates.epciGroupName,
+        epciCodes: queryStates.epcis,
+      })
+    }
+    
+    return createSimulationForBadHousing.mutateAsync(getValues())
+  }
 
   return (
     <>

@@ -13,6 +13,8 @@ import { GeoApiCommuneResult, GeoApiEpciResult } from '~/hooks/use-geoapi-search
 import { TEpci } from '~/schemas/epci'
 import { CheckboxEpcis } from './checkbox-epcis'
 import { ContiguousEpcisCheckboxes } from './contiguous-epcis-checkboxes'
+import { EpciGroupNameInput } from './epci-group-name-input'
+import { EpciGroupSelect } from './epci-group-select'
 
 type WrapperSimulationTypePageProps = {
   bassinEpcis: TEpci[]
@@ -20,13 +22,15 @@ type WrapperSimulationTypePageProps = {
 
 export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulationTypePageProps) => {
   const router = useRouter()
-  const [{ baseEpci, epcis }, setQueryStates] = useQueryStates({
+  const [{ baseEpci, epcis, epciGroupName }, setQueryStates] = useQueryStates({
     baseEpci: parseAsString,
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epciGroupName: parseAsString,
   })
   const { data: selectedEpcis } = useEpcis(epcis)
 
   const [isEditing, setIsEditing] = useState(false)
+  const [showGroupSelect, setShowGroupSelect] = useState(false)
   const href = `/simulation/cadrage-temporel`
 
   useEffect(() => {
@@ -111,6 +115,39 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
           </>
         )}
       </div>
+
+      {showGroupSelect && (
+        <div className={fr.cx('fr-mt-3w')}>
+          <EpciGroupSelect
+            onSelect={(group) => {
+              setQueryStates({
+                epcis: group.epciGroupEpcis.map((e) => e.epciCode),
+                epciGroupName: group.name,
+              })
+              setShowGroupSelect(false)
+            }}
+            onCancel={() => setShowGroupSelect(false)}
+          />
+        </div>
+      )}
+
+      {selectedEpcis && selectedEpcis.length > 0 && (
+        <div className={fr.cx('fr-mt-3w')}>
+          <Button
+            priority="secondary"
+            onClick={() => setShowGroupSelect(true)}
+            className={fr.cx('fr-mb-2w')}
+          >
+            Ou sélectionner un groupe existant
+          </Button>
+          {isEditing && (
+            <EpciGroupNameInput
+              value={epciGroupName || ''}
+              onChange={(value) => setQueryStates({ epciGroupName: value })}
+            />
+          )}
+        </div>
+      )}
 
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
         <NextStepLink href={href} query="epcis" />

@@ -1,6 +1,7 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
+import classNames from 'classnames'
 import { FC, useEffect, useState } from 'react'
 import { tss } from 'tss-react'
 import { AutocompleteResults } from '~/components/simulations/autocomplete/autocomplete-results'
@@ -11,9 +12,16 @@ type AutocompleteInputProps = {
   label?: string
   onClick?: (item: GeoApiEpciResult | GeoApiCommuneResult) => void
   defaultValue?: string
+  className?: string
 }
 
-export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label, onClick, defaultValue }: AutocompleteInputProps) => {
+export const AutocompleteInput: FC<AutocompleteInputProps> = ({
+  hintText,
+  label,
+  onClick,
+  defaultValue,
+  className,
+}: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
   const [isResultsVisible, setIsResultsVisible] = useState(false)
@@ -41,7 +49,7 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label,
   const hasResults = (data.communes.length > 0 || data.epcis.length > 0) && isResultsVisible
 
   return (
-    <div className={classes.container}>
+    <div className={classNames(classes.container, className)}>
       <Input
         hintText={hintText}
         label={label}

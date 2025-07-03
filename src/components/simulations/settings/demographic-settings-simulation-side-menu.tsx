@@ -1,16 +1,22 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
+import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import React from 'react'
 import { DemographicSettingsCreationGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
 import { useEpcis } from '~/hooks/use-epcis'
 import styles from './simulation-side-menu.module.css'
 
 export default function DemographicSettingsSimulationSideMenu() {
-  const { data: epcis } = useEpcis()
+  const [epcisParam] = useQueryState('epcis', parseAsArrayOf(parseAsString).withDefault([]))
+  const { data: epcis } = useEpcis(epcisParam)
+  
+  // Explicitly check the URL params, not the fetched data
+  const epciNames = epcisParam.length > 0 && epcis ? epcis.map((epci) => epci.name) : undefined
+  
   const demographicSteps = [
     {
-      data: epcis?.map((epci) => epci.name),
+      data: epciNames,
       label: 'Territoire à étudier',
       path: '/simulation/choix-du-territoire',
       queryKeys: ['epci', 'epcis'],

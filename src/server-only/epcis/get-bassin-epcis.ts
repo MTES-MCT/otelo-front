@@ -11,6 +11,7 @@ export const getBassinEpcis = async (epci: string) => {
 
   const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/epcis/${epci}/bassin`, {
     headers: {
+      Authorization: `Bearer ${session.accessToken}`,
       'Content-Type': 'application/json',
     },
   })

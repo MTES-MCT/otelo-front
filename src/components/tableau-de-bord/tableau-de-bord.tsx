@@ -16,6 +16,7 @@ import classNames from 'classnames'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
+import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
 import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
 import styles from './tableau-de-bord.module.css'
@@ -93,45 +94,45 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
               <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mb-2w')}>
                 {simulations.map((simulation) => (
                   <div key={simulation.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-                    <div className={styles.card}>
-                      <div className={styles.cardUpperBody}>
-                        <div className={styles.cardHeader}>
-                          <div className={styles.tagContainer}>
-                            <Badge small severity="info">
-                              Horizon {simulation.scenario.projection}
-                            </Badge>
-                            <Badge small>{getPopulationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
-                            <Badge small>{getDecohabitationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
-                          </div>
-                          <Controller
-                            control={control}
-                            name="selectedSimulations"
-                            render={({ field }) => (
-                              <Checkbox
-                                small
-                                className={styles.checkbox}
-                                options={[
-                                  {
-                                    label: '',
-                                    nativeInputProps: {
-                                      checked: field.value.includes(simulation.id),
-                                      onChange: (e) => {
-                                        if (e.target.checked) {
-                                          field.onChange([...field.value, simulation.id])
-                                        } else {
-                                          field.onChange(field.value.filter((id: string) => id !== simulation.id))
-                                        }
-                                      },
+                    <GenericCard
+                      header={
+                        <div className={styles.tagContainer}>
+                          <Badge small severity="info">
+                            Horizon {simulation.scenario.projection}
+                          </Badge>
+                          <Badge small>{getPopulationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
+                          <Badge small>{getDecohabitationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
+                        </div>
+                      }
+                      headerAction={
+                        <Controller
+                          control={control}
+                          name="selectedSimulations"
+                          render={({ field }) => (
+                            <Checkbox
+                              small
+                              className={styles.checkbox}
+                              options={[
+                                {
+                                  label: '',
+                                  nativeInputProps: {
+                                    checked: field.value.includes(simulation.id),
+                                    onChange: (e) => {
+                                      if (e.target.checked) {
+                                        field.onChange([...field.value, simulation.id])
+                                      } else {
+                                        field.onChange(field.value.filter((id: string) => id !== simulation.id))
+                                      }
                                     },
                                   },
-                                ]}
-                              />
-                            )}
-                          />
-                        </div>
-                        <h3 className={styles.cardTitle}>
-                          <Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>
-                        </h3>
+                                },
+                              ]}
+                            />
+                          )}
+                        />
+                      }
+                      title={<Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>}
+                      description={
                         <ul className={styles.cardList}>
                           {simulation.epcis.map((epci) => (
                             <li className={styles.cardListItem} key={epci.code}>
@@ -139,10 +140,11 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                             </li>
                           ))}
                         </ul>
-                      </div>
-
-                      <div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>
-                    </div>
+                      }
+                      footer={
+                        <div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>
+                      }
+                    />
                   </div>
                 ))}
               </div>

@@ -3,7 +3,6 @@ import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
 import { EpcisAccommodationRates } from '~/components/simulations/settings/epcis-accommodation-rates/epcis-accommodation-rates'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
-import { getBassinEpcis } from '~/server-only/epcis/get-bassin-epcis'
 import { getEpcis } from '~/server-only/epcis/get-epcis'
 import styles from './taux-cibles-logements.module.css'
 
@@ -12,13 +11,8 @@ type PageProps = {
 }
 
 export default async function TargetRatesHousing({ searchParams }: PageProps) {
-  const { epcis, type } = await searchParamsCache.parse(searchParams)
-  let simulationsEpcis = []
-  if (type === 'epcis') {
-    simulationsEpcis = await getEpcis(epcis)
-  } else {
-    simulationsEpcis = await getBassinEpcis(epcis[0])
-  }
+  const { epcis } = await searchParamsCache.parse(searchParams)
+  const simulationsEpcis = await getEpcis(epcis)
   const href = `/simulation/validation-parametrage`
 
   return (

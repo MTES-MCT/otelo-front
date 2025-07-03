@@ -13,7 +13,6 @@ import { ValidationSettingsRates } from '~/components/simulations/validation-set
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
 import { TInitSimulationDto, ZInitSimulationDto } from '~/schemas/simulation'
 import { getOmphaleLabel } from '~/utils/omphale-label'
-import { useCreateEpciGroup } from '~/hooks/use-create-epci-group'
 
 export const CreateSimulationForm: FC = () => {
   const { classes } = useStyles()
@@ -22,7 +21,6 @@ export const CreateSimulationForm: FC = () => {
     redirectUri: '/simulation/{{id}}/modifier/mal-logement/horizon-de-resorption',
   })
   const { rates } = useEpcisRates()
-  const createEpciGroup = useCreateEpciGroup()
 
   const [queryStates] = useQueryStates({
     epci: parseAsString,
@@ -30,8 +28,12 @@ export const CreateSimulationForm: FC = () => {
     projection: parseAsInteger,
     region: parseAsString,
     epciGroupName: parseAsString,
+    epciGroupId: parseAsString,
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
   })
+
+  // Use epcis from query states, or fall back to all EPCIs in rates if none specified
+  const selectedEpcis = queryStates.epcis.length > 0 ? queryStates.epcis : Object.keys(rates)
 
   const {
     register,
@@ -42,14 +44,19 @@ export const CreateSimulationForm: FC = () => {
     resolver: zodResolver(ZInitSimulationDto),
     values: {
       name: '',
-      epci: Object.entries(rates).map(([epci]) => ({ code: epci })),
+      epci: selectedEpcis.map((epciCode) => ({ code: epciCode })),
+      epciGroupId: queryStates.epciGroupId,
+      epciGroupName: queryStates.epciGroupName,
       scenario: {
         b2_scenario: queryStates.omphale as string,
-        epcis: Object.entries(rates).reduce(
-          (acc, [epci, rates]) => {
-            acc[epci] = {
-              b2_tx_rs: rates.txRS ?? undefined,
-              b2_tx_vacance: rates.txLV ?? undefined,
+        epcis: selectedEpcis.reduce(
+          (acc, epciCode) => {
+            const epciRates = rates[epciCode]
+            if (epciRates) {
+              acc[epciCode] = {
+                b2_tx_rs: epciRates.txRS ?? undefined,
+                b2_tx_vacance: epciRates.txLV ?? undefined,
+              }
             }
             return acc
           },
@@ -61,26 +68,10 @@ export const CreateSimulationForm: FC = () => {
   })
 
   const onSubmitForResults = async () => {
-    // Create EPCI group if a custom name was provided
-    if (queryStates.epciGroupName && queryStates.epcis.length > 0) {
-      await createEpciGroup.mutateAsync({
-        name: queryStates.epciGroupName,
-        epciCodes: queryStates.epcis,
-      })
-    }
-    
     return createSimulationForResults.mutateAsync(getValues())
   }
-  
+
   const onSubmitForBadHousing = async () => {
-    // Create EPCI group if a custom name was provided
-    if (queryStates.epciGroupName && queryStates.epcis.length > 0) {
-      await createEpciGroup.mutateAsync({
-        name: queryStates.epciGroupName,
-        epciCodes: queryStates.epcis,
-      })
-    }
-    
     return createSimulationForBadHousing.mutateAsync(getValues())
   }
 

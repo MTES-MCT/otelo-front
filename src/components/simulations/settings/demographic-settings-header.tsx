@@ -22,7 +22,7 @@ export const DemographicSettingsSelectEpci = ({ epcis }: { epcis?: string[] }) =
     <Select
       label=""
       nativeSelectProps={{
-        value: displayedEpci as string,
+        value: (displayedEpci as string) || epcis?.[0],
         onChange: (event) => setDisplayedEpci(event.target.value),
       }}
     >

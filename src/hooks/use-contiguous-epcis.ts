@@ -26,6 +26,7 @@ export const useContiguousEpcis = (epciCodes?: string | string[]) => {
     enabled: !!epciCodes && (Array.isArray(epciCodes) ? epciCodes.length > 0 : true),
     queryFn: () => getContiguousEpcis(),
     queryKey: ['contiguous-epcis', codesKey],
+    placeholderData: (previousData) => previousData,
   })
 
   return { data: data || [], isLoading }

@@ -10,10 +10,10 @@ import styles from './simulation-side-menu.module.css'
 export default function DemographicSettingsSimulationSideMenu() {
   const [epcisParam] = useQueryState('epcis', parseAsArrayOf(parseAsString).withDefault([]))
   const { data: epcis } = useEpcis(epcisParam)
-  
+
   // Explicitly check the URL params, not the fetched data
   const epciNames = epcisParam.length > 0 && epcis ? epcis.map((epci) => epci.name) : undefined
-  
+
   const demographicSteps = [
     {
       data: epciNames,

@@ -36,6 +36,9 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
   const notEnoughSimulations = simulations.length < 3
   const { mutateAsync, isError, isSuccess, isPending } = useRequestPowerpoint()
 
+  // Extract unique EPCIs from all simulations
+  const uniqueEpcis = Array.from(new Map(simulations.flatMap((sim) => sim.epcis).map((epci) => [epci.code, epci])).values())
+
   const {
     control,
     handleSubmit,
@@ -88,6 +91,23 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
 
           <h2>{groupName}</h2>
 
+          <div className={fr.cx('fr-callout', 'fr-mb-4w')}>
+            <h3 className={fr.cx('fr-callout__title')}>Territoires concernés</h3>
+            <div className={fr.cx('fr-callout__text')}>
+              <p className={fr.cx('fr-text--sm', 'fr-mb-2w')}>
+                Les simulations de ce groupe portent sur {uniqueEpcis.length} territoire{uniqueEpcis.length > 1 ? 's' : ''} :
+              </p>
+              <div>
+                {uniqueEpcis.map((epci, index) => (
+                  <span key={epci.code}>
+                    <Badge small>{epci.name}</Badge>
+                    {index < uniqueEpcis.length - 1 && ' '}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <form>
             <div className={fr.cx('fr-mb-6w')}>
               <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des scénarios à inclure :</p>
@@ -132,18 +152,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                         />
                       }
                       title={<Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>}
-                      description={
-                        <ul className={styles.cardList}>
-                          {simulation.epcis.map((epci) => (
-                            <li className={styles.cardListItem} key={epci.code}>
-                              {epci.name}
-                            </li>
-                          ))}
-                        </ul>
-                      }
-                      footer={
-                        <div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>
-                      }
+                      footer={<div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>}
                     />
                   </div>
                 ))}

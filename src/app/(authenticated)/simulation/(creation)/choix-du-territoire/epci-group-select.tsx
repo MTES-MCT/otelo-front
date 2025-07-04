@@ -10,12 +10,13 @@ import { TEpciGroupWithEpcis } from '~/schemas/epci-group'
 
 type EpciGroupSelectProps = {
   selectedGroupId?: string | null
+  onUnselect?: () => void
 }
 
 // Container wrapper component to avoid repetition
 const SelectContainer: FC<{ children: ReactNode }> = ({ children }) => <div className={fr.cx('fr-p-3w')}>{children}</div>
 
-export const EpciGroupSelect: FC<EpciGroupSelectProps> = ({ selectedGroupId }) => {
+export const EpciGroupSelect: FC<EpciGroupSelectProps> = ({ selectedGroupId, onUnselect: onUnselectProp }) => {
   const [_, setQueryStates] = useQueryStates({
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
     epciGroupName: parseAsString,
@@ -32,11 +33,15 @@ export const EpciGroupSelect: FC<EpciGroupSelectProps> = ({ selectedGroupId }) =
   }
 
   const onUnselect = () => {
-    setQueryStates({
-      epciGroupId: null,
-      epciGroupName: null,
-      epcis: [],
-    })
+    if (onUnselectProp) {
+      onUnselectProp()
+    } else {
+      setQueryStates({
+        epciGroupId: null,
+        epciGroupName: null,
+        epcis: [],
+      })
+    }
   }
 
   if (isLoading) {
@@ -65,7 +70,6 @@ export const EpciGroupSelect: FC<EpciGroupSelectProps> = ({ selectedGroupId }) =
 
   return (
     <SelectContainer>
-      <h6>Sélectionner un groupe EPCI existant</h6>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         {groups.map((group) => (
           <div key={group.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>

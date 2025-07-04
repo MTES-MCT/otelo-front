@@ -16,6 +16,7 @@ import { CheckboxEpcis } from './checkbox-epcis'
 import { ContiguousEpcisCheckboxes } from './contiguous-epcis-checkboxes'
 import { EpciGroupNameInput } from './epci-group-name-input'
 import { EpciGroupSelect } from './epci-group-select'
+import { MethodSelectionCards, SelectionMethod } from './method-selection-cards'
 
 type WrapperSimulationTypePageProps = {
   bassinEpcis: TEpci[]
@@ -32,6 +33,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
   const { data: selectedEpcis } = useEpcis(epcis)
   const { data: groups } = useEpciGroups()
   const [isEditing, setIsEditing] = useState(false)
+  const [selectedMethod, setSelectedMethod] = useState<SelectionMethod>(null)
 
   const hasExistingGroups = groups ? groups.length > 0 : false
   const hasEpcis = epcis ? epcis.length > 0 : false
@@ -50,6 +52,15 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
       }
     }
   }, [baseEpci, epcis.length, bassinEpcis, setQueryStates])
+
+  // Determine selected method based on current state
+  useEffect(() => {
+    if (epciGroupId) {
+      setSelectedMethod('existing-group')
+    } else if (baseEpci || epcis.length > 0) {
+      setSelectedMethod('custom-selection')
+    }
+  }, [epciGroupId, baseEpci, epcis.length])
 
   const onEditClick = () => {
     setIsEditing(!isEditing)
@@ -70,6 +81,20 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
 
   const description = "Les résultats de votre simulation seront donnés à l'échelle de l'EPCI ou à l'échelle du bassin d'habitat."
 
+  const handleMethodSelect = (method: SelectionMethod) => {
+    setSelectedMethod(method)
+    if (method === null) {
+      // Reset everything when changing method
+      setQueryStates({
+        epciGroupId: null,
+        epciGroupName: null,
+        epcis: [],
+        baseEpci: null,
+      })
+      setIsEditing(false)
+    }
+  }
+
   return (
     <>
       <div
@@ -78,10 +103,52 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
           background: fr.colors.decisions.background.default.grey.default,
         }}
       >
-        {hasExistingGroups && <EpciGroupSelect selectedGroupId={epciGroupId} />}
-        {!epciGroupId && (
+        {/* Show method selection cards when no method is selected */}
+        {!selectedMethod && hasExistingGroups && (
+          <MethodSelectionCards
+            selectedMethod={selectedMethod}
+            onMethodSelect={handleMethodSelect}
+            existingGroupsCount={groups?.length || 0}
+          />
+        )}
+
+        {/* Show change method button when a method is selected */}
+        {selectedMethod && hasExistingGroups && (
+          <div className={fr.cx('fr-mb-3w')}>
+            <Button
+              priority="tertiary no outline"
+              iconId="fr-icon-refresh-line"
+              iconPosition="left"
+              size="small"
+              onClick={() => handleMethodSelect(null)}
+            >
+              Changer de méthode de sélection
+            </Button>
+          </div>
+        )}
+
+        {/* Show existing group selection when that method is selected */}
+        {selectedMethod === 'existing-group' && hasExistingGroups && (
           <>
-            <strong>Ou</strong>
+            <h3 className={fr.cx('fr-h5')}>Sélectionner un groupe EPCI sauvegardé</h3>
+            <p className={fr.cx('fr-text--sm', 'fr-hint-text')}>Choisissez parmi vos groupes d'EPCI précédemment sauvegardés</p>
+            <EpciGroupSelect
+              selectedGroupId={epciGroupId}
+              onUnselect={() => {
+                setQueryStates({
+                  epciGroupId: null,
+                  epciGroupName: null,
+                  epcis: [],
+                })
+              }}
+            />
+          </>
+        )}
+
+        {/* Show custom selection when that method is selected or when no existing groups */}
+        {(selectedMethod === 'custom-selection' || !hasExistingGroups) && !epciGroupId && (
+          <>
+            {selectedMethod === 'custom-selection' && <h3 className={fr.cx('fr-h5')}>Créer une sélection personnalisée</h3>}
             <AutocompleteInput
               label="Rechercher un EPCI"
               onClick={onSelectEpci}
@@ -122,16 +189,11 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
               )}
             </div>
             {isEditing && !epciGroupId && <ContiguousEpcisCheckboxes epcis={bassinEpcis} />}
+            <hr className={fr.cx('fr-mt-3w')} />
+            <EpciGroupNameInput value={epciGroupName || ''} />
             <div className={fr.cx('fr-mt-2w')}>
               <Alert description={description} severity="info" small />
             </div>
-          </>
-        )}
-
-        {!epciGroupId && (
-          <>
-            <hr className={fr.cx('fr-mt-3w')} />
-            <EpciGroupNameInput value={epciGroupName || ''} />
           </>
         )}
       </div>

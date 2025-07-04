@@ -19,17 +19,17 @@ export type GenericCardProps = {
   selected?: boolean
 }
 
-export const GenericCard: FC<GenericCardProps> = ({ 
-  title, 
-  subtitle, 
-  description, 
-  onClick, 
-  className, 
+export const GenericCard: FC<GenericCardProps> = ({
+  title,
+  subtitle,
+  description,
+  onClick,
+  className,
   header,
   headerAction,
   footer,
   children,
-  selected = false
+  selected = false,
 }) => {
   const content = children || (
     <>
@@ -40,11 +40,7 @@ export const GenericCard: FC<GenericCardProps> = ({
             {headerAction}
           </div>
         )}
-        {title && (
-          <h3 className={styles.cardTitle}>
-            {typeof title === 'string' ? title : title}
-          </h3>
-        )}
+        {title && <h3 className={styles.cardTitle}>{typeof title === 'string' ? title : title}</h3>}
         {subtitle && <p className={fr.cx('fr-card__desc', 'fr-text--sm', 'fr-mb-1w')}>{subtitle}</p>}
         {description && <div>{description}</div>}
       </div>
@@ -53,9 +49,9 @@ export const GenericCard: FC<GenericCardProps> = ({
   )
 
   return (
-    <div 
-      className={classNames(styles.card, { [styles.cardSelected]: selected }, className)} 
-      onClick={onClick} 
+    <div
+      className={classNames(styles.card, { [styles.cardSelected]: selected }, className)}
+      onClick={onClick}
       style={onClick ? { cursor: 'pointer' } : undefined}
     >
       {content}

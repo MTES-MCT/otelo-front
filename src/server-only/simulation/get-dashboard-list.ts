@@ -20,5 +20,9 @@ export const getDashboardList = async () => {
     throw new Error(`Failed to get dashboard list: ${res.status} - ${errorText}`)
   }
 
-  return res.json() as Promise<Record<string, TSimulationWithRelations[]>>
+  return res.json() as Promise<Array<{
+    id: string
+    name: string
+    simulations: TSimulationWithRelations[]
+  }>>
 }

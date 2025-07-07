@@ -5,9 +5,9 @@ import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
 import { NoResults } from './no-results'
 
 export default async function TableauxDeBordPage() {
-  const dashboard = await getDashboardList()
+  const dashboardGroups = await getDashboardList()
 
-  if (Object.keys(dashboard).length === 0) {
+  if (dashboardGroups.length === 0) {
     return <NoResults />
   }
 
@@ -15,16 +15,15 @@ export default async function TableauxDeBordPage() {
     <div className={fr.cx('fr-container')}>
       <h1>Tableaux de bord</h1>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-        {Object.keys(dashboard).map((groupName) => {
-          const simulations = dashboard[groupName]
+        {dashboardGroups.map((group) => {
           return (
-            <div key={groupName} className={fr.cx('fr-col-12', 'fr-col-md-6', 'fr-mb-3w')}>
+            <div key={group.id} className={fr.cx('fr-col-12', 'fr-col-md-6', 'fr-mb-3w')}>
               <div className={fr.cx('fr-p-2w')}>
                 <h6>
-                  <Link href={`/tableau-de-bord/${groupName}`}>{groupName}</Link>
+                  <Link href={`/tableau-de-bord/${group.id}`}>{group.name}</Link>
                 </h6>
                 <div>
-                  {simulations.map((simulation) => (
+                  {group.simulations.map((simulation) => (
                     <DashboardSimulationItem key={simulation.id} simulation={simulation} />
                   ))}
                 </div>

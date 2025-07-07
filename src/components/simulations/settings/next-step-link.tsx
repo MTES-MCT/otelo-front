@@ -11,6 +11,7 @@ type NextStepLinkProps = {
   href: string
   label?: string
   query: string
+  isDisabled?: boolean
 }
 
 export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 'label'>> = ({ href, label = 'Étape suivante' }) => {
@@ -24,7 +25,7 @@ export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 
   )
 }
 
-export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Étape suivante', query }) => {
+export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Étape suivante', query, isDisabled }) => {
   const [value] = useQueryState(query, {
     defaultValue: defaultValue ?? '',
   })
@@ -32,9 +33,11 @@ export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label 
   const searchParamsString = new URLSearchParams(searchParams).toString()
   const hrefWithParams = `${href}${searchParamsString ? `?${searchParamsString}` : ''}`
 
+  const disabled = isDisabled || !value
+
   return (
     <Link href={hrefWithParams}>
-      <Button disabled={!value}>{label}</Button>
+      <Button disabled={disabled}>{label}</Button>
     </Link>
   )
 }

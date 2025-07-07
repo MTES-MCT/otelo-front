@@ -1,16 +1,23 @@
-import { fr } from '@codegouvfr/react-dsfr'
-import classNames from 'classnames'
-import { WrapperSimulationTypePage } from '~/app/(authenticated)/simulation/(creation)/choix-du-territoire/wrapper-simulation-type-page'
-import { SimulationTypeSelection } from '~/components/simulations/settings/simulation-type-selection'
+import { TEpci } from '~/schemas/epci'
+import { getBassinEpcis } from '~/server-only/epcis/get-bassin-epcis'
 import classes from './choix-du-territoire.module.css'
+import { WrapperSimulationTypePage } from './wrapper-simulation-type-page'
 
-export default async function TerritorialChoicePage() {
+type TerritorialChoicePageProps = {
+  searchParams: Promise<{ baseEpci: string }>
+}
+
+export default async function TerritorialChoicePage({ searchParams }: TerritorialChoicePageProps) {
+  const { baseEpci } = await searchParams
+
+  let bassinEpcis: TEpci[] = []
+  if (baseEpci) {
+    bassinEpcis = await getBassinEpcis(baseEpci)
+  }
+
   return (
     <div className={classes.container}>
-      <div className={classNames(fr.cx('fr-mb-2w'), classes.typeSelectionContainer)}>
-        <SimulationTypeSelection />
-      </div>
-      <WrapperSimulationTypePage />
+      <WrapperSimulationTypePage bassinEpcis={bassinEpcis} />
     </div>
   )
 }

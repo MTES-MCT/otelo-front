@@ -5,27 +5,27 @@ import { authOptions } from '~/lib/auth/auth.config'
 import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
 
 interface PageProps {
-  params: { groupName: string }
+  params: { groupId: string }
 }
 
 export default async function TableauDeBordPage({ params }: PageProps) {
-  const { groupName } = params
+  const { groupId } = params
 
-  // Redirect if no EPCIs are provided
-  if (!groupName) {
+  // Redirect if no groupId is provided
+  if (!groupId) {
     redirect('/tableaux-de-bord')
   }
 
   const session = await getServerSession(authOptions)
 
-  // Fetch simulations for the given EPCIs
-  const dashboard = await getDashboardList()
+  // Fetch simulations for the given group
+  const dashboardGroups = await getDashboardList()
 
-  const simulations = dashboard[groupName]
+  const group = dashboardGroups.find((g) => g.id === groupId)
 
-  if (!simulations) {
+  if (!group) {
     redirect('/tableaux-de-bord')
   }
 
-  return <TableauDeBord simulations={simulations} groupName={groupName} userEmail={session?.user?.email as string} />
+  return <TableauDeBord simulations={group.simulations} groupName={group.name} userEmail={session?.user?.email as string} />
 }

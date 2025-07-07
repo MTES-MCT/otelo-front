@@ -3,7 +3,7 @@
 import Button from '@codegouvfr/react-dsfr/Button'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
@@ -27,7 +27,13 @@ export const CreateSimulationForm: FC = () => {
     omphale: parseAsString,
     projection: parseAsInteger,
     region: parseAsString,
+    epciGroupName: parseAsString,
+    epciGroupId: parseAsString,
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
   })
+
+  // Use epcis from query states, or fall back to all EPCIs in rates if none specified
+  const selectedEpcis = queryStates.epcis.length > 0 ? queryStates.epcis : Object.keys(rates)
 
   const {
     register,
@@ -38,14 +44,19 @@ export const CreateSimulationForm: FC = () => {
     resolver: zodResolver(ZInitSimulationDto),
     values: {
       name: '',
-      epci: Object.entries(rates).map(([epci]) => ({ code: epci })),
+      epci: selectedEpcis.map((epciCode) => ({ code: epciCode })),
+      epciGroupId: queryStates.epciGroupId,
+      epciGroupName: queryStates.epciGroupName,
       scenario: {
         b2_scenario: queryStates.omphale as string,
-        epcis: Object.entries(rates).reduce(
-          (acc, [epci, rates]) => {
-            acc[epci] = {
-              b2_tx_rs: rates.txRS ?? undefined,
-              b2_tx_vacance: rates.txLV ?? undefined,
+        epcis: selectedEpcis.reduce(
+          (acc, epciCode) => {
+            const epciRates = rates[epciCode]
+            if (epciRates) {
+              acc[epciCode] = {
+                b2_tx_rs: epciRates.txRS ?? undefined,
+                b2_tx_vacance: epciRates.txLV ?? undefined,
+              }
             }
             return acc
           },
@@ -56,8 +67,13 @@ export const CreateSimulationForm: FC = () => {
     },
   })
 
-  const onSubmitForResults = async () => createSimulationForResults.mutateAsync(getValues())
-  const onSubmitForBadHousing = async () => createSimulationForBadHousing.mutateAsync(getValues())
+  const onSubmitForResults = async () => {
+    return createSimulationForResults.mutateAsync(getValues())
+  }
+
+  const onSubmitForBadHousing = async () => {
+    return createSimulationForBadHousing.mutateAsync(getValues())
+  }
 
   return (
     <>

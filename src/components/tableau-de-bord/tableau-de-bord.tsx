@@ -16,6 +16,7 @@ import classNames from 'classnames'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
+import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
 import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
 import styles from './tableau-de-bord.module.css'
@@ -34,6 +35,9 @@ const modalActions = createModal({
 export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
   const { mutateAsync, isError, isSuccess, isPending } = useRequestPowerpoint()
+
+  // Extract unique EPCIs from all simulations
+  const uniqueEpcis = Array.from(new Map(simulations.flatMap((sim) => sim.epcis).map((epci) => [epci.code, epci])).values())
 
   const {
     control,
@@ -87,62 +91,69 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
 
           <h2>{groupName}</h2>
 
+          <div className={fr.cx('fr-callout', 'fr-mb-4w')}>
+            <h3 className={fr.cx('fr-callout__title')}>Territoires concernés</h3>
+            <div className={fr.cx('fr-callout__text')}>
+              <p className={fr.cx('fr-text--sm', 'fr-mb-2w')}>
+                Les simulations de ce groupe portent sur {uniqueEpcis.length} territoire{uniqueEpcis.length > 1 ? 's' : ''} :
+              </p>
+              <div>
+                {uniqueEpcis.map((epci, index) => (
+                  <span key={epci.code}>
+                    <Badge small>{epci.name}</Badge>
+                    {index < uniqueEpcis.length - 1 && ' '}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <form>
             <div className={fr.cx('fr-mb-6w')}>
               <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des scénarios à inclure :</p>
               <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mb-2w')}>
                 {simulations.map((simulation) => (
                   <div key={simulation.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-                    <div className={styles.card}>
-                      <div className={styles.cardUpperBody}>
-                        <div className={styles.cardHeader}>
-                          <div className={styles.tagContainer}>
-                            <Badge small severity="info">
-                              Horizon {simulation.scenario.projection}
-                            </Badge>
-                            <Badge small>{getPopulationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
-                            <Badge small>{getDecohabitationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
-                          </div>
-                          <Controller
-                            control={control}
-                            name="selectedSimulations"
-                            render={({ field }) => (
-                              <Checkbox
-                                small
-                                className={styles.checkbox}
-                                options={[
-                                  {
-                                    label: '',
-                                    nativeInputProps: {
-                                      checked: field.value.includes(simulation.id),
-                                      onChange: (e) => {
-                                        if (e.target.checked) {
-                                          field.onChange([...field.value, simulation.id])
-                                        } else {
-                                          field.onChange(field.value.filter((id: string) => id !== simulation.id))
-                                        }
-                                      },
+                    <GenericCard
+                      header={
+                        <div className={styles.tagContainer}>
+                          <Badge small severity="info">
+                            Horizon {simulation.scenario.projection}
+                          </Badge>
+                          <Badge small>{getPopulationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
+                          <Badge small>{getDecohabitationScenarioLabel(simulation.scenario.b2_scenario) || ''}</Badge>
+                        </div>
+                      }
+                      headerAction={
+                        <Controller
+                          control={control}
+                          name="selectedSimulations"
+                          render={({ field }) => (
+                            <Checkbox
+                              small
+                              className={styles.checkbox}
+                              options={[
+                                {
+                                  label: '',
+                                  nativeInputProps: {
+                                    checked: field.value.includes(simulation.id),
+                                    onChange: (e) => {
+                                      if (e.target.checked) {
+                                        field.onChange([...field.value, simulation.id])
+                                      } else {
+                                        field.onChange(field.value.filter((id: string) => id !== simulation.id))
+                                      }
                                     },
                                   },
-                                ]}
-                              />
-                            )}
-                          />
-                        </div>
-                        <h3 className={styles.cardTitle}>
-                          <Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>
-                        </h3>
-                        <ul className={styles.cardList}>
-                          {simulation.epcis.map((epci) => (
-                            <li className={styles.cardListItem} key={epci.code}>
-                              {epci.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>
-                    </div>
+                                },
+                              ]}
+                            />
+                          )}
+                        />
+                      }
+                      title={<Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>}
+                      footer={<div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>}
+                    />
                   </div>
                 ))}
               </div>

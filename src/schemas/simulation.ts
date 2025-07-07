@@ -41,6 +41,8 @@ export const ZInitSimulationDto = z.object({
     ),
     projection: z.number(),
   }),
+  epciGroupName: z.string().optional().nullable(),
+  epciGroupId: z.string().optional().nullable(),
 })
 
 export type TInitSimulationDto = z.infer<typeof ZInitSimulationDto>

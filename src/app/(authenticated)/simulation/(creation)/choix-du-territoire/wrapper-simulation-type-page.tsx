@@ -1,33 +1,206 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
-import { parseAsStringEnum, useQueryState } from 'nuqs'
-import { BassinHabitatSimulation } from '~/app/(authenticated)/simulation/(creation)/choix-du-territoire/bassin-habitat-simulation'
-import { EpcisSimulation } from '~/app/(authenticated)/simulation/(creation)/choix-du-territoire/epcis-simulation'
+import Alert from '@codegouvfr/react-dsfr/Alert'
+import Button from '@codegouvfr/react-dsfr/Button'
+import { useRouter } from 'next/navigation'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
+import { useEffect, useState } from 'react'
+import { AutocompleteInput } from '~/components/simulations/autocomplete/autocomplete-input'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
+import { useEpciGroups } from '~/hooks/use-epci-groups'
+import { useEpcis } from '~/hooks/use-epcis'
+import { GeoApiCommuneResult, GeoApiEpciResult } from '~/hooks/use-geoapi-search'
+import { TEpci } from '~/schemas/epci'
+import { CheckboxEpcis } from './checkbox-epcis'
+import { ContiguousEpcisCheckboxes } from './contiguous-epcis-checkboxes'
+import { EpciGroupNameInput } from './epci-group-name-input'
+import { EpciGroupSelect } from './epci-group-select'
+import { MethodSelectionCards, SelectionMethod } from './method-selection-cards'
 
-export const WrapperSimulationTypePage = () => {
+type WrapperSimulationTypePageProps = {
+  bassinEpcis: TEpci[]
+}
+
+export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulationTypePageProps) => {
+  const router = useRouter()
+  const [{ baseEpci, epcis, epciGroupName, epciGroupId }, setQueryStates] = useQueryStates({
+    baseEpci: parseAsString,
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epciGroupName: parseAsString,
+    epciGroupId: parseAsString,
+  })
+  const { data: selectedEpcis } = useEpcis(epcis)
+  const { data: groups } = useEpciGroups()
+  const [isEditing, setIsEditing] = useState(false)
+  const [selectedMethod, setSelectedMethod] = useState<SelectionMethod>(null)
+
+  const hasExistingGroups = groups ? groups.length > 0 : false
+  const hasEpcis = epcis ? epcis.length > 0 : false
+  const canGoNextStep = hasEpcis && (epciGroupName || epciGroupId)
+
   const href = `/simulation/cadrage-temporel`
-  const [simulationTypeQuery] = useQueryState('type', parseAsStringEnum(['bh', 'epcis']).withDefault('bh'))
 
-  const nextStepLinkComponent = (
-    <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-      <NextStepLink href={href} query="epcis" />
-    </div>
-  )
+  useEffect(() => {
+    // Only set epcis if we have a baseEpci, bassinEpcis data, and epcis is empty
+    // Also check that the bassinEpcis actually corresponds to the current baseEpci
+    if (baseEpci && epcis.length === 0 && bassinEpcis.length > 0) {
+      // Verify that at least one of the bassinEpcis matches our baseEpci
+      const isCorrectBassin = bassinEpcis.some((epci) => epci.code === baseEpci)
+      if (isCorrectBassin) {
+        setQueryStates({ epcis: bassinEpcis.map((epci) => epci.code) })
+      }
+    }
+  }, [baseEpci, epcis.length, bassinEpcis, setQueryStates])
 
-  if (simulationTypeQuery === 'bh') {
-    return (
-      <>
-        <BassinHabitatSimulation />
-        {nextStepLinkComponent}
-      </>
-    )
+  // Determine selected method based on current state
+  useEffect(() => {
+    if (epciGroupId) {
+      setSelectedMethod('existing-group')
+    } else if (baseEpci || epcis.length > 0) {
+      setSelectedMethod('custom-selection')
+    }
+  }, [epciGroupId, baseEpci, epcis.length])
+
+  const onEditClick = () => {
+    setIsEditing(!isEditing)
   }
+
+  const onSelectEpci = async (item: GeoApiEpciResult | GeoApiCommuneResult) => {
+    const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
+
+    // Reset editing state when selecting a new EPCI
+    setIsEditing(false)
+
+    await setQueryStates({ baseEpci: code, epcis: [] })
+
+    router.refresh()
+  }
+
+  const baseEpciData = bassinEpcis.find((epci) => epci.code === baseEpci)
+
+  const description = "Les résultats de votre simulation seront donnés à l'échelle de l'EPCI ou à l'échelle du bassin d'habitat."
+
+  const handleMethodSelect = (method: SelectionMethod) => {
+    setSelectedMethod(method)
+    if (method === null) {
+      // Reset everything when changing method
+      setQueryStates({
+        epciGroupId: null,
+        epciGroupName: null,
+        epcis: [],
+        baseEpci: null,
+      })
+      setIsEditing(false)
+    }
+  }
+
   return (
     <>
-      <EpcisSimulation />
-      {nextStepLinkComponent}
+      <div
+        className={fr.cx('fr-p-2w', 'fr-p-md-5w', 'fr-mb-2w')}
+        style={{
+          background: fr.colors.decisions.background.default.grey.default,
+        }}
+      >
+        {/* Show method selection cards when no method is selected */}
+        {!selectedMethod && hasExistingGroups && (
+          <MethodSelectionCards
+            selectedMethod={selectedMethod}
+            onMethodSelect={handleMethodSelect}
+            existingGroupsCount={groups?.length || 0}
+          />
+        )}
+
+        {/* Show change method button when a method is selected */}
+        {selectedMethod && hasExistingGroups && (
+          <div className={fr.cx('fr-mb-3w')}>
+            <Button
+              priority="tertiary no outline"
+              iconId="fr-icon-refresh-line"
+              iconPosition="left"
+              size="small"
+              onClick={() => handleMethodSelect(null)}
+            >
+              Changer de méthode de sélection
+            </Button>
+          </div>
+        )}
+
+        {/* Show existing group selection when that method is selected */}
+        {selectedMethod === 'existing-group' && hasExistingGroups && (
+          <>
+            <h3 className={fr.cx('fr-h5')}>Sélectionner un groupe EPCI sauvegardé</h3>
+            <p className={fr.cx('fr-text--sm', 'fr-hint-text')}>Choisissez parmi vos groupes d'EPCI précédemment sauvegardés</p>
+            <EpciGroupSelect
+              selectedGroupId={epciGroupId}
+              onUnselect={() => {
+                setQueryStates({
+                  epciGroupId: null,
+                  epciGroupName: null,
+                  epcis: [],
+                })
+              }}
+            />
+          </>
+        )}
+
+        {/* Show custom selection when that method is selected or when no existing groups */}
+        {(selectedMethod === 'custom-selection' || !hasExistingGroups) && !epciGroupId && (
+          <>
+            {selectedMethod === 'custom-selection' && <h3 className={fr.cx('fr-h5')}>Créer une sélection personnalisée</h3>}
+            <AutocompleteInput
+              label="Rechercher un EPCI"
+              onClick={onSelectEpci}
+              hintText="Saisissez le nom de l'EPCI du territoire concerné, ou par défaut, vous pouvez saisir le nom de la commune ou son code postal."
+              defaultValue={baseEpciData?.name}
+            />
+          </>
+        )}
+
+        {selectedEpcis && selectedEpcis.length > 0 && !epciGroupId && (
+          <>
+            <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-grid-row--middle')}>
+              <div className={fr.cx('fr-col-md-9')}>
+                {!isEditing && selectedEpcis && (
+                  <div className={fr.cx('fr-py-5w')}>
+                    <div>
+                      Les territoires inclus dans la simulation sont :
+                      <ul>
+                        {selectedEpcis.map((epci) => (
+                          <li key={epci.code}>{epci.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+                {isEditing && (
+                  <div className={fr.cx('fr-py-5w')}>
+                    <CheckboxEpcis epcis={bassinEpcis} />
+                  </div>
+                )}
+              </div>
+              {!epciGroupId && (
+                <div className={fr.cx('fr-col-md-3')}>
+                  <Button priority="secondary" onClick={onEditClick}>
+                    Éditer les territoires inclus
+                  </Button>
+                </div>
+              )}
+            </div>
+            {isEditing && !epciGroupId && <ContiguousEpcisCheckboxes epcis={bassinEpcis} />}
+            <hr className={fr.cx('fr-mt-3w')} />
+            <EpciGroupNameInput value={epciGroupName || ''} />
+            <div className={fr.cx('fr-mt-2w')}>
+              <Alert description={description} severity="info" small />
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
+        <NextStepLink href={href} query="epcis" isDisabled={!canGoNextStep} />
+      </div>
     </>
   )
 }

@@ -25,6 +25,7 @@ export const useEpcis = (epcis?: string[]) => {
     enabled: !!epcisParams,
     queryFn: () => getEpcisList(),
     queryKey: ['epcis-list', epcisParams],
+    placeholderData: (previousData) => previousData,
   })
   return { data, isLoading }
 }

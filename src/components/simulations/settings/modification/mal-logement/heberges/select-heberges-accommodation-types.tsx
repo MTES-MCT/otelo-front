@@ -6,7 +6,7 @@ import { useBadHousingSettings } from '~/app/(authenticated)/simulation/[id]/mod
 export const SelectHebergesAccommodationTypes = () => {
   const { badHousingSettings, setBadHousingSettings } = useBadHousingSettings()
   const {
-    heberges: { free, particular, temporary },
+    heberges: { particular, temporary },
   } = badHousingSettings
 
   const handleToggle = (type: string) => {
@@ -30,15 +30,6 @@ export const SelectHebergesAccommodationTypes = () => {
             name: 'particular',
             onChange: () => handleToggle('particular'),
             value: 'particular',
-          },
-        },
-        {
-          label: 'Logés à titre gratuit',
-          nativeInputProps: {
-            checked: free,
-            name: 'free',
-            onChange: () => handleToggle('free'),
-            value: 'free',
           },
         },
         {

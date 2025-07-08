@@ -28,7 +28,7 @@ export const ZSimulationWithRelations = ZSimulation.pick({
 export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
-  name: z.string().nonempty('Veuillez donner un nom pour cette simulation').max(100, 'Le nom ne doit pas dépasser 100 caractères'),
+  name: z.string().min(1, 'Veuillez donner un nom pour cette simulation').max(100, 'Le nom ne doit pas dépasser 100 caractères'),
   epci: z.array(z.object({ code: z.string() })),
   scenario: z.object({
     b2_scenario: z.string(),
@@ -37,6 +37,9 @@ export const ZInitSimulationDto = z.object({
       z.object({
         b2_tx_rs: z.number().optional(),
         b2_tx_vacance: z.number().optional(),
+        b2_tx_vacance_longue: z.number().optional(),
+        b2_tx_vacance_courte: z.number().optional(),
+        baseEpci: z.boolean(),
       }),
     ),
     projection: z.number(),
@@ -84,6 +87,8 @@ export const ZUpdateDemographicSimulationDto = z.object({
       z.object({
         b2_tx_rs: z.number().optional(),
         b2_tx_vacance: z.number().optional(),
+        b2_tx_vacance_courte: z.number().optional(),
+        b2_tx_vacance_longue: z.number().optional(),
       }),
     ),
     projection: z.number(),

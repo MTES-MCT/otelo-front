@@ -1,6 +1,5 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
 import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Select from '@codegouvfr/react-dsfr/SelectNext'
@@ -128,9 +127,10 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className={fr.cx('fr-py-2w')}>
+      <div>
         <Select
-          label=""
+          label="Scénario de projection de population"
+          hint="Le choix de scénario s'applique au global dans votre simulation, à l'échelle du bassin d'habitat ou des EPCI."
           placeholder="Choix du scénario"
           nativeSelectProps={{
             onChange: (event) => setQueryStates({ population: event.target.value }),

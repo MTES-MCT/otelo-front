@@ -8,7 +8,6 @@ export interface BadHousingSettings {
     source: string
   }
   heberges: {
-    free: boolean
     part: number
     particular: boolean
     temporary: boolean

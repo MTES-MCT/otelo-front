@@ -30,18 +30,14 @@ export const UpdateBadHousingSimulationForm: FC = () => {
         b11_part_etablissement: badHousingSettings.horsLogement.part,
         b11_sa: badHousingSettings.horsLogement.sa,
         b12_cohab_interg_subie: badHousingSettings.heberges.part,
-        b12_heberg_gratuit: badHousingSettings.heberges.free,
         b12_heberg_particulier: badHousingSettings.heberges.particular,
         b12_heberg_temporaire: badHousingSettings.heberges.temporary,
         b13_acc: badHousingSettings.inadequationFinanciere.accedant,
-
         b13_plp: badHousingSettings.inadequationFinanciere.plp,
         b13_taux_effort: badHousingSettings.inadequationFinanciere.maxEffort,
         b13_taux_reallocation: badHousingSettings.inadequationFinanciere.part,
         b14_confort: badHousingSettings.badQuality.confort,
-
         b14_occupation: badHousingSettings.badQuality.occupation,
-        // todo
         b14_qualite: '',
         b14_taux_reallocation: badHousingSettings.badQuality.part,
         b15_loc_hors_hlm: badHousingSettings.suroccupation.plp,

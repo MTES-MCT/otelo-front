@@ -24,7 +24,6 @@ export const BadHousingSettingsFormContextWrapper = ({ children }: BadHousingSet
       source: scenario.source_b14,
     },
     heberges: {
-      free: scenario.b12_heberg_gratuit,
       part: scenario.b12_cohab_interg_subie,
       particular: scenario.b12_heberg_particulier,
       temporary: scenario.b12_heberg_temporaire,

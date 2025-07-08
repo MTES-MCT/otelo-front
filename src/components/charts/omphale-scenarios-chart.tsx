@@ -4,8 +4,8 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import React, { FC } from 'react'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
-import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
@@ -89,7 +89,7 @@ export const OmphaleScenariosTooltip = ({
   basePopulation,
   label,
   payload,
-}: TooltipProps<ValueType, NameType> & { basePopulation: TOmphaleEvolution }) => {
+}: { active?: boolean; label?: string; payload?: TooltipPayload<ValueType, NameType>[]; basePopulation: TOmphaleEvolution }) => {
   const { classes } = useStyles()
   if (!active || !payload?.length) return null
   return (

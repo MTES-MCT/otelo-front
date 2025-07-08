@@ -25,6 +25,7 @@ export const CreateSimulationForm: FC = () => {
   const [queryStates] = useQueryStates({
     epci: parseAsString,
     omphale: parseAsString,
+    baseEpci: parseAsString,
     projection: parseAsInteger,
     region: parseAsString,
     epciGroupName: parseAsString,
@@ -55,7 +56,10 @@ export const CreateSimulationForm: FC = () => {
             if (epciRates) {
               acc[epciCode] = {
                 b2_tx_rs: epciRates.txRS ?? undefined,
-                b2_tx_vacance: epciRates.txLV ?? undefined,
+                b2_tx_vacance: epciRates.vacancyRate ?? undefined,
+                b2_tx_vacance_longue: epciRates.longTermVacancyRate ?? undefined,
+                b2_tx_vacance_courte: epciRates.shortTermVacancyRate ?? undefined,
+                baseEpci: queryStates.baseEpci === epciCode,
               }
             }
             return acc

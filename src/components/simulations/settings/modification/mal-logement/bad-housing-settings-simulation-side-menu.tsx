@@ -29,7 +29,7 @@ export default function BadHousingSettingsSimulationSideMenu({ id }: BadHousingS
       label: 'Hébergés',
       path: `/simulation/${id}/modifier/mal-logement/heberges`,
       title: <span>Paramétrage hébergés</span>,
-      value: `Part: ${badHousingSettings.heberges.part}% | ${badHousingSettings.heberges.particular ? 'Particulier -' : ''} ${badHousingSettings.heberges.free ? 'Gratuit -' : ''} ${badHousingSettings.heberges.temporary ? 'Temporaire' : ''}`,
+      value: `Part: ${badHousingSettings.heberges.part}% | ${badHousingSettings.heberges.particular ? 'Particulier -' : ''} ${badHousingSettings.heberges.temporary ? 'Temporaire' : ''}`,
     },
     {
       label: 'Inadéquation financière',

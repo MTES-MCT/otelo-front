@@ -39,8 +39,12 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
     }
   }
 
+  console.log(scenario.epciScenarios)
   const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_rs
-  const epciTxVacance = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance
+  const shortTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_courte
+  const longTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_longue
+  const vacancyRate = (shortTermVacancyRate ?? 0) + (longTermVacancyRate ?? 0)
+  console.log('vacancyRate', vacancyRate, shortTermVacancyRate, longTermVacancyRate)
 
   const settings = [
     {
@@ -71,14 +75,27 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
           },
         ]
       : []),
-    ...(epciTxVacance
+    ...(vacancyRate
       ? [
           {
             iconId: 'ri-percent-line',
             key: 'tauxLV',
             label: 'Taux cible de logements vacants',
             tags: [
-              <>{epciTxVacance && <Tag key="tauxLV">Taux cible de logements vacants : {Number(epciTxVacance * 100).toFixed(2)} %</Tag>}</>,
+              <>
+                {shortTermVacancyRate && (
+                  <Tag key="shortTermVacancyRate">
+                    Taux cible de logements vacants courte durée: {Number(shortTermVacancyRate * 100).toFixed(2)} %
+                  </Tag>
+                )}
+              </>,
+              <>
+                {longTermVacancyRate && (
+                  <Tag key="longTermVacancyRate">
+                    Taux cible de logements vacants longue durée: {Number(longTermVacancyRate * 100).toFixed(2)} %
+                  </Tag>
+                )}
+              </>,
             ],
           },
         ]

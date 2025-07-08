@@ -30,10 +30,12 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
     epciGroupName: parseAsString,
     epciGroupId: parseAsString,
   })
-  const { data: selectedEpcis } = useEpcis(epcis)
+  const { data: selectedEpcis, isLoading: isLoadingEpcis } = useEpcis(epcis)
   const { data: groups } = useEpciGroups()
   const [isEditing, setIsEditing] = useState(false)
-  const [selectedMethod, setSelectedMethod] = useState<SelectionMethod>(null)
+  const [selectedMethod, setSelectedMethod] = useState<SelectionMethod>(
+    epciGroupId ? 'existing-group' : baseEpci || epcis.length > 0 ? 'custom-selection' : null,
+  )
 
   const hasExistingGroups = groups ? groups.length > 0 : false
   const hasEpcis = epcis ? epcis.length > 0 : false
@@ -52,15 +54,6 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
       }
     }
   }, [baseEpci, epcis.length, bassinEpcis, setQueryStates])
-
-  // Determine selected method based on current state
-  useEffect(() => {
-    if (epciGroupId) {
-      setSelectedMethod('existing-group')
-    } else if (baseEpci || epcis.length > 0) {
-      setSelectedMethod('custom-selection')
-    }
-  }, [epciGroupId, baseEpci, epcis.length])
 
   const onEditClick = () => {
     setIsEditing(!isEditing)
@@ -103,58 +96,63 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
           background: fr.colors.decisions.background.default.grey.default,
         }}
       >
-        {/* Show method selection cards when no method is selected */}
-        {!selectedMethod && hasExistingGroups && (
-          <MethodSelectionCards
-            selectedMethod={selectedMethod}
-            onMethodSelect={handleMethodSelect}
-            existingGroupsCount={groups?.length || 0}
-          />
-        )}
+        {isLoadingEpcis && <div>Chargement en cours...</div>}
 
-        {/* Show change method button when a method is selected */}
-        {selectedMethod && hasExistingGroups && (
-          <div className={fr.cx('fr-mb-3w')}>
-            <Button
-              priority="tertiary no outline"
-              iconId="fr-icon-refresh-line"
-              iconPosition="left"
-              size="small"
-              onClick={() => handleMethodSelect(null)}
-            >
-              Changer de méthode de sélection
-            </Button>
-          </div>
-        )}
-
-        {/* Show existing group selection when that method is selected */}
-        {selectedMethod === 'existing-group' && hasExistingGroups && (
+        {!isLoadingEpcis && (
           <>
-            <h3 className={fr.cx('fr-h5')}>Sélectionner un groupe EPCI sauvegardé</h3>
-            <p className={fr.cx('fr-text--sm', 'fr-hint-text')}>Choisissez parmi vos groupes d'EPCI précédemment sauvegardés</p>
-            <EpciGroupSelect
-              selectedGroupId={epciGroupId}
-              onUnselect={() => {
-                setQueryStates({
-                  epciGroupId: null,
-                  epciGroupName: null,
-                  epcis: [],
-                })
-              }}
-            />
-          </>
-        )}
+            {!selectedMethod && hasExistingGroups && (
+              <MethodSelectionCards
+                selectedMethod={selectedMethod}
+                onMethodSelect={handleMethodSelect}
+                existingGroupsCount={groups?.length || 0}
+              />
+            )}
 
-        {/* Show custom selection when that method is selected or when no existing groups */}
-        {(selectedMethod === 'custom-selection' || !hasExistingGroups) && !epciGroupId && (
-          <>
-            {selectedMethod === 'custom-selection' && <h3 className={fr.cx('fr-h5')}>Créer une sélection personnalisée</h3>}
-            <AutocompleteInput
-              label="Rechercher un EPCI"
-              onClick={onSelectEpci}
-              hintText="Saisissez le nom de l'EPCI du territoire concerné, ou par défaut, vous pouvez saisir le nom de la commune ou son code postal."
-              defaultValue={baseEpciData?.name}
-            />
+            {/* Show change method button when a method is selected */}
+            {selectedMethod && hasExistingGroups && (
+              <div className={fr.cx('fr-mb-3w')}>
+                <Button
+                  priority="tertiary no outline"
+                  iconId="fr-icon-refresh-line"
+                  iconPosition="left"
+                  size="small"
+                  onClick={() => handleMethodSelect(null)}
+                >
+                  Changer de méthode de sélection
+                </Button>
+              </div>
+            )}
+
+            {/* Show existing group selection when that method is selected */}
+            {selectedMethod === 'existing-group' && hasExistingGroups && (
+              <>
+                <h3 className={fr.cx('fr-h5')}>Sélectionner un groupe EPCI sauvegardé</h3>
+                <p className={fr.cx('fr-text--sm', 'fr-hint-text')}>Choisissez parmi vos groupes d'EPCI précédemment sauvegardés</p>
+                <EpciGroupSelect
+                  selectedGroupId={epciGroupId}
+                  onUnselect={() => {
+                    setQueryStates({
+                      epciGroupId: null,
+                      epciGroupName: null,
+                      epcis: [],
+                    })
+                  }}
+                />
+              </>
+            )}
+
+            {/* Show custom selection when that method is selected or when no existing groups */}
+            {(selectedMethod === 'custom-selection' || !hasExistingGroups) && !epciGroupId && (
+              <>
+                {selectedMethod === 'custom-selection' && <h3 className={fr.cx('fr-h5')}>Créer une sélection personnalisée</h3>}
+                <AutocompleteInput
+                  label="Rechercher un EPCI"
+                  onClick={onSelectEpci}
+                  hintText="Saisissez le nom de l'EPCI du territoire concerné, ou par défaut, vous pouvez saisir le nom de la commune ou son code postal."
+                  defaultValue={baseEpciData?.name}
+                />
+              </>
+            )}
           </>
         )}
 

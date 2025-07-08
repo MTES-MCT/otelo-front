@@ -1,5 +1,4 @@
-import { TooltipProps } from 'recharts'
-import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
+import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { formatNumber } from '~/utils/format-numbers'
@@ -9,7 +8,7 @@ export const PopulationScenariosCustomTooltip = ({
   basePopulation,
   label,
   payload,
-}: TooltipProps<ValueType, NameType> & { basePopulation: TPopulationEvolution }) => {
+}: { active?: boolean; label?: string; payload?: TooltipPayload<ValueType, NameType>[]; basePopulation: TPopulationEvolution }) => {
   const { classes } = useStyles()
   if (!active || !payload?.length) return null
   return (

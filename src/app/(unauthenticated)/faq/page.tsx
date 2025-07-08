@@ -330,7 +330,7 @@ export default function FaqPage() {
               </p>
 
               <p>
-                <strong>🏗️ Besoin total</strong>
+                <strong>🏗️ Besoin en constructions neuves</strong>
               </p>
 
               <ul>

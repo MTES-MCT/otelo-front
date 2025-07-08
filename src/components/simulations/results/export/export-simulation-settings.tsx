@@ -19,7 +19,7 @@ export const ExportSimulationSettings: FC<{ id: string }> = ({ id }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Button iconId="ri-download-line" priority="tertiary" type="submit" disabled={isPending}>
+      <Button iconId="ri-download-line" priority="primary" type="submit" disabled={isPending}>
         {isPending ? 'Export en cours...' : 'Exporter mon scénario'}
       </Button>
     </form>

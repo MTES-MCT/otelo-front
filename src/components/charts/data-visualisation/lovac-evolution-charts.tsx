@@ -2,6 +2,7 @@ import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Payload } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
@@ -159,8 +160,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
             />
             <Tooltip
               formatter={(value: number, name: string) => [`${value}`, `${name}`]}
-              // biome-ignore lint/suspicious/noExplicitAny: TODO
-              labelFormatter={(label: string, payload: any[]) => {
+              labelFormatter={(label: string, payload: readonly Payload<number, string>[]) => {
                 // Show both period and EPCI name
                 if (payload && payload.length > 0) {
                   return `${payload[0].payload.name} - ${label}`

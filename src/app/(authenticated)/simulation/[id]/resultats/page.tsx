@@ -1,4 +1,3 @@
-import Button from '@codegouvfr/react-dsfr/Button'
 import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/classNames'
 import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
@@ -15,6 +14,8 @@ export const revalidate = 0
 
 export default async function Resultats({ params }: { params: { id: string } }) {
   const simulation = await getSimulationWithResults(params.id)
+  const projection = simulation.scenario.projection
+
   const results = {
     badQuality: simulation.results.badQuality.total,
     total: simulation.results.total,
@@ -60,6 +61,10 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       totalFlux,
       vacantAccomodationEvolution: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
         .totals.vacantAccomodation,
+      shortTermVacantAccomodation: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
+        .totals.shortTermVacantAccomodation,
+      longTermVacantAccomodation: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
+        .totals.longTermVacantAccomodation,
     }
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
@@ -67,20 +72,26 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     return {
       content: (
         <>
-          <SimulationNeedsSummary projection={simulation.scenario.projection} results={epciResults} />
+          <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={epciResults} />
+          <AccommodationContructionEvolutionChart
+            sitadelResults={sitadelResults}
+            newConstructionsResults={newConstructionsResults}
+            horizon={simulation.scenario.projection}
+          />
+          {/* todo */}
+          Clé de lecture : Ce graphique représente l'évolution du besoin en logements jusqu'en {projection}. Pour le territoire de
+          {epci.name}, il n'y a plus de besoin en constructions neuves à partir de {2020}
           <div className={styles.flowContainer}>
-            <h5 className={styles.flowTitle}>Besoin en flux - Evolution du besoin démographique en logements</h5>
+            <h5 className={styles.flowTitle}>
+              Besoins liés à la démographie et à l'évolution du parc - Evolution du besoin démographique en logements
+            </h5>
             <div className={styles.flowChartContainer}>
               {/* <DemographicEvolutionChart data={simulation} /> */}
               <FlowRequirementsChart results={flowResults} />
             </div>
           </div>
           <StockEvolutionChart results={stockResults} />
-          <AccommodationContructionEvolutionChart
-            sitadelResults={sitadelResults}
-            newConstructionsResults={newConstructionsResults}
-            horizon={simulation.scenario.projection}
-          />
+          Clé de lecture: Ce graphique représente xxxxx.
         </>
       ),
       iconId: 'ri-road-map-line' as RiIconClassName,
@@ -91,7 +102,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   const bassinTab = {
     content: (
       <div>
-        <SimulationNeedsSummary projection={simulation.scenario.projection} results={results} />
+        <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={results} />
       </div>
     ),
     iconId: 'ri-home-line' as RiIconClassName,
@@ -103,13 +114,6 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   return (
     <>
       <div className={styles.headerContainer}>
-        <div className={styles.buttonsContainer}>
-          <Button linkProps={{ href: `/simulation/${params.id}/modifier/cadrage-temporel` }}>Modifier mes paramètres</Button>
-          <Button priority="secondary" linkProps={{ href: `/simulation/${params.id}/modifier/mal-logement/horizon-de-resorption` }}>
-            Paramétrer le mal-logement
-          </Button>
-        </div>
-        <div className={styles.border} />
         <ExportSimulationSettings id={params.id} />
       </div>
       <SimulationResultsTabs tabs={tabs} />

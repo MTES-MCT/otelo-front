@@ -15,6 +15,8 @@ interface FlowRequirementsChartProps {
     secondaryResidenceAccomodationEvolution: number
     totalFlux: number
     vacantAccomodationEvolution: number
+    shortTermVacantAccomodation: number
+    longTermVacantAccomodation: number
   }
 }
 
@@ -56,9 +58,6 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
 
   return (
     <div className={classes.rowContainer}>
-      <div className={classes.tableContainer}>
-        <DemographicEvolutionResultsTable results={results} />
-      </div>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -85,6 +84,10 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <div className={classes.tableContainer}>
+        <DemographicEvolutionResultsTable results={results} />
+      </div>
+      Clé de lecture: Ce graphique représente xxxxx.
     </div>
   )
 }
@@ -99,13 +102,12 @@ const useStyles = tss.create({
   },
   rowContainer: {
     display: 'flex',
-    flexDirection: 'row',
-    gap: '2rem',
+    flexDirection: 'column',
   },
   tableContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: '30%',
+    width: '100%',
   },
 })

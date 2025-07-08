@@ -2,6 +2,7 @@ import { createSearchParamsCache, parseAsArrayOf, parseAsString } from 'nuqs/ser
 
 export const searchParamsCache = createSearchParamsCache({
   epcis: parseAsArrayOf(parseAsString).withDefault([]),
+  baseEpci: parseAsString.withDefault(''),
   omphale: parseAsString.withDefault(''),
   projection: parseAsString.withDefault(''),
   q: parseAsString.withDefault(''),

@@ -14,7 +14,8 @@ type PageProps = {
 export default async function TauxCiblesLogementsPage({ params }: PageProps) {
   const simulation = await getSimulationWithResults(params.id)
   const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
-  const simulationsEpcis = await getEpcis(epcisCodes)
+  const baseEpci = simulation.scenario.epciScenarios.find((e) => e.baseEpci)
+  const simulationsEpcis = await getEpcis(epcisCodes, baseEpci?.epciCode)
 
   const href = `/simulation/${params.id}/modifier/validation-parametrage`
 

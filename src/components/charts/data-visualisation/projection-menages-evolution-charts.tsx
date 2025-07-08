@@ -76,7 +76,11 @@ const SCENARIOS = [
   },
 ]
 
-export const CustomTooltip = ({ active, label, payload }: TooltipProps<ValueType, NameType>) => {
+export const CustomTooltip = ({
+  active,
+  label,
+  payload,
+}: TooltipProps<ValueType, NameType> & { label?: string; payload?: TooltipPayload<ValueType, NameType>[] }) => {
   const { classes } = useStyles()
   if (!active || !payload?.length) return null
 
@@ -228,6 +232,7 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
                           {...props}
                           stroke={stroke}
                           year={props.payload.year}
+                          period={undefined}
                           key={`${epci}-${dataKey}-${props.payload.year}`}
                         />
                       )}
@@ -245,11 +250,22 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
               <Legend
                 align="right"
                 verticalAlign="top"
-                payload={[
-                  { color: barChartColors[0], type: 'rect', value: 'Décohabitation haute' },
-                  { color: barChartColors[1], type: 'rect', value: 'Décohabitation tendanciel' },
-                  { color: barChartColors[2], type: 'rect', value: 'Décohabitation basse' },
-                ]}
+                content={() => (
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginBottom: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[0] }} />
+                      <span>Décohabitation haute</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[1] }} />
+                      <span>Décohabitation tendanciel</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[2] }} />
+                      <span>Décohabitation basse</span>
+                    </div>
+                  </div>
+                )}
               />
               <XAxis dataKey="period" ticks={['2021-2030', '2030-2040', '2040-2050']} />
               <YAxis />
@@ -258,10 +274,9 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
                   // Format the value and include the population type
                   return [`${value}`, `${name}`]
                 }}
-                // biome-ignore lint/suspicious/noExplicitAny: TODO
-                labelFormatter={(label: string, payload: any[]) => {
+                labelFormatter={(label: string, payload: readonly { payload?: { name: string } }[]) => {
                   // Show both period and EPCI name
-                  if (payload && payload.length > 0) {
+                  if (payload && payload.length > 0 && payload[0].payload?.name) {
                     return `${payload[0].payload.name} - ${label}`
                   }
                   return label

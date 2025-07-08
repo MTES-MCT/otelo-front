@@ -57,6 +57,7 @@ export const ZFlowRequirementChartData = z.object({
     parcEvolution: z.record(z.number()),
     housingNeeds: z.record(z.number()),
     surplusHousing: z.record(z.number()),
+    peakYear: z.number(),
   }),
   totals: z.object({
     demographicEvolution: z.number(),
@@ -65,6 +66,8 @@ export const ZFlowRequirementChartData = z.object({
     surplusHousing: z.number(),
     housingNeeds: z.number(),
     vacantAccomodation: z.number(),
+    shortTermVacantAccomodation: z.number(),
+    longTermVacantAccomodation: z.number(),
   }),
   metadata: z.object({ max: z.number(), min: z.number() }),
 })

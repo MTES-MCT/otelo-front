@@ -65,14 +65,6 @@ export default function ValidationParametragePage() {
                     },
                   },
                   {
-                    label: 'Logés à titre gratuit',
-                    nativeInputProps: {
-                      checked: badHousingSettings.heberges.free,
-                      name: 'free',
-                      readOnly: true,
-                    },
-                  },
-                  {
                     label: 'Logés temporairement',
                     nativeInputProps: {
                       checked: badHousingSettings.heberges.temporary,

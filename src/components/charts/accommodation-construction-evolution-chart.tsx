@@ -43,7 +43,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
 
   return (
     <div className={classes.container}>
-      <h5>Besoins en construction neuves annualisées</h5>
+      <h5>Besoins en construction neuves annualisés</h5>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
@@ -92,7 +92,6 @@ const useStyles = tss.create(() => ({
     width: '100%',
   },
   container: {
-    paddingLeft: '2rem',
     paddingTop: '2rem',
   },
 }))

@@ -34,7 +34,9 @@ export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
           (acc, [epci, rates]) => {
             acc[epci] = {
               b2_tx_rs: rates.txRS ?? undefined,
-              b2_tx_vacance: rates.txLV ?? undefined,
+              b2_tx_vacance: (rates.shortTermVacancyRate ?? 0) + (rates.longTermVacancyRate ?? 0),
+              b2_tx_vacance_courte: rates.shortTermVacancyRate ?? undefined,
+              b2_tx_vacance_longue: rates.longTermVacancyRate ?? undefined,
             }
             return acc
           },

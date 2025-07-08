@@ -8,6 +8,8 @@ type DemographicEvolutionResultsTableProps = {
     secondaryResidenceAccomodationEvolution: number
     totalFlux: number
     vacantAccomodationEvolution: number
+    shortTermVacantAccomodation: number
+    longTermVacantAccomodation: number
   }
 }
 export const DemographicEvolutionResultsTable = ({ results }: DemographicEvolutionResultsTableProps) => {
@@ -19,7 +21,8 @@ export const DemographicEvolutionResultsTable = ({ results }: DemographicEvoluti
         ['Démographie', formatNumber(results.demographicEvolution)],
         ['Renouvellement', formatNumber(results.renewalNeeds)],
         ['Résidences secondaires', formatNumber(results.secondaryResidenceAccomodationEvolution)],
-        ['Logements vacants', formatNumber(results.vacantAccomodationEvolution)],
+        ['Logements vacants de courte durée', formatNumber(results.shortTermVacantAccomodation)],
+        ['Logements vacants de longue durée', formatNumber(results.longTermVacantAccomodation)],
         ['Total', formatNumber(results.totalFlux)],
       ]}
       fixed

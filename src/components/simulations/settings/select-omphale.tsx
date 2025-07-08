@@ -72,7 +72,8 @@ export const SelectOmphale = ({ onChange }: SelectOmphaleProps) => {
   const filteredScenarios = scenarios.filter((scenario) => scenario.id === queryStates.population)
   return (
     <Select
-      label=""
+      label="Scénario de projection de population"
+      hint="Le choix de scénario s'applique au global dans votre simulation, à l'échelle du bassin d'habitat ou des EPCI."
       className={classes.select}
       placeholder="Choix du scénario"
       nativeSelectProps={{

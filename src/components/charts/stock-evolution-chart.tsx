@@ -1,7 +1,7 @@
 'use client'
 
 import { Table } from '@codegouvfr/react-dsfr/Table'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
 import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { tss } from 'tss-react'
@@ -22,7 +22,6 @@ interface StockEvolutionChartProps {
 }
 
 export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) => {
-  const [activeIndex, setActiveIndex] = useState<number>()
   const { classes } = useStyles()
   const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, socialParc, totalStock } = results
   const chartData = [
@@ -33,8 +32,6 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
     { name: 'Parc social', value: socialParc },
     { name: 'Mauvaise qualité', value: badQuality },
   ]
-
-  const onPieEnter = (_: unknown, index: number) => setActiveIndex(index)
 
   const renderActiveShape = (props: PieSectorDataItem) => {
     const RADIAN = Math.PI / 180
@@ -53,11 +50,10 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
     const ex = mx + (cos >= 0 ? 1 : -1) * 22
     const ey = my
     const textAnchor = cos >= 0 ? 'start' : 'end'
-
     return (
       <g>
         <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontSize: '20px' }}>
-          {payload.name}
+          {payload.name as string}
         </text>
         <Sector
           cx={cx}
@@ -89,14 +85,12 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
 
   return (
     <div className={classes.container}>
-      <h5>Besoin en stock - Evolution du besoin en stock</h5>
+      <h5>Besoins liés aux situations de mal logement</h5>
       <div className={classes.rowContainer}>
         <div className={classes.chartContainer}>
           <ResponsiveContainer height="100%">
             <PieChart>
               <Pie
-                activeIndex={activeIndex}
-                onMouseEnter={onPieEnter}
                 data={chartData}
                 activeShape={renderActiveShape}
                 cx="50%"
@@ -153,13 +147,11 @@ const useStyles = tss.create({
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem',
-    paddingLeft: '2rem',
     paddingTop: '2rem',
   },
   rowContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
   },
   tableContainer: {
     display: 'flex',

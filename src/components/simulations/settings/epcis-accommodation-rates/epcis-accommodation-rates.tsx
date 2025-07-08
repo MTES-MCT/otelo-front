@@ -28,7 +28,7 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
   if (!epciRates) return null
 
   return (
-    <div>
+    <>
       <div className={fr.cx('fr-mb-2w')}>
         <Alert
           description={
@@ -36,11 +36,11 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
               <span>
                 Le volume de logements vacants longue durée est de {formatNumber(epciRates.vacancy.nbAccommodation)} logements en&nbsp;
                 {epciRates.vacancy.year}.
-                <span className={classes.smallText}>
-                  &nbsp;(soit <span className={classes.bold}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
-                </span>
               </span>
-              <p>Le taux de vacance courte durée est de {(Number(epciRates.txLv) * 100).toFixed(2)}%. Il n'est pas modifiable.</p>
+              <p className={classes.underline}>
+                Le taux de vacance courte durée est de {(Number(epciRates.shortTermVacancyRate) * 100).toFixed(2)}%. Il n'est pas
+                modifiable.
+              </p>
             </>
           }
           severity="info"
@@ -48,15 +48,10 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
         />
       </div>
       <div className={classes.inputsContainer}>
-        <VacancyAccommodationRatesInput
-          creationMode={creationMode}
-          epci={epci}
-          longTermValue={epciRates.txLvLD}
-          shortTermValue={epciRates.txLv}
-        />
+        <VacancyAccommodationRatesInput creationMode={creationMode} epci={epci} />
         <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
       </div>
-    </div>
+    </>
   )
 }
 
@@ -64,7 +59,6 @@ export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ epci
   const { classes } = useStyles()
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
-
   if (!rates) return null
 
   const tabs = epcis.map((epci) => ({
@@ -86,8 +80,8 @@ const useStyles = tss.create({
     gap: '1rem',
     justifyContent: 'space-between',
   },
-  smallText: {
-    fontSize: '0.8rem',
+  underline: {
+    textDecoration: 'underline',
   },
   bold: {
     fontWeight: 'bold',

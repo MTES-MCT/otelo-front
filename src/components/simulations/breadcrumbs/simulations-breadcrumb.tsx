@@ -1,13 +1,12 @@
-'use client'
-
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
 import dayjs from 'dayjs'
-import { usePathname } from 'next/navigation'
-import { useSimulation } from '~/hooks/use-simulation'
+import { TSimulationWithResults } from '~/schemas/simulation'
 
-export const SimulationsBreadcrumb = () => {
-  const pathname = usePathname()
-  const { data: simulation } = useSimulation()
+type SimulationsBreadcrumbProps = {
+  simulation: TSimulationWithResults
+}
+
+export const SimulationsBreadcrumb = ({ simulation }: SimulationsBreadcrumbProps) => {
   return (
     <Breadcrumb
       currentPageLabel="Résultats"
@@ -16,8 +15,8 @@ export const SimulationsBreadcrumb = () => {
       }}
       segments={[
         {
-          label: `${simulation?.name} - ${dayjs(simulation?.createdAt).format('DD/MM/YYYY')}`,
-          linkProps: { href: pathname },
+          label: `${simulation.name} - ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`,
+          linkProps: { href: `/simulation/${simulation.id}` },
         },
       ]}
     />

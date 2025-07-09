@@ -1,6 +1,6 @@
 import { FC } from 'react'
+import { BadHousingChart } from '~/components/charts/data-visualisation/bad-housing-charts'
 import { LovacAccommodationEvolutionChart } from '~/components/charts/data-visualisation/lovac-evolution-charts'
-import { MalLogementChart } from '~/components/charts/data-visualisation/mal-logement-charts'
 import { PopulationEvolutionChart } from '~/components/charts/data-visualisation/population-evolution-charts'
 import { ProjectionMenagesEvolutionChart } from '~/components/charts/data-visualisation/projection-menages-evolution-charts'
 import { ProjectionPopulationEvolutionChart } from '~/components/charts/data-visualisation/projection-population-evolution-charts'
@@ -45,6 +45,6 @@ export const DataVisualisationChart: FC<{
     }
   }
   if (isMalLogement) {
-    return <MalLogementChart data={data as TInadequateHousing} />
+    return <BadHousingChart data={data as TInadequateHousing} />
   }
 }

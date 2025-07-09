@@ -39,12 +39,10 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
     }
   }
 
-  console.log(scenario.epciScenarios)
   const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_rs
   const shortTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_courte
   const longTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_longue
   const vacancyRate = (shortTermVacancyRate ?? 0) + (longTermVacancyRate ?? 0)
-  console.log('vacancyRate', vacancyRate, shortTermVacancyRate, longTermVacancyRate)
 
   const settings = [
     {

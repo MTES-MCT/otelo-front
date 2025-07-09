@@ -1,5 +1,6 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsString, useQueryStates } from 'nuqs'
@@ -8,6 +9,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import { tss } from 'tss-react'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TInadequateHousing } from '~/schemas/population-evolution'
+import { formatNumber } from '~/utils/format-numbers'
 import styles from './accommodation-evolution-charts.module.css'
 
 interface MalLogementChartProps {
@@ -22,7 +24,13 @@ export const MalLogementChart: FC<MalLogementChartProps> = ({ data }) => {
   })
   const { classes } = useStyles()
 
-  const chartData = [data[queryStates.epci as string]]
+  const chartData = [
+    {
+      ...data[queryStates.epci as string],
+      noAccommodation: data[queryStates.epci as string].noAccommodation.total,
+      hosted: data[queryStates.epci as string].hosted.total,
+    },
+  ]
   const chartDataOteloParams = [
     {
       badQuality: chartData[0].badQuality * 0.5,
@@ -37,11 +45,16 @@ export const MalLogementChart: FC<MalLogementChartProps> = ({ data }) => {
   const title = DATA_TYPE_OPTIONS.find((option) => option.value === queryStates.type)?.label
   const EPCIS_OPTIONS = Object.entries(data).map(([key, value]) => ({ label: value.name, value: key }))
   const dataToDisplay = withOteloParams ? chartDataOteloParams : chartData
+  const homelessMakeshiftHotelSum =
+    data[queryStates.epci as string].noAccommodation.hotel +
+    data[queryStates.epci as string].noAccommodation.homeless +
+    data[queryStates.epci as string].noAccommodation.makeShiftHousing
+  const name = data[queryStates.epci as string].name
   return (
     <>
       <div className={styles.headerContainer}>
         <h5>
-          {title} - {chartData[0].name}
+          {title} - {name}
         </h5>
         <div>
           <Select
@@ -86,8 +99,56 @@ export const MalLogementChart: FC<MalLogementChartProps> = ({ data }) => {
           </BarChart>
         </ResponsiveContainer>
         <div className={classes.titleContainer}>
-          <span className={classes.title}>Graphique de la répartition des formes de mal logement à {chartData[0].name}</span>
+          <span className={classes.title}>Graphique sur les situations de mal logement à {name}</span>
         </div>
+      </div>
+      <div>
+        <p className={fr.cx('fr-mb-0')}>
+          <span className={fr.cx('fr-text--bold')}>Clé de lecture :</span> Ce graphique présente le nombre de mal-logés par typologie de
+          mal-logement sur le territoire de {name}. Chacune de ces situations ne génère pas nécessairement un besoin en logements
+          supplémentaires : certaines peuvent être résolues par des actions sur le parc existant (réhabilitation, relogement, accompagnement
+          social, etc.). La part à prendre en compte est paramétrable lors de l’élaboration d’un scenario, via l’espace “Paramétrer le
+          mal-logement” de la page de résultat.
+        </p>
+        <p>On retrouve sur le territoire :</p>
+        <ul>
+          <li>
+            <span className={fr.cx('fr-text--bold')}>Mauvaise qualité</span> : {formatNumber(chartData[0].badQuality)} ménages habitant un
+            logement indigne, d’après le le Parc privé potentiellement indigne (2021) ;
+          </li>
+          <li>
+            <span className={fr.cx('fr-text--bold')}>Inadéquation financière</span> : {formatNumber(chartData[0].financialInadequation)}
+            &nbsp; ménages locataires du parc privé ayant un taux d’effort supérieur à 30% et bénéficiant des APL (CNAF 2022) ;
+          </li>
+          <li>
+            <span className={fr.cx('fr-text--bold')}>Inadéquation physique</span> : {formatNumber(chartData[0].physicalInadequation)}
+            &nbsp; ménages dans un logement trop petit. Les données fiscales (2021) sont mobilisées pour quantifier le nombre de
+            propriétaires et locataires du parc privé vivant dans un logement comprenant deux pièces en moins ;
+          </li>
+          <li>
+            <span className={fr.cx('fr-text--bold')}>Hébergés</span> :
+            <ul>
+              <li>
+                {formatNumber(data[queryStates.epci as string].hosted.sne)} personnes hébergés chez un tiers, ou à titre temporaire d’après
+                le SNE. ;
+              </li>
+              <li>{formatNumber(data[queryStates.epci as string].hosted.filocom)} familles dans une situation de cohabitation subie ;</li>
+            </ul>
+          </li>
+          <li>
+            <span className={fr.cx('fr-text--bold')}>Sans logement</span> :
+            <ul>
+              <li>
+                {formatNumber(homelessMakeshiftHotelSum)} personnes sans abri, vivant en habitation de fortune, ou logées à l’hôtel, d’après
+                les données du recensement de la population (2021). ;
+              </li>
+              <li>
+                {formatNumber(data[queryStates.epci as string].noAccommodation.finess)} logés dans un hébergement d’urgence (FINESS 2022 -
+                pour plus d’information sur les types d’hébergement d’urgence).
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </>
   )

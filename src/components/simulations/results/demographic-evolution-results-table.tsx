@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import Table from '@codegouvfr/react-dsfr/Table'
 import { formatNumber } from '~/utils/format-numbers'
 
@@ -19,11 +20,17 @@ export const DemographicEvolutionResultsTable = ({ results }: DemographicEvoluti
       caption="Résumé des besoins en stock"
       data={[
         ['Démographie', formatNumber(results.demographicEvolution)],
-        ['Renouvellement', formatNumber(results.renewalNeeds)],
-        ['Résidences secondaires', formatNumber(results.secondaryResidenceAccomodationEvolution)],
-        ['Logements vacants de courte durée', formatNumber(results.shortTermVacantAccomodation)],
-        ['Logements vacants de longue durée', formatNumber(results.longTermVacantAccomodation)],
-        ['Total', formatNumber(results.totalFlux)],
+        ['Logements vacants de courte durée - Fluidité du parc', formatNumber(results.shortTermVacantAccomodation)],
+        [
+          results.secondaryResidenceAccomodationEvolution < 0 ? 'Remobilisation de résidences secondaires' : 'Résidences secondaires',
+          formatNumber(results.secondaryResidenceAccomodationEvolution),
+        ],
+        [
+          results.longTermVacantAccomodation < 0 ? 'Remobilisation de logements vacants' : 'Logements vacants de longue durée',
+          formatNumber(results.longTermVacantAccomodation),
+        ],
+        ['Renouvellement urbain - Disparition & Restructuration', formatNumber(results.renewalNeeds)],
+        [<span className={fr.cx('fr-text--bold')}>Total</span>, formatNumber(results.totalFlux)],
       ]}
       fixed
       headers={['Catégorie', 'Besoin calculé']}

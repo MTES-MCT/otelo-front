@@ -1,5 +1,6 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
 import { Table } from '@codegouvfr/react-dsfr/Table'
 import { FC } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
@@ -10,6 +11,7 @@ import { formatNumber } from '~/utils/format-numbers'
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 interface StockEvolutionChartProps {
+  horizon: number
   results: {
     badQuality: number
     financialInadequation: number
@@ -21,7 +23,7 @@ interface StockEvolutionChartProps {
   }
 }
 
-export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) => {
+export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, horizon }) => {
   const { classes } = useStyles()
   const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, socialParc, totalStock } = results
   const chartData = [
@@ -32,6 +34,9 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
     { name: 'Parc social', value: socialParc },
     { name: 'Mauvaise qualité', value: badQuality },
   ]
+
+  const maxValue = Math.max(...chartData.map((item) => item.value))
+  const maxValueName = chartData.find((item) => item.value === maxValue)?.name || ''
 
   const renderActiveShape = (props: PieSectorDataItem) => {
     const RADIAN = Math.PI / 180
@@ -82,6 +87,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
       </g>
     )
   }
+  const currentYear = new Date().getFullYear()
 
   return (
     <div className={classes.container}>
@@ -106,6 +112,22 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
               </Pie>
             </PieChart>
           </ResponsiveContainer>
+        </div>
+        <div>
+          <p className={fr.cx('fr-mb-0')}>
+            <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : La résorption du besoin en stock sur la période&nbsp;
+            {currentYear} à {horizon} ans (soit {horizon - currentYear} ans) implique&nbsp;
+            {formatNumber(totalStock)} logements à produire. Le graphique ci-dessus précise la ventilation de ce besoin par type de
+            mal-logement. Par exemple, {formatNumber(hosted)} logements devront être créés pour répondre au besoin des&nbsp;
+            {formatNumber(maxValue)} logements de catégorie "{maxValueName}".
+          </p>
+          <ul>
+            <li>Hors logement : personnes hors-logement</li>
+            <li>Hébergés : ménages hébergés dans un logement qui n’est pas le leur</li>
+            <li>Inadéquation financière : ménages ayant un taux d’effort trop important.</li>
+            <li>Mauvaise qualité : ménages habitant un logement précaire.</li>
+            <li>Inadéquation physique : ménages dans un logement trop petit.</li>
+          </ul>
         </div>
         <div className={classes.tableContainer}>
           <Table

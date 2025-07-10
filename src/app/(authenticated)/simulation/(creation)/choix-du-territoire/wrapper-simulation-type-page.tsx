@@ -33,15 +33,17 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
   const { data: selectedEpcis, isLoading: isLoadingEpcis } = useEpcis(epcis)
   const { data: groups } = useEpciGroups()
   const [isEditing, setIsEditing] = useState(false)
-  const [selectedMethod, setSelectedMethod] = useState<SelectionMethod>(
-    epciGroupId ? 'existing-group' : baseEpci || epcis.length > 0 ? 'custom-selection' : null,
-  )
+  const [selectedMethod, setSelectedMethod] = useState<SelectionMethod>(() => {
+    if (epciGroupId) return 'existing-group'
+    if (baseEpci || epcis.length > 0) return 'custom-selection'
+    return null
+  })
+  const [isBassinHabitat, setIsBassinHabitat] = useState(false)
 
-  const hasExistingGroups = groups ? groups.length > 0 : false
-  const hasEpcis = epcis ? epcis.length > 0 : false
-  const canGoNextStep = hasEpcis && (epciGroupName || epciGroupId)
+  const hasEpcis = !!epcis?.length
+  const canGoNextStep = hasEpcis && !!(epciGroupName || epciGroupId)
 
-  const href = `/simulation/cadrage-temporel`
+  const href = '/simulation/cadrage-temporel'
 
   useEffect(() => {
     // Only set epcis if we have a baseEpci, bassinEpcis data, and epcis is empty
@@ -51,13 +53,15 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
       const isCorrectBassin = bassinEpcis.some((epci) => epci.code === baseEpci)
       if (isCorrectBassin) {
         setQueryStates({ epcis: bassinEpcis.map((epci) => epci.code) })
+        // If we're in bassin-habitat mode, mark it as such
+        if (selectedMethod === 'bassin-habitat') {
+          setIsBassinHabitat(true)
+        }
       }
     }
-  }, [baseEpci, epcis.length, bassinEpcis, setQueryStates])
+  }, [baseEpci, epcis.length, bassinEpcis, setQueryStates, selectedMethod])
 
-  const onEditClick = () => {
-    setIsEditing(!isEditing)
-  }
+  const toggleEditing = () => setIsEditing(!isEditing)
 
   const onSelectEpci = async (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
@@ -65,14 +69,15 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
     // Reset editing state when selecting a new EPCI
     setIsEditing(false)
 
+    // Mark if this is a bassin habitat selection
+    setIsBassinHabitat(selectedMethod === 'bassin-habitat')
+
     await setQueryStates({ baseEpci: code, epcis: [] })
 
     router.refresh()
   }
 
   const baseEpciData = bassinEpcis.find((epci) => epci.code === baseEpci)
-
-  const description = "Les résultats de votre simulation seront donnés à l'échelle de l'EPCI ou à l'échelle du bassin d'habitat."
 
   const handleMethodSelect = (method: SelectionMethod) => {
     setSelectedMethod(method)
@@ -85,6 +90,10 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
         baseEpci: null,
       })
       setIsEditing(false)
+      setIsBassinHabitat(false)
+    } else if (method !== 'bassin-habitat') {
+      // If switching away from bassin-habitat, reset the flag
+      setIsBassinHabitat(false)
     }
   }
 
@@ -100,7 +109,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
 
         {!isLoadingEpcis && (
           <>
-            {!selectedMethod && hasExistingGroups && (
+            {!selectedMethod && (
               <MethodSelectionCards
                 selectedMethod={selectedMethod}
                 onMethodSelect={handleMethodSelect}
@@ -109,7 +118,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
             )}
 
             {/* Show change method button when a method is selected */}
-            {selectedMethod && hasExistingGroups && (
+            {selectedMethod && (
               <div className={fr.cx('fr-mb-3w')}>
                 <Button
                   priority="tertiary no outline"
@@ -124,7 +133,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
             )}
 
             {/* Show existing group selection when that method is selected */}
-            {selectedMethod === 'existing-group' && hasExistingGroups && (
+            {selectedMethod === 'existing-group' && (
               <>
                 <h3 className={fr.cx('fr-h5')}>Sélectionner un groupe EPCI sauvegardé</h3>
                 <p className={fr.cx('fr-text--sm', 'fr-hint-text')}>Choisissez parmi vos groupes d'EPCI précédemment sauvegardés</p>
@@ -141,14 +150,26 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
               </>
             )}
 
-            {/* Show custom selection when that method is selected or when no existing groups */}
-            {(selectedMethod === 'custom-selection' || !hasExistingGroups) && !epciGroupId && (
+            {/* Show bassin habitat or custom selection based on method */}
+            {!epciGroupId && (selectedMethod === 'bassin-habitat' || selectedMethod === 'custom-selection') && (
               <>
+                {selectedMethod === 'bassin-habitat' && (
+                  <>
+                    <h3 className={fr.cx('fr-h5')}>Choisir un Bassin d'Habitat</h3>
+                    <p className={fr.cx('fr-text--sm', 'fr-hint-text')}>
+                      Recherchez un EPCI pour sélectionner automatiquement son bassin d'habitat
+                    </p>
+                  </>
+                )}
                 {selectedMethod === 'custom-selection' && <h3 className={fr.cx('fr-h5')}>Créer une sélection personnalisée</h3>}
                 <AutocompleteInput
                   label="Rechercher un EPCI"
                   onClick={onSelectEpci}
-                  hintText="Saisissez le nom de l'EPCI du territoire concerné, ou par défaut, vous pouvez saisir le nom de la commune ou son code postal."
+                  hintText={
+                    selectedMethod === 'bassin-habitat'
+                      ? "Saisissez le nom de l'EPCI pour charger automatiquement tous les EPCI de son bassin d'habitat."
+                      : "Saisissez le nom de l'EPCI du territoire concerné, ou par défaut, vous pouvez saisir le nom de la commune ou son code postal."
+                  }
                   defaultValue={baseEpciData?.name}
                 />
               </>
@@ -160,16 +181,22 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
           <>
             <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-grid-row--middle')}>
               <div className={fr.cx('fr-col-md-9')}>
-                {!isEditing && selectedEpcis && (
+                {!isEditing && (
                   <div className={fr.cx('fr-py-5w')}>
-                    <div>
-                      Les territoires inclus dans la simulation sont :
-                      <ul>
-                        {selectedEpcis.map((epci) => (
-                          <li key={epci.code}>{epci.name}</li>
-                        ))}
-                      </ul>
-                    </div>
+                    {isBassinHabitat && (
+                      <Alert
+                        description="Les EPCI du bassin d'habitat ont été automatiquement sélectionnés et ne peuvent pas être modifiés."
+                        severity="info"
+                        small
+                        className={fr.cx('fr-mb-2w')}
+                      />
+                    )}
+                    Les territoires inclus dans la simulation sont :
+                    <ul>
+                      {selectedEpcis?.map((epci) => (
+                        <li key={epci.code}>{epci.name}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
                 {isEditing && (
@@ -178,19 +205,23 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
                   </div>
                 )}
               </div>
-              {!epciGroupId && (
+              {!epciGroupId && !isBassinHabitat && (
                 <div className={fr.cx('fr-col-md-3')}>
-                  <Button priority="secondary" onClick={onEditClick}>
+                  <Button priority="secondary" onClick={toggleEditing}>
                     Éditer les territoires inclus
                   </Button>
                 </div>
               )}
             </div>
-            {isEditing && !epciGroupId && <ContiguousEpcisCheckboxes epcis={bassinEpcis} />}
+            {isEditing && !epciGroupId && !isBassinHabitat && <ContiguousEpcisCheckboxes epcis={bassinEpcis} />}
             <hr className={fr.cx('fr-mt-3w')} />
             <EpciGroupNameInput value={epciGroupName || ''} />
             <div className={fr.cx('fr-mt-2w')}>
-              <Alert description={description} severity="info" small />
+              <Alert
+                description="Les résultats de votre simulation seront donnés à l'échelle de l'EPCI ou à l'échelle du bassin d'habitat."
+                severity="info"
+                small
+              />
             </div>
           </>
         )}

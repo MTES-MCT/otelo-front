@@ -38,18 +38,14 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(demographicEvolution > 0 && { demographicEvolution }),
     ...(renewalNeeds > 0 && { renewalNeeds }),
     ...(secondaryResidenceAccomodationEvolution > 0 && { secondaryResidenceAccomodationEvolution }),
-    ...(vacantAccomodationEvolution > 0 && { vacantAccomodationEvolution }),
+    ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation: 0 }),
+    ...(shortTermVacantAccomodation > 0 && { shortTermVacantAccomodation }),
   }
 
   const negativeData = {
     name: 'Mobilisation du parc existant',
-    ...(demographicEvolution < 0 && { demographicEvolution: Math.abs(demographicEvolution) }),
-    ...(renewalNeeds < 0 && { renewalNeeds: Math.abs(renewalNeeds) }),
-    ...(secondaryResidenceAccomodationEvolution < 0 && {
-      secondaryResidenceAccomodationEvolution: Math.abs(secondaryResidenceAccomodationEvolution),
-    }),
-    ...(vacantAccomodationEvolution < 0 && {
-      vacantAccomodationEvolution: Math.abs(vacantAccomodationEvolution),
+    ...(longTermVacantAccomodation < 0 && {
+      longTermVacantAccomodation: Math.abs(longTermVacantAccomodation),
     }),
   }
 
@@ -87,7 +83,8 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
             <Tooltip />
             <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill="#4F46E5" />
             <Bar dataKey="secondaryResidenceAccomodationEvolution" name="Résidences secondaires" stackId="a" fill="#EC4899" />
-            <Bar dataKey="vacantAccomodationEvolution" name="Vacance" stackId="a" fill="#10B981" />
+            <Bar dataKey="longTermVacantAccomodation" name="Logements vacants de longue durée" stackId="a" fill="#10B981" />
+            <Bar dataKey="shortTermVacantAccomodation" name="Logements vacants de courte durée" stackId="a" fill="#10B981" />
             <Bar dataKey="renewalNeeds" name="Renouvellement" stackId="a" fill="#F59E0B" />
             <Bar dataKey="totalFlux" name="Demande potentielle" stackId="a" fill="#6366F1" />
             <Legend

@@ -38,6 +38,18 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, hor
   const maxValue = Math.max(...chartData.map((item) => item.value))
   const maxValueName = chartData.find((item) => item.value === maxValue)?.name || ''
 
+  const getCategoryLabel = (categoryName: string) => {
+    const categoryLabels = {
+      Hébergés: "personnes hébergées dans un logement qui n'est pas le leur",
+      'Hors logement': "personnes hors-logement (sans abri, logés à l'hôtel, habitat de fortune) ou en hébergement social",
+      'Inadéquation financière': "ménages ayant un taux d'effort trop important",
+      'Inadéquation physique': 'ménages dans un logement trop petit',
+      'Parc social': 'logements du parc social',
+      'Mauvaise qualité': 'ménages habitant un logement précaire',
+    }
+    return categoryLabels[categoryName as keyof typeof categoryLabels] || `de catégorie "${categoryName}"`
+  }
+
   const renderActiveShape = (props: PieSectorDataItem) => {
     const RADIAN = Math.PI / 180
     const { endAngle, fill, innerRadius, payload, startAngle, value } = props
@@ -114,20 +126,14 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, hor
           </ResponsiveContainer>
         </div>
         <div>
-          <p className={fr.cx('fr-mb-0')}>
+          <p>
             <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : La résorption du besoin en stock sur la période&nbsp;
             {currentYear} à {horizon} ans (soit {horizon - currentYear} ans) implique&nbsp;
             {formatNumber(totalStock)} logements à produire. Le graphique ci-dessus précise la ventilation de ce besoin par type de
-            mal-logement. Par exemple, {formatNumber(hosted)} logements devront être créés pour répondre au besoin des&nbsp;
-            {formatNumber(maxValue)} logements de catégorie "{maxValueName}".
+            mal-logement. Par exemple, {formatNumber(maxValue)} logements devront être créés pour répondre aux besoins des{' '}
+            {getCategoryLabel(maxValueName)}.
           </p>
-          <ul>
-            <li>Hors logement : personnes hors-logement</li>
-            <li>Hébergés : ménages hébergés dans un logement qui n’est pas le leur</li>
-            <li>Inadéquation financière : ménages ayant un taux d’effort trop important.</li>
-            <li>Mauvaise qualité : ménages habitant un logement précaire.</li>
-            <li>Inadéquation physique : ménages dans un logement trop petit.</li>
-          </ul>
+          <p>Les besoins en logements issues du besoin en stock sont détaillés dans le tableau ci-dessous.</p>
         </div>
         <div className={classes.tableContainer}>
           <Table

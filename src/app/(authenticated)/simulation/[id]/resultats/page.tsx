@@ -35,7 +35,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       totalFlux,
       totalStock,
       vacancy: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
-        .vacantAccomodation,
+        .longTermVacantAccomodation,
     }
 
     const stockResults = {

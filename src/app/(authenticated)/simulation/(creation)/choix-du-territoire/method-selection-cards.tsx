@@ -1,10 +1,8 @@
-'use client'
-
 import { fr } from '@codegouvfr/react-dsfr'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 
-export type SelectionMethod = 'existing-group' | 'custom-selection' | null
+export type SelectionMethod = 'existing-group' | 'custom-selection' | 'bassin-habitat' | null
 
 type MethodSelectionCardsProps = {
   selectedMethod: SelectionMethod
@@ -14,47 +12,69 @@ type MethodSelectionCardsProps = {
 
 export const MethodSelectionCards: FC<MethodSelectionCardsProps> = ({ selectedMethod, onMethodSelect, existingGroupsCount }) => {
   const { classes, cx } = useStyles({ selectedMethod })
+  const showExistingGroup = existingGroupsCount > 0
 
   return (
     <div className={classes.container}>
       <h3 className={fr.cx('fr-h5', 'fr-mb-3w')}>Comment souhaitez-vous sélectionner les EPCI ?</h3>
 
       <div className={classes.cardsWrapper}>
+        {showExistingGroup && (
+          <button
+            className={cx(
+              classes.card,
+              selectedMethod === 'existing-group' && classes.cardSelected,
+              (selectedMethod === 'custom-selection' || selectedMethod === 'bassin-habitat') && classes.cardInactive,
+            )}
+            onClick={() => onMethodSelect('existing-group')}
+            type="button"
+          >
+            <div className={classes.cardIcon}>
+              <i className={fr.cx('fr-icon-folder-2-line', 'fr-icon--lg')} />
+            </div>
+            <div className={classes.cardContent}>
+              <h4 className={classes.cardTitle}>Utiliser un groupe sauvegardé</h4>
+              <p className={classes.cardDescription}>
+                Sélectionnez parmi vos {existingGroupsCount} groupe{existingGroupsCount > 1 ? 's' : ''} d'EPCI existant
+                {existingGroupsCount > 1 ? 's' : ''}
+              </p>
+            </div>
+            {selectedMethod === 'existing-group' && (
+              <div className={classes.selectedBadge}>
+                <i className={fr.cx('fr-icon-checkbox-circle-fill')} />
+              </div>
+            )}
+          </button>
+        )}
+
         <button
           className={cx(
             classes.card,
-            selectedMethod === 'existing-group' && classes.cardSelected,
-            selectedMethod === 'custom-selection' && classes.cardInactive,
+            selectedMethod === 'bassin-habitat' && classes.cardSelected,
+            (selectedMethod === 'existing-group' || selectedMethod === 'custom-selection') && classes.cardInactive,
           )}
-          onClick={() => onMethodSelect('existing-group')}
+          onClick={() => onMethodSelect('bassin-habitat')}
           type="button"
         >
           <div className={classes.cardIcon}>
-            <i className={fr.cx('fr-icon-folder-2-line', 'fr-icon--lg')} />
+            <i className={fr.cx('fr-icon-map-pin-2-line', 'fr-icon--lg')} />
           </div>
           <div className={classes.cardContent}>
-            <h4 className={classes.cardTitle}>Utiliser un groupe sauvegardé</h4>
-            <p className={classes.cardDescription}>
-              Sélectionnez parmi vos {existingGroupsCount} groupe{existingGroupsCount > 1 ? 's' : ''} d'EPCI existant
-              {existingGroupsCount > 1 ? 's' : ''}
-            </p>
+            <h4 className={classes.cardTitle}>Choisir un Bassin d'Habitat</h4>
+            <p className={classes.cardDescription}>Sélectionnez un bassin d'habitat prédéfini sans modification possible</p>
           </div>
-          {selectedMethod === 'existing-group' && (
+          {selectedMethod === 'bassin-habitat' && (
             <div className={classes.selectedBadge}>
               <i className={fr.cx('fr-icon-checkbox-circle-fill')} />
             </div>
           )}
         </button>
 
-        <div className={classes.divider}>
-          <span className={classes.dividerText}>OU</span>
-        </div>
-
         <button
           className={cx(
             classes.card,
             selectedMethod === 'custom-selection' && classes.cardSelected,
-            selectedMethod === 'existing-group' && classes.cardInactive,
+            (selectedMethod === 'existing-group' || selectedMethod === 'bassin-habitat') && classes.cardInactive,
           )}
           onClick={() => onMethodSelect('custom-selection')}
           type="button"
@@ -84,7 +104,7 @@ const useStyles = tss.withParams<{ selectedMethod: SelectionMethod }>().create((
   cardsWrapper: {
     display: 'flex',
     gap: fr.spacing('3w'),
-    alignItems: 'center',
+    alignItems: 'stretch',
     flexWrap: 'wrap',
   },
   card: {
@@ -141,33 +161,5 @@ const useStyles = tss.withParams<{ selectedMethod: SelectionMethod }>().create((
     top: fr.spacing('2w'),
     right: fr.spacing('2w'),
     color: fr.colors.decisions.text.actionHigh.blueFrance.default,
-  },
-  divider: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    minWidth: '60px',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: '1px',
-      height: '60px',
-      backgroundColor: fr.colors.decisions.border.default.grey.default,
-    },
-  },
-  dividerText: {
-    backgroundColor: 'white',
-    padding: `${fr.spacing('1w')} ${fr.spacing('2w')}`,
-    borderRadius: '20px',
-    border: `1px solid ${fr.colors.decisions.border.default.grey.default}`,
-    fontSize: '0.875rem',
-    fontWeight: 600,
-    color: fr.colors.decisions.text.mention.grey.default,
-    position: 'relative',
-    zIndex: 1,
   },
 }))

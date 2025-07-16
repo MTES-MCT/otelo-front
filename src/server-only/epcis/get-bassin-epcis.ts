@@ -15,8 +15,9 @@ export const getBassinEpcis = async (epci: string) => {
       'Content-Type': 'application/json',
     },
   })
+
   if (!res.ok) {
-    throw new Error('Failed to get bassin epcis')
+    return []
   }
   return (await res.json()) as TEpci[]
 }

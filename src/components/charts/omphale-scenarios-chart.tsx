@@ -8,6 +8,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { UploadDemographicEvolutionCustom } from '~/components/charts/upload-demographic-evolution-custom'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
 import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
 import { formatNumber } from '~/utils/format-numbers'
@@ -84,7 +85,7 @@ const SCENARIOS = [
   },
 ]
 
-export const OmphaleScenariosTooltip = ({
+const OmphaleScenariosTooltip = ({
   active,
   basePopulation,
   label,
@@ -161,6 +162,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
         small
         className={fr.cx('fr-mb-2w')}
       />
+      <UploadDemographicEvolutionCustom epciCode={queryStates.epciChart || queryStates.epcis[0]} />
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={300} data={data}>

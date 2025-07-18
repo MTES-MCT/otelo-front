@@ -16,15 +16,34 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn(params) {
       try {
+        // We sign up user there
+        const user = params.user as CustomUser
+        await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
+          body: JSON.stringify({
+            email: user.email,
+            provider: proConnectProviderId,
+            firstname: user.firstName,
+            lastname: user.lastName,
+            sub: user.sub,
+            id: user.id,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        })
+
+        // Ensuite, vérifier l'accès
         const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
           method: 'POST',
           body: JSON.stringify({
-            email: params.user?.email,
+            email: user.email,
           }),
           headers: {
             'Content-Type': 'application/json',
           },
         })
+
         if (!hasUserAccess.ok) {
           throw new Error('Failed to check user access')
         }
@@ -35,12 +54,13 @@ export const authOptions: NextAuthOptions = {
         }
         return '/unauthorized'
       } catch {
-        return false
+        return '/unauthorized'
       }
     },
     async jwt({ account, token, user }) {
       if (account) {
-        // First time coming from SSO
+        // User is already registered in the signIn callback
+        // Get session tokens
         try {
           const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
             body: JSON.stringify({
@@ -66,6 +86,9 @@ export const authOptions: NextAuthOptions = {
           token.refreshToken = data.session.refreshToken
           token.expiresAt = expiresAtUnix
           token.user = data.user
+
+          // User has passed the access check in signIn
+          token.hasAccess = true
         } catch (_error) {
           throw new Error('Failed to get tokens from API')
         }

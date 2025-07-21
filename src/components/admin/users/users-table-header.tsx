@@ -17,7 +17,7 @@ export const UsersTableHeader: FC = () => {
   const [inputValue, setInputValue] = useState(searchQuery ?? '')
   const { data: usersResponse } = useUsers()
   const { data: usersSearchResponse } = useSearchUsers()
-  const { refetch } = useSynchroDs()
+  const { mutate, isPending } = useSynchroDs()
 
   const { classes, cx } = useStyles()
 
@@ -34,7 +34,7 @@ export const UsersTableHeader: FC = () => {
   }, [inputValue, setSearchQuery])
 
   const handleSynchroDs = async () => {
-    await refetch()
+    await mutate()
     setSearchQuery(null)
     queryClient.invalidateQueries({ queryKey: ['users'] })
   }
@@ -65,7 +65,9 @@ export const UsersTableHeader: FC = () => {
           <span className={classes.userCount}>{userCount} utilisateurs</span>
         </div>
       </div>
-      <Button onClick={handleSynchroDs}>Synchronisation Démarches Simplifiées</Button>
+      <Button onClick={handleSynchroDs} disabled={isPending}>
+        {isPending ? 'Synchronisation en cours...' : 'Synchronisation Démarches Simplifiées'}
+      </Button>
     </div>
   )
 }

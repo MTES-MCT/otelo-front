@@ -79,7 +79,6 @@ export const authOptions: NextAuthOptions = {
           if (!response.ok) {
             throw new Error('Failed to get tokens from API')
           }
-
           const data = await response.json()
           const expiresAtUnix = Math.floor(new Date(data.session.expiresAt).getTime() / 1000)
           token.accessToken = data.session.accessToken
@@ -94,6 +93,26 @@ export const authOptions: NextAuthOptions = {
         }
       } else if (Date.now() < (token.expiresAt as number) * 1000) {
         // Subsequent logins, but the `access_token` is still valid
+        const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: (token.user as CustomUser)?.email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!hasUserAccess.ok) {
+          token.error = 'AccessCheckError'
+          throw new Error('Failed to check user access')
+        }
+
+        const accessData = await hasUserAccess.json()
+        if (!accessData) {
+          token.error = 'AccessRevoked'
+          throw new Error('User access has been revoked')
+        }
         return token
       } else {
         if (!token.refreshToken) throw new TypeError('Missing refresh_token')
@@ -111,6 +130,29 @@ export const authOptions: NextAuthOptions = {
           }
 
           const data = await response.json()
+
+          // Check if user still has access after refresh
+          const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
+            method: 'POST',
+            body: JSON.stringify({
+              email: (token.user as CustomUser)?.email,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          if (!hasUserAccess.ok) {
+            token.error = 'AccessCheckError'
+            throw new Error('Failed to check user access')
+          }
+
+          const accessData = await hasUserAccess.json()
+          if (!accessData) {
+            token.error = 'AccessRevoked'
+            throw new Error('User access has been revoked')
+          }
+
           const expiresAtUnix = Math.floor(new Date(data.session.expiresAt).getTime() / 1000)
           token.accessToken = data.session.accessToken
           token.refreshToken = data.session.refreshToken

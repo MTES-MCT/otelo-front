@@ -3,20 +3,34 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
 import { createModal } from '@codegouvfr/react-dsfr/Modal'
+import Select from '@codegouvfr/react-dsfr/Select'
 import dayjs from 'dayjs'
 import { useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
+import { useDeleteUser } from '~/hooks/use-delete-user'
 import { useSearchUsers } from '~/hooks/use-search-users'
+import { useUpdateUserAccess } from '~/hooks/use-update-user-access'
 import { useUsers } from '~/hooks/use-users'
 
 export const UsersTable: FC = () => {
   const { classes, cx } = useStyles()
   const { data: usersResponse } = useUsers()
   const { data: usersSearchResponse } = useSearchUsers()
+  const { mutate: updateUserAccess, isPending } = useUpdateUserAccess()
+  const { mutate: deleteUser } = useDeleteUser()
   const [searchQuery] = useQueryState('q')
 
-  const headers = ['Nom et Prénom', 'Email', 'Role', 'Date de création', 'Date de dernière connexion', 'Démarches simplifiées', 'Supprimer']
+  const headers = [
+    'Nom et Prénom',
+    'Email',
+    'Role',
+    'Date de création',
+    'Date de dernière connexion',
+    'Accès',
+    'Démarches simplifiées',
+    'Supprimer',
+  ]
   const data = searchQuery ? usersSearchResponse?.users : usersResponse?.users
 
   const userModals = (data || []).map((user) => {
@@ -26,7 +40,8 @@ export const UsersTable: FC = () => {
     })
 
     return {
-      handleDeleteUser: () => {
+      handleDeleteUser: async () => {
+        await deleteUser(user.id)
         modalActions.close()
       },
       modalActions,
@@ -55,7 +70,39 @@ export const UsersTable: FC = () => {
                 </td>
                 <td>{dayjs(user.createdAt).format('DD/MM/YYYY')}</td>
                 <td>{dayjs(user.lastLoginAt).format('DD/MM/YYYY - HH:mm')}</td>
-                <td>{user.hasAccess ? '✅' : '❌'}</td>
+                <td>
+                  {user.role === 'USER' ? (
+                    <Select
+                      label=""
+                      nativeSelectProps={{
+                        value: user.hasAccess ? 'authorized' : 'unauthorized',
+                        onChange: (e) => {
+                          const newAccess = e.target.value === 'authorized'
+                          updateUserAccess({ userId: user.id, hasAccess: newAccess })
+                        },
+                        disabled: isPending,
+                      }}
+                      className={classes.accessSelect}
+                    >
+                      <option value="authorized">✅ Autorisé</option>
+                      <option value="unauthorized">❌ Non autorisé</option>
+                    </Select>
+                  ) : (
+                    <div className={cx(fr.cx('fr-badge'), user.role === 'ADMIN' ? classes.adminBadge : classes.userBadge)}>{user.role}</div>
+                  )}
+                </td>
+                <td>
+                  {user.role === 'USER' ? (
+                    user.engaged ? (
+                      '✅'
+                    ) : (
+                      '❌'
+                    )
+                  ) : (
+                    <div className={cx(fr.cx('fr-badge'), user.role === 'ADMIN' ? classes.adminBadge : classes.userBadge)}>{user.role}</div>
+                  )}
+                </td>
+
                 <td>
                   <div className={classes.actions}>
                     <i style={{ cursor: 'pointer' }} onClick={modalActions.open} className="ri-delete-bin-5-fill" />
@@ -85,6 +132,10 @@ export const UsersTable: FC = () => {
 }
 
 const useStyles = tss.create({
+  accessSelect: {
+    marginBottom: '0 !important',
+    minWidth: '160px',
+  },
   actions: {
     color: fr.colors.decisions.text.actionHigh.blueFrance.default,
     display: 'flex',

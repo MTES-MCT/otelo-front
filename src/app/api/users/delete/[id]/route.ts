@@ -16,7 +16,6 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
     method: 'DELETE',
   })
 
-  console.log('res', res)
   if (!res.ok) {
     return NextResponse.json({ error: 'Failed to delete user' }, { status: res.status })
   }

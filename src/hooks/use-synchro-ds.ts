@@ -9,7 +9,6 @@ export const useSynchroDs = () => {
       if (!response.ok) {
         throw new Error('Failed to synchro ds')
       }
-      console.log('res', response)
     } catch {
       return
     }

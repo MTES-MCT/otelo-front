@@ -51,7 +51,7 @@ export default async function Unauthorized() {
                 Demander l'accès à Otelo
               </Button>
             </div>
-            <p className={fr.cx('fr-text--xs', 'fr-text--alt')}>Vous serez redirigé vers le formulaire de demande d'accès</p>
+            <p className={fr.cx('fr-text--xs', 'fr-text--alt')}>Vous serez redirigé vers le formulaire de demande d'accès.</p>
           </div>
         </div>
       </div>

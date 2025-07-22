@@ -7,7 +7,7 @@ import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
-import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
+import { NextAppDirEmotionCacheProvider } from 'tss-react/next/appDir'
 import Matomo from '~/app/matomo'
 import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
@@ -17,6 +17,8 @@ import { authOptions } from '~/lib/auth/auth.config'
 import { NextAuthProvider } from '~/providers/next-auth'
 import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
 import classes from './layout.module.css'
+
+import '~/global.css'
 
 export const metadata: Metadata = {
   description: "Otelo - votre assistant pour l'estimation des besoins en logements",

@@ -1,9 +1,10 @@
 import type { AuthOptions, NextAuthOptions, Session, User } from 'next-auth'
+import Credentials from 'next-auth/providers/credentials'
 import { ProConnectProvider, proConnectProviderId } from '~/lib/auth/providers/pro-connect'
 
 export type CustomUser = User & {
-  firstName: string
-  lastName: string
+  firstname: string
+  lastname: string
   sub: string
   hasAccess: boolean
   id: string
@@ -17,37 +18,36 @@ export const authOptions: NextAuthOptions = {
     async signIn(params) {
       try {
         // We sign up user there
-        const user = params.user as CustomUser
-        await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
-          body: JSON.stringify({
-            email: user.email,
-            provider: proConnectProviderId,
-            firstname: user.firstName,
-            lastname: user.lastName,
-            sub: user.sub,
-            id: user.id,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        })
+        if (params.account?.provider === proConnectProviderId) {
+          const user = params.user as CustomUser
+          await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
+            body: JSON.stringify({
+              email: user.email,
+              provider: params.account?.provider,
+              firstname: user.firstName ?? user.firstname,
+              lastname: user.lastName ?? user.lastname,
+              sub: user.sub,
+              id: user.id,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+          })
+        }
 
-        // Ensuite, vérifier l'accès
         const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
           method: 'POST',
           body: JSON.stringify({
-            email: user.email,
+            email: params.user.email,
           }),
           headers: {
             'Content-Type': 'application/json',
           },
         })
-
         if (!hasUserAccess.ok) {
           throw new Error('Failed to check user access')
         }
-
         const data = await hasUserAccess.json()
         if (data) {
           return true
@@ -65,9 +65,9 @@ export const authOptions: NextAuthOptions = {
           const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
             body: JSON.stringify({
               email: user.email,
-              provider: proConnectProviderId,
-              firstname: (user as CustomUser).firstName,
-              lastname: (user as CustomUser).lastName,
+              provider: account.provider,
+              firstname: (user as CustomUser).firstName ?? (user as CustomUser).firstname,
+              lastname: (user as CustomUser).lastName ?? (user as CustomUser).lastname,
               sub: (user as CustomUser).sub,
               id: (user as CustomUser).id,
             }),
@@ -109,6 +109,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const accessData = await hasUserAccess.json()
+
         if (!accessData) {
           token.error = 'AccessRevoked'
           throw new Error('User access has been revoked')
@@ -173,5 +174,37 @@ export const authOptions: NextAuthOptions = {
       return session
     },
   },
-  providers: [ProConnectProvider()],
+  providers: [
+    ProConnectProvider(),
+    Credentials({
+      name: 'Email - Mot de passe',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Mot de passe', type: 'password' },
+      },
+      authorize: async (credentials) => {
+        try {
+          const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/signin`, {
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+          })
+          if (!response.ok) {
+            throw new Error('Failed to sign in')
+          }
+          const data = await response.json()
+          return data
+        } catch (error) {
+          console.error('Error signing in', error)
+          return null
+        }
+        return null
+      },
+    }),
+  ],
 } satisfies AuthOptions

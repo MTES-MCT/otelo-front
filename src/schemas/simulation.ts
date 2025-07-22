@@ -43,6 +43,7 @@ export const ZInitSimulationDto = z.object({
       }),
     ),
     projection: z.number(),
+    demographicEvolutionOmphaleCustomIds: z.array(z.string().uuid()).optional(),
   }),
   epciGroupName: z.string().optional().nullable(),
   epciGroupId: z.string().optional().nullable(),

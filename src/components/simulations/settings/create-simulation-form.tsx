@@ -31,6 +31,7 @@ export const CreateSimulationForm: FC = () => {
     epciGroupName: parseAsString,
     epciGroupId: parseAsString,
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
 
   // Use epcis from query states, or fall back to all EPCIs in rates if none specified
@@ -67,6 +68,7 @@ export const CreateSimulationForm: FC = () => {
           {} as Record<string, TInitSimulationDto['scenario']['epcis'][string]>,
         ),
         projection: (queryStates.projection as number) ?? 2030,
+        demographicEvolutionOmphaleCustomIds: queryStates.demographicEvolutionOmphaleCustomIds,
       },
     },
   })

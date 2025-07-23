@@ -47,7 +47,6 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       noAccomodation: (simulation.results.noAccomodation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
       physicalInadequation: (simulation.results.physicalInadequation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult)
         .value,
-      socialParc: (simulation.results.socialParc.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
       totalStock,
     }
 
@@ -83,7 +82,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
           <div>
             <p className={fr.cx('fr-mb-0')}>
               <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : Ce graphique présente l’évolution des besoins annuels en
-              construction neuve sur le territoire de {epci.name}, en les comparant avec les permis de construire commencés sur les années
+              construction neuve sur le territoire de {epci.name}, en les comparant avec les permis de construire autorisés sur les années
               récentes. Il distingue trois courbes différentes :
             </p>
             <ul>
@@ -99,7 +98,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
                 </li>
               )}
               <li>
-                <span className={fr.cx('fr-text--bold')}>Permis de construire commencés (barres bleues)</span> : nombre d’autorisation de
+                <span className={fr.cx('fr-text--bold')}>Permis de construire autorisés (barres bleues)</span> : nombre d’autorisation de
                 construction d’après Sit@del2.
               </li>
             </ul>

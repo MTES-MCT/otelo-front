@@ -34,7 +34,7 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
   } = results
 
   const positiveData = {
-    name: 'Constructions neuves supplémentaires',
+    name: "Besoin en logements liés à l'évolution démographique et à l'évolution du parc",
     ...(demographicEvolution > 0 && { demographicEvolution }),
     ...(renewalNeeds > 0 && { renewalNeeds }),
     ...(secondaryResidenceAccomodationEvolution > 0 && { secondaryResidenceAccomodationEvolution }),
@@ -47,6 +47,7 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(longTermVacantAccomodation < 0 && {
       longTermVacantAccomodation: Math.abs(longTermVacantAccomodation),
     }),
+    ...(renewalNeeds < 0 && { renewalNeeds: Math.abs(renewalNeeds) }),
   }
 
   const hasNegativeValues = Object.keys(negativeData).length > 1 // > 1 because it always has 'name'
@@ -55,7 +56,7 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     positiveData,
     ...(hasNegativeValues ? [negativeData] : []),
     {
-      name: "Besoin en logements liés à l'évolution démographique et à l'évolution du parc",
+      name: 'Construction neuves supplémentaires',
       totalFlux: Math.abs(totalFlux),
     },
   ]

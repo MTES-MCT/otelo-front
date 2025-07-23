@@ -81,7 +81,7 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
               start={<h4>Logements vacants {vacancy < 0 ? 'résorbés' : 'à remobiliser'}</h4>}
               title={
                 <span className="fr-h2" style={{ cursor: 'default' }}>
-                  {formatNumber(Math.abs(vacancy))}
+                  {vacancy < 0 ? formatNumber(Math.abs(vacancy)) : 0}
                 </span>
               }
             />

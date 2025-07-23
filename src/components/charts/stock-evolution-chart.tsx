@@ -18,20 +18,18 @@ interface StockEvolutionChartProps {
     hosted: number
     noAccomodation: number
     physicalInadequation: number
-    socialParc: number
     totalStock: number
   }
 }
 
 export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, horizon }) => {
   const { classes } = useStyles()
-  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, socialParc, totalStock } = results
+  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, totalStock } = results
   const chartData = [
     { name: 'Hébergés', value: hosted },
     { name: 'Hors logement', value: noAccomodation },
     { name: 'Inadéquation financière', value: financialInadequation },
     { name: 'Inadéquation physique', value: physicalInadequation },
-    { name: 'Parc social', value: socialParc },
     { name: 'Mauvaise qualité', value: badQuality },
   ]
 
@@ -44,7 +42,6 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, hor
       'Hors logement': "personnes hors-logement (sans abri, logés à l'hôtel, habitat de fortune) ou en hébergement social",
       'Inadéquation financière': "ménages ayant un taux d'effort trop important",
       'Inadéquation physique': 'ménages dans un logement trop petit',
-      'Parc social': 'logements du parc social',
       'Mauvaise qualité': 'ménages habitant un logement précaire',
     }
     return categoryLabels[categoryName as keyof typeof categoryLabels] || `de catégorie "${categoryName}"`
@@ -152,7 +149,6 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, hor
                 formatNumber(physicalInadequation),
                 `${Number((physicalInadequation / totalStock) * 100).toFixed(1)} %`,
               ],
-              ['Parc social', formatNumber(socialParc), `${Number((socialParc / totalStock) * 100).toFixed(1)} %`],
               ['Mauvaise qualité', formatNumber(badQuality), `${Number((badQuality / totalStock) * 100).toFixed(1)} %`],
               ['Total', formatNumber(totalStock), '-'],
             ]}

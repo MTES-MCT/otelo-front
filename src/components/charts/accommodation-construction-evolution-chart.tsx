@@ -69,7 +69,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
                 offset: 10,
               }}
             />
-            <Bar name="Permis de construire commencés (Sit@del)" dataKey="sitadelValue" fill="#8884d8" />
+            <Bar name="Permis de construire autorisés (Sit@del)" dataKey="sitadelValue" fill="#8884d8" />
             <Bar name="Besoins en logements" dataKey="housingNeeds" fill="#82ca9d" />
             <Bar name="Logements excédentaires" dataKey="surplusHousing" fill="#ffc658" />
             <XAxis dataKey="year" angle={-45} textAnchor="end" height={60} />

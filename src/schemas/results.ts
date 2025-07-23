@@ -21,7 +21,7 @@ export const ZDemographicEvolution = z.object({
 
 export type TDemographicEvolutionOmphale = z.infer<typeof ZDemographicEvolution>
 
-export const ZEpciCalculationResult = z.object({ epciCode: z.string(), value: z.number() })
+export const ZEpciCalculationResult = z.object({ epciCode: z.string(), value: z.number(), prorataValue: z.number() })
 export type TEpciCalculationResult = z.infer<typeof ZEpciCalculationResult>
 
 export const ZEpciTotalCalculationResult = z.object({

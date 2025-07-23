@@ -39,14 +39,15 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     }
 
     const stockResults = {
-      badQuality,
+      badQuality: (simulation.results.badQuality.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).prorataValue,
       financialInadequation: (
         simulation.results.financialInadequation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult
-      ).value,
-      hosted: (simulation.results.hosted.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
-      noAccomodation: (simulation.results.noAccomodation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value,
+      ).prorataValue,
+      hosted: (simulation.results.hosted.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).prorataValue,
+      noAccomodation: (simulation.results.noAccomodation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult)
+        .prorataValue,
       physicalInadequation: (simulation.results.physicalInadequation.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult)
-        .value,
+        .prorataValue,
       totalStock,
     }
 

@@ -5,7 +5,6 @@ import { Button } from '@codegouvfr/react-dsfr/Button'
 import classNames from 'classnames'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
-import { SignInButton } from '~/components/sign-in-button'
 import { authOptions } from '~/lib/auth/auth.config'
 import styles from './section-hero.module.css'
 
@@ -21,7 +20,9 @@ export const SectionHero = async () => {
       Élaborer un scénario
     </Button>
   ) : (
-    <SignInButton />
+    <Button iconId="fr-icon-account-fill" linkProps={{ href: '/connexion' }}>
+      S&apos;inscrire ou se connecter
+    </Button>
   )
 
   return (

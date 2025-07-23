@@ -1,11 +1,12 @@
 import { getServerSession } from 'next-auth'
+import { notFound } from 'next/navigation'
 import { authOptions } from '~/lib/auth/auth.config'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 
 export const getDashboardList = async () => {
   const session = await getServerSession(authOptions)
   if (!session?.accessToken) {
-    throw new Error('Unauthorized')
+    notFound()
   }
 
   const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/simulations/dashboard-list`, {

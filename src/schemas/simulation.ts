@@ -73,6 +73,7 @@ export const ZUpdateBadHousingSimulationDto = z.object({
     isConfidential: true,
     projection: true,
     updatedAt: true,
+    demographicEvolutionOmphaleCustom: true,
   }),
 })
 

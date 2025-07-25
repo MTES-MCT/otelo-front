@@ -1,84 +1,67 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
-import { Footer, FooterProps } from '@codegouvfr/react-dsfr/Footer'
-import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
-import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider'
-import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes'
+import { Footer } from '@codegouvfr/react-dsfr/Footer'
+import { StartDsfrOnHydration } from '@codegouvfr/react-dsfr/next-app-router'
 import type { Metadata } from 'next'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
-import { NextAppDirEmotionCacheProvider } from 'tss-react/next'
-import { StartDsfr, defaultColorScheme } from '~/app/start-dsfr'
+import { NextAppDirEmotionCacheProvider } from 'tss-react/next/appDir'
+import Matomo from '~/app/matomo'
+import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
-import { auth } from '~/lib/auth/auth'
+import { DsfrHead, getHtmlAttributes } from '~/dsfr/dsfr-head'
+import { DsfrProvider } from '~/dsfr/dsfr-provider'
+import { authOptions } from '~/lib/auth/auth.config'
 import { NextAuthProvider } from '~/providers/next-auth'
 import { TanstackQueryClientProvider } from '~/providers/tanstack-client'
 import classes from './layout.module.css'
 
+import '~/global.css'
+
 export const metadata: Metadata = {
-  description: 'Otelo - Votre assistant pour la transition écologique - v4.0',
+  description: "Otelo - votre assistant pour l'estimation des besoins en logements",
   title: 'Otelo',
 }
 
 export default async function RootLayout({ children }: { children: JSX.Element }) {
   const lang = 'fr'
-  const session = await auth()
-
-  const linkList: NonNullable<FooterProps['linkList']> = [
-    {
-      links: [
-        {
-          linkProps: {
-            href: '/accueil',
-          },
-          text: 'Accueil',
-        },
-        {
-          linkProps: {
-            href: '/ressources',
-          },
-          text: 'Ressources',
-        },
-        {
-          linkProps: {
-            href: '/en-savoir-plus',
-          },
-          text: 'En savoir plus',
-        },
-        {
-          linkProps: {
-            href: '/contact',
-          },
-          text: 'Nous contacter',
-        },
-      ],
-    },
-  ]
+  const session = await getServerSession(authOptions)
 
   return (
-    <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
+    <html {...getHtmlAttributes({ lang })}>
       <head>
-        <StartDsfr />
-        <DsfrHead Link={Link} preloadFonts={['Marianne-Regular', 'Marianne-Medium', 'Marianne-Bold']} />
+        <DsfrHead preloadFonts={['Marianne-Regular', 'Marianne-Medium', 'Marianne-Bold']} />
+        <Matomo />
       </head>
       <body>
         <div className={classes.container}>
           <NextAppDirEmotionCacheProvider options={{ key: 'css' }}>
+            <StartDsfrOnHydration />
             <DsfrProvider lang={lang}>
               <TanstackQueryClientProvider>
                 <NuqsAdapter>
                   <NextAuthProvider session={session}>
                     <HeaderComponent />
-                    <div className={classes.main}>{children}</div>
+                    <main className={classes.main}>{children}</main>
                     <Footer
-                      accessibility="partially compliant"
+                      accessibility="non compliant"
+                      brandTop={<BrandTop />}
                       homeLinkProps={{
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
-                      linkList={linkList}
-                      bottomItems={[headerFooterDisplayItem]}
-                      brandTop="République Française"
+                      termsLinkProps={{ href: '/mentions-legales' }}
+                      bottomItems={[
+                        headerFooterDisplayItem,
+                        <Link className={fr.cx('fr-footer__bottom-link')} href="/donnees-personnelles">
+                          Données personnelles
+                        </Link>,
+                        <Link className={fr.cx('fr-footer__bottom-link')} href="/cgv">
+                          Conditions générales d’utilisation et Gestion des cookies
+                        </Link>,
+                      ]}
                     />
                     <Toaster
                       toastOptions={{

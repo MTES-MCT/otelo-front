@@ -1,11 +1,36 @@
 'use client'
 
-import Input from '@codegouvfr/react-dsfr/Input'
+import Tag from '@codegouvfr/react-dsfr/Tag'
 import { FC } from 'react'
-import { useEpci } from '~/hooks/use-epci'
+import { tss } from 'tss-react'
+import { useEpcis } from '~/hooks/use-epcis'
 
 export const ValidationSettingsInputEpci: FC = () => {
-  const { data: epci } = useEpci()
+  const { data: epcis } = useEpcis()
+  const { classes } = useStyles()
 
-  return <Input disabled label="" hintText="Commune" nativeInputProps={{ value: epci?.name }} style={{ flex: 1 }} />
+  return (
+    <div className={classes.container}>
+      <div className={classes.gridContainer}>
+        {(epcis || []).map((e) => (
+          <Tag key={e.code} iconId="fr-icon-checkbox-circle-line">
+            {e.name}
+          </Tag>
+        ))}
+      </div>
+    </div>
+  )
 }
+
+const useStyles = tss.create({
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gridContainer: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '0.5rem',
+  },
+})

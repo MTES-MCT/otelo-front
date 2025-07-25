@@ -1,8 +1,8 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
-import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
-import { FC, useState } from 'react'
+import classNames from 'classnames'
+import { FC, useEffect, useState } from 'react'
 import { tss } from 'tss-react'
 import { AutocompleteResults } from '~/components/simulations/autocomplete/autocomplete-results'
 import { GeoApiCommuneResult, GeoApiEpciResult, useGeoApiSearch } from '~/hooks/use-geoapi-search'
@@ -10,18 +10,27 @@ import { GeoApiCommuneResult, GeoApiEpciResult, useGeoApiSearch } from '~/hooks/
 type AutocompleteInputProps = {
   hintText: string
   label?: string
+  onClick?: (item: GeoApiEpciResult | GeoApiCommuneResult) => void
+  defaultValue?: string
+  className?: string
 }
 
-export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label }: AutocompleteInputProps) => {
+export const AutocompleteInput: FC<AutocompleteInputProps> = ({
+  hintText,
+  label,
+  onClick,
+  defaultValue,
+  className,
+}: AutocompleteInputProps) => {
   const { classes } = useStyles()
   const { data, isError, searchQuery, setSearchQuery } = useGeoApiSearch()
-  const [_, setSearchQueryState] = useQueryStates({
-    epci: parseAsString.withDefault(''),
-    epcis: parseAsArrayOf(parseAsString).withDefault([]),
-    q: parseAsString.withDefault(''),
-    region: parseAsString.withDefault(''),
-  })
   const [isResultsVisible, setIsResultsVisible] = useState(false)
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSearchQuery(defaultValue)
+    }
+  }, [defaultValue])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
@@ -29,11 +38,10 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
   }
 
   const handleInputClick = (item: GeoApiEpciResult | GeoApiCommuneResult) => {
-    if ('codeEpci' in item) {
-      setSearchQueryState({ epci: item.codeEpci ?? item.code, epcis: [], region: item.codeRegion })
-    } else {
-      setSearchQueryState({ epci: item.code ?? item.code, epcis: [], region: item.codesRegions[0] })
+    if (onClick) {
+      onClick(item)
     }
+
     setSearchQuery(item.nom)
     setIsResultsVisible(false)
   }
@@ -41,7 +49,7 @@ export const AutocompleteInput: FC<AutocompleteInputProps> = ({ hintText, label 
   const hasResults = (data.communes.length > 0 || data.epcis.length > 0) && isResultsVisible
 
   return (
-    <div className={classes.container}>
+    <div className={classNames(classes.container, className)}>
       <Input
         hintText={hintText}
         label={label}

@@ -2,36 +2,64 @@
 
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC } from 'react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { tss } from 'tss-react'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { LongTermAccomodationRange } from '~/components/simulations/settings/long-term-accomodation-range'
 
 type VacancyAccommodationRatesInputProps = {
   epci: string
-  longTermValue: number
-  shortTermValue: number
+  creationMode: boolean
 }
 
-export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, longTermValue, shortTermValue }) => {
-  const { rates } = useBassinRates()
+export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, creationMode }) => {
+  const { rates } = useEpcisRates()
+  const { classes } = useStyles()
   const ratesByEpci = rates[epci]
-  const txLv = ratesByEpci.txLV
+  const shortTermVacancyRate = ratesByEpci.shortTermVacancyRate
+  const longTermVacancyRate = ratesByEpci.longTermVacancyRate
 
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
-      <div style={{ flex: 1 }}>
-        <Input
-          disabled
-          iconId="ri-percent-line"
-          label="Taux cible de logements vacants"
-          nativeInputProps={{
-            type: 'text',
-            value: `${Number(txLv * 100).toFixed(2)}`,
-          }}
-        />
-      </div>
-      <div style={{ flex: 1 }}>
-        <LongTermAccomodationRange epci={epci} longTermValue={longTermValue} shortTermValue={shortTermValue} />
+    <div className={classes.container}>
+      <Input
+        disabled
+        iconId="ri-percent-line"
+        label="Taux cible de logements vacants de courte durée"
+        nativeInputProps={{
+          type: 'text',
+          value: `${Number(shortTermVacancyRate * 100).toFixed(2)}`,
+        }}
+      />
+      <div className={classes.longTermRateContainer}>
+        <div className={classes.flex}>
+          <Input
+            disabled
+            iconId="ri-percent-line"
+            label="Taux cible de logements vacants de longue durée"
+            nativeInputProps={{
+              type: 'text',
+              value: `${Number(longTermVacancyRate * 100).toFixed(2)}`,
+            }}
+          />
+        </div>
+        <div className={classes.flex}>
+          <LongTermAccomodationRange creationMode={creationMode} epci={epci} />
+        </div>
       </div>
     </div>
   )
 }
+
+const useStyles = tss.create({
+  container: {
+    flexDirection: 'column',
+    display: 'flex',
+    gap: '1rem',
+  },
+  longTermRateContainer: {
+    display: 'flex',
+    gap: '1rem',
+  },
+  flex: {
+    flex: 1,
+  },
+})

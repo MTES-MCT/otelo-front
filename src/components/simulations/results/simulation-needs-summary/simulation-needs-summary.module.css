@@ -1,13 +1,13 @@
 .cardContainer {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, auto);
+  display: flex;
+  gap: 1rem;
   width: 100%;
+  justify-content: space-between;
 }
 
 .cardWrapper {
   width: 100%;
+  min-height: 200px;
 }
 
 .gridContainer {
@@ -19,7 +19,7 @@
 
 .root {
   height: 100%;
-  min-height: 10rem;
+  min-height: 200px;
 }
 
 .vacancyContainer {
@@ -28,4 +28,16 @@
   gap: 1rem;
   justify-content: space-between;
   padding-bottom: 2rem;
+}
+
+.symbol {
+  align-self: center;
+}
+
+.contentSpaceBetween {
+  justify-content: space-between;
+}
+
+.contentCenter {
+  justify-content: center;
 }

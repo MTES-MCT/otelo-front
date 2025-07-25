@@ -3,10 +3,70 @@ import { parseAsString } from 'nuqs'
 import { useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
+import { CustomizedDot } from '~/components/charts/customized-dot'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TDemographicProjectionEvolution } from '~/schemas/population-evolution'
+import { formatNumber } from '~/utils/format-numbers'
+
+const SCENARIOS = [
+  {
+    dataKey: 'haute',
+    stroke: '#666666',
+  },
+  {
+    dataKey: 'central',
+    stroke: '#000091',
+  },
+  {
+    dataKey: 'basse',
+    stroke: '#161616',
+  },
+]
+
+const CustomTooltip = ({
+  active,
+  label,
+  payload,
+}: { active?: boolean; label?: string; payload?: TooltipPayload<ValueType, NameType>[] }) => {
+  const { classes } = useStyles()
+  if (!active || !payload?.length) return null
+
+  const grouped: Record<string, typeof payload> = {}
+  payload.forEach((item: TooltipPayload<ValueType, NameType>) => {
+    const epciName = item.name ?? 'Inconnu'
+    if (!grouped[epciName]) grouped[epciName] = []
+    grouped[epciName].push(item)
+  })
+
+  return (
+    <div className={classes.tooltipContainer}>
+      <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
+      {Object.entries(grouped).map(([epciName, items]) => (
+        <div key={epciName} style={{ marginBottom: 8 }}>
+          <div className={classes.bold}>{epciName}</div>
+          <ul style={{ margin: 0, paddingLeft: 16 }}>
+            {items.map((item: TooltipPayload<ValueType, NameType>) => {
+              if (!item.dataKey || typeof item.dataKey !== 'string') return null
+              const label = item.dataKey.charAt(0).toUpperCase() + item.dataKey.slice(1)
+              const value = typeof item.value === 'number' ? formatNumber(item.value) : '-'
+              return (
+                <li key={item.dataKey} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span className={classes.tooltipDot} style={{ backgroundColor: item.stroke, marginRight: 6 }} />
+                  <span>
+                    {label}: {value} habitants
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export type ProjectionPopulationEvolutionChartProps = {
   data: TDemographicProjectionEvolution
@@ -15,12 +75,12 @@ export type ProjectionPopulationEvolutionChartProps = {
 
 export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutionChartProps> = ({ data: chartData, type }) => {
   const [queryStates] = useQueryStates({
-    epci: parseAsString.withDefault(''),
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epci: parseAsString.withDefault(''),
   })
   const { classes } = useStyles()
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
-  const epciName = chartData.tableData[queryStates.epci as string]?.name
+  const epciName = chartData.tableData[queryStates.epci]?.name
 
   const barChartData = Object.entries(chartData.tableData)
     .filter(([key]) => queryStates.epcis.includes(key))
@@ -50,97 +110,118 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
       ]
     })
     .flat()
+    .sort((a, b) => a.period.localeCompare(b.period))
 
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
+  const displayedScenarios = SCENARIOS.map((scenario) => ({
+    ...scenario,
+    stroke: `${scenario.stroke}33`,
+    strokeWidth: 2,
+  }))
+
   return (
     <>
       <h5>
         {title} - {epciName}
       </h5>
       <div className={classes.chartContainer}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart width={500} height={500} margin={{ left: 20, right: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" allowDuplicatedCategory={false} />
+        <div className={classes.chartLabelContainer}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart width={500} height={500} margin={{ left: 20, right: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" allowDuplicatedCategory={false} />
 
-            {epcisLinearChart.length > 0 && (
-              <YAxis
-                domain={(() => {
-                  const allMetadata = epcisLinearChart.map((epci) => chartData.linearChart[epci].metadata)
-                  const minValues = allMetadata.map((m) => m.min)
-                  const maxValues = allMetadata.map((m) => m.max)
-                  const globalMin = Math.min(...minValues)
-                  const globalMax = Math.max(...maxValues)
+              {epcisLinearChart.length > 0 && (
+                <YAxis
+                  domain={(() => {
+                    const allMetadata = epcisLinearChart.map((epci) => chartData.linearChart[epci].metadata)
+                    const minValues = allMetadata.map((m) => m.min)
+                    const maxValues = allMetadata.map((m) => m.max)
+                    const globalMin = Math.min(...minValues)
+                    const globalMax = Math.max(...maxValues)
 
-                  const padding = (globalMax - globalMin) * 0.05
-                  return [Math.max(0, Math.round(globalMin - padding)), Math.round(globalMax + padding)]
-                })()}
+                    const padding = (globalMax - globalMin) * 0.05
+                    return [Math.max(0, Math.round(globalMin - padding)), Math.round(globalMax + padding)]
+                  })()}
+                />
+              )}
+              <Tooltip content={<CustomTooltip />} />
+              {epcisLinearChart.map((epci) => {
+                const epciData = chartData.linearChart[epci].data
+                return displayedScenarios.map(({ dataKey, stroke, strokeWidth }) => (
+                  <Line
+                    dataKey={dataKey}
+                    data={epciData}
+                    type="monotone"
+                    stroke={stroke}
+                    strokeWidth={strokeWidth}
+                    name={chartData.linearChart[epci].epci.name}
+                    key={`${epci}-${dataKey}`}
+                    dot={(props) => (
+                      <CustomizedDot
+                        {...props}
+                        stroke={stroke}
+                        year={props.payload.year}
+                        period={undefined}
+                        key={`${epci}-${dataKey}-${props.payload.year}`}
+                      />
+                    )}
+                  />
+                ))
+              })}
+            </LineChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>Évolution du nombre d'habitants par scenario démographique</div>
+        </div>
+        <div className={classes.chartLabelContainer}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart width={730} height={600} data={barChartData} margin={{ left: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <Legend
+                align="right"
+                verticalAlign="top"
+                content={() => (
+                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[0] }} />
+                      <span>Population haute</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[1] }} />
+                      <span>Population centrale</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[2] }} />
+                      <span>Population basse</span>
+                    </div>
+                  </div>
+                )}
               />
-            )}
-            <Tooltip />
-            {epcisLinearChart.map((epci, index) => {
-              const epciData = chartData.linearChart[epci].data
-              return (
-                <>
-                  <Line
-                    dataKey="haute"
-                    stroke={barChartColors[index]}
-                    data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Haute`}
-                    key={epci}
-                  />
-                  <Line
-                    dataKey="central"
-                    stroke={barChartColors[index]}
-                    data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Central`}
-                    key={epci}
-                  />
-                  <Line
-                    dataKey="basse"
-                    stroke={barChartColors[index]}
-                    data={epciData}
-                    name={`${chartData.linearChart[epci].epci.name} - Basse`}
-                    key={epci}
-                  />
-                </>
-              )
-            })}
-          </LineChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart width={730} height={600} data={barChartData} margin={{ left: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <Legend
-              align="right"
-              verticalAlign="top"
-              payload={[
-                { color: barChartColors[0], type: 'rect', value: 'Population haute' },
-                { color: barChartColors[1], type: 'rect', value: 'Population centrale' },
-                { color: barChartColors[2], type: 'rect', value: 'Population basse' },
-              ]}
-            />
-            <XAxis dataKey="period" />
-            <YAxis />
-            <Tooltip
-              formatter={(value: number, name: string) => {
-                // Format the value and include the population type
-                return [`${value}`, `${name}`]
-              }}
-              // biome-ignore lint/suspicious/noExplicitAny: TODO
-              labelFormatter={(label: string, payload: any[]) => {
-                // Show both period and EPCI name
-                if (payload && payload.length > 0) {
-                  return `${payload[0].payload.name} - ${label}`
-                }
-                return label
-              }}
-            />
-            <Bar dataKey="haute" name="Population haute" fill={barChartColors[0]} />
-            <Bar dataKey="central" name="Population centrale" fill={barChartColors[1]} />
-            <Bar dataKey="basse" name="Population basse" fill={barChartColors[2]} />
-          </BarChart>
-        </ResponsiveContainer>
+              <XAxis dataKey="period" ticks={['2021-2030', '2030-2040', '2040-2050']} />
+              <YAxis />
+              <Tooltip
+                formatter={(value: number, name: string) => {
+                  // Format the value and include the population type
+                  return [`${value}`, `${name}`]
+                }}
+                // biome-ignore lint/suspicious/noExplicitAny: TODO
+                labelFormatter={(label: string, payload: readonly any[]) => {
+                  // Show both period and EPCI name
+                  if (payload && payload.length > 0) {
+                    return `${payload[0].payload.name} - ${label}`
+                  }
+                  return label
+                }}
+              />
+              <Bar dataKey="haute" name="Population haute" fill={barChartColors[0]} />
+              <Bar dataKey="central" name="Population centrale" fill={barChartColors[1]} />
+              <Bar dataKey="basse" name="Population basse" fill={barChartColors[2]} />
+            </BarChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+            Évolution décennal du nombre d'habitants, par scenario démographique
+          </div>
+        </div>
       </div>
     </>
   )
@@ -152,5 +233,33 @@ const useStyles = tss.create({
     gap: '2rem',
     height: '700px',
     width: '100%',
+  },
+  chartLabelContainer: {
+    width: '100%',
+    marginBottom: '2rem',
+  },
+  tooltipContainer: {
+    backgroundColor: 'white',
+    border: '1px solid var(--border-default-grey)',
+    borderRadius: '4px',
+    padding: '1rem',
+  },
+  tooltipTitle: {
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+  },
+  tooltipItem: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipDot: {
+    borderRadius: '50%',
+    height: '8px',
+    width: '8px',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 })

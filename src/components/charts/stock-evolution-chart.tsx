@@ -1,7 +1,8 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
 import { Table } from '@codegouvfr/react-dsfr/Table'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
 import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { tss } from 'tss-react'
@@ -10,31 +11,41 @@ import { formatNumber } from '~/utils/format-numbers'
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 interface StockEvolutionChartProps {
+  horizon: number
   results: {
     badQuality: number
     financialInadequation: number
     hosted: number
     noAccomodation: number
     physicalInadequation: number
-    socialParc: number
     totalStock: number
   }
 }
 
-export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) => {
-  const [activeIndex, setActiveIndex] = useState<number>()
+export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, horizon }) => {
   const { classes } = useStyles()
-  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, socialParc, totalStock } = results
+  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, totalStock } = results
   const chartData = [
     { name: 'Hébergés', value: hosted },
     { name: 'Hors logement', value: noAccomodation },
     { name: 'Inadéquation financière', value: financialInadequation },
     { name: 'Inadéquation physique', value: physicalInadequation },
-    { name: 'Parc social', value: socialParc },
     { name: 'Mauvaise qualité', value: badQuality },
   ]
 
-  const onPieEnter = (_: unknown, index: number) => setActiveIndex(index)
+  const maxValue = Math.max(...chartData.map((item) => item.value))
+  const maxValueName = chartData.find((item) => item.value === maxValue)?.name || ''
+
+  const getCategoryLabel = (categoryName: string) => {
+    const categoryLabels = {
+      Hébergés: "personnes hébergées dans un logement qui n'est pas le leur",
+      'Hors logement': "personnes hors-logement (sans abri, logés à l'hôtel, habitat de fortune) ou en hébergement social",
+      'Inadéquation financière': "ménages ayant un taux d'effort trop important",
+      'Inadéquation physique': 'ménages dans un logement trop petit',
+      'Mauvaise qualité': 'ménages habitant un logement précaire',
+    }
+    return categoryLabels[categoryName as keyof typeof categoryLabels] || `de catégorie "${categoryName}"`
+  }
 
   const renderActiveShape = (props: PieSectorDataItem) => {
     const RADIAN = Math.PI / 180
@@ -53,11 +64,10 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
     const ex = mx + (cos >= 0 ? 1 : -1) * 22
     const ey = my
     const textAnchor = cos >= 0 ? 'start' : 'end'
-
     return (
       <g>
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontSize: '24px' }}>
-          {payload.name}
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontSize: '20px' }}>
+          {payload.name as string}
         </text>
         <Sector
           cx={cx}
@@ -86,25 +96,24 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
       </g>
     )
   }
+  const currentYear = new Date().getFullYear()
 
   return (
     <div className={classes.container}>
-      <h5>Besoin en stock - Evolution du besoin en stock</h5>
+      <h5>Besoins liés aux situations de mal logement</h5>
       <div className={classes.rowContainer}>
         <div className={classes.chartContainer}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer height="100%">
             <PieChart>
               <Pie
-                activeIndex={activeIndex}
-                onMouseEnter={onPieEnter}
                 data={chartData}
                 activeShape={renderActiveShape}
                 cx="50%"
                 cy="50%"
-                outerRadius={150}
+                outerRadius={180}
                 fill="#8884d8"
                 dataKey="value"
-                innerRadius={130}
+                innerRadius={160}
               >
                 {chartData.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -112,6 +121,16 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
               </Pie>
             </PieChart>
           </ResponsiveContainer>
+        </div>
+        <div>
+          <p>
+            <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : La résorption du besoin en stock sur la période&nbsp;
+            {currentYear} à {horizon} ans (soit {horizon - currentYear} ans) implique&nbsp;
+            {formatNumber(totalStock)} logements à produire. Le graphique ci-dessus précise la ventilation de ce besoin par type de
+            mal-logement. Par exemple, {formatNumber(maxValue)} logements devront être créés pour répondre aux besoins des{' '}
+            {getCategoryLabel(maxValueName)}.
+          </p>
+          <p>Les besoins en logements issues du besoin en stock sont détaillés dans le tableau ci-dessous.</p>
         </div>
         <div className={classes.tableContainer}>
           <Table
@@ -130,7 +149,6 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
                 formatNumber(physicalInadequation),
                 `${Number((physicalInadequation / totalStock) * 100).toFixed(1)} %`,
               ],
-              ['Parc social', formatNumber(socialParc), `${Number((socialParc / totalStock) * 100).toFixed(1)} %`],
               ['Mauvaise qualité', formatNumber(badQuality), `${Number((badQuality / totalStock) * 100).toFixed(1)} %`],
               ['Total', formatNumber(totalStock), '-'],
             ]}
@@ -146,25 +164,22 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results }) =
 const useStyles = tss.create({
   chartContainer: {
     display: 'flex',
-    height: '600px',
+    height: '500px',
     width: '100%',
   },
   container: {
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem',
-    paddingLeft: '2rem',
     paddingTop: '2rem',
   },
   rowContainer: {
     display: 'flex',
-    flexDirection: 'row',
-    gap: '2rem',
+    flexDirection: 'column',
   },
   tableContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: '50%',
   },
 })

@@ -2,13 +2,15 @@ import React, { createContext, useContext, useState } from 'react'
 import { TAccommodationRates } from '~/schemas/accommodations-rates'
 
 export interface RateSettings {
-  txLV: number
-  txLVLD: number
+  vacancyRate: number
+  longTermVacancyRate: number
+  shortTermVacancyRate: number
   txRS: number
 }
 
 interface RatesState {
   rates: Record<string, RateSettings>
+  defaultRates: Record<string, RateSettings>
   updateRates: (epciId: string, newRates: Partial<RateSettings>) => void
 }
 
@@ -19,22 +21,22 @@ interface RatesProviderProps {
   initialRates: Record<string, TAccommodationRates>
 }
 
-export const getComputedTxLv = (value: number, tauxLVLD: number): number => value - ((tauxLVLD && tauxLVLD / 100) || 0)
-
 export const RatesProvider = ({ children, initialRates }: RatesProviderProps) => {
-  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates).reduce(
-    (acc, [epciId, rates]) => ({
+  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates).reduce((acc, [epciId, rates]) => {
+    return {
       ...acc,
       [epciId]: {
-        txLV: getComputedTxLv(rates.txLv, rates.vacancy.txLvLongue),
-        txLVLD: rates.vacancy.txLvLongue,
+        vacancyRate: rates.vacancyRate,
+        longTermVacancyRate: rates.longTermVacancyRate,
+        shortTermVacancyRate: rates.shortTermVacancyRate,
         txRS: rates.txRs,
+        initialRates: rates,
       },
-    }),
-    {},
-  )
+    }
+  }, {})
 
   const [rates, setRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
+  const [defaultRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
   const updateRates = (epciId: string, newRates: Partial<RateSettings>) => {
     setRates((prevRates) => ({
       ...prevRates,
@@ -45,13 +47,13 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
     }))
   }
 
-  return <RatesSettingsContext.Provider value={{ rates, updateRates }}>{children}</RatesSettingsContext.Provider>
+  return <RatesSettingsContext.Provider value={{ rates, updateRates, defaultRates }}>{children}</RatesSettingsContext.Provider>
 }
 
-export const useBassinRates = () => {
+export const useEpcisRates = () => {
   const context = useContext(RatesSettingsContext)
   if (context === undefined) {
-    throw new Error('useBassinRates must be used within a RatesProvider')
+    throw new Error('useEpcisRates must be used within a RatesProvider')
   }
   return context
 }

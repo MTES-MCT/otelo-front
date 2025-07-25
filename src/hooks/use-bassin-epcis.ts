@@ -2,18 +2,17 @@ import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { TEpci } from '~/schemas/epci'
 
-export const useBassinEpcis = () => {
+export const useBassinEpcis = (epci?: string) => {
   const searchParams = useSearchParams()
-  const epci = searchParams.get('epci')
+  const epciParams = epci ?? searchParams.get('epcis')?.split(',')[0]
 
   const getBassinEpcis = async (): Promise<TEpci[]> => {
     try {
-      const response = await fetch(`/api/bassin/epcis/${epci}`)
+      const response = await fetch(`/api/bassin/epcis/${epciParams}`)
 
       if (!response.ok) {
         throw new Error('Failed to get bassin epcis list')
       }
-
       const data = await response.json()
       return data
     } catch (error) {
@@ -23,9 +22,9 @@ export const useBassinEpcis = () => {
   }
 
   const { data, isLoading } = useQuery({
-    enabled: !!epci,
+    enabled: !!epciParams,
     queryFn: () => getBassinEpcis(),
-    queryKey: ['bassin-epcis', epci],
+    queryKey: ['bassin-epcis', epciParams],
   })
   return { data, isLoading }
 }

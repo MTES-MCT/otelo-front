@@ -17,15 +17,18 @@ export type TSimulation = z.infer<typeof ZSimulation>
 
 export const ZSimulationWithRelations = ZSimulation.pick({
   createdAt: true,
+  name: true,
   id: true,
   updatedAt: true,
 }).extend({
   epcis: z.array(ZEpci),
+  scenario: ZScenario.pick({ b2_scenario: true, projection: true }),
 })
 
 export type TSimulationWithRelations = z.infer<typeof ZSimulationWithRelations>
 
 export const ZInitSimulationDto = z.object({
+  name: z.string().min(1, 'Veuillez donner un nom pour cette simulation').max(100, 'Le nom ne doit pas dépasser 100 caractères'),
   epci: z.array(z.object({ code: z.string() })),
   scenario: z.object({
     b2_scenario: z.string(),
@@ -34,10 +37,15 @@ export const ZInitSimulationDto = z.object({
       z.object({
         b2_tx_rs: z.number().optional(),
         b2_tx_vacance: z.number().optional(),
+        b2_tx_vacance_longue: z.number().optional(),
+        b2_tx_vacance_courte: z.number().optional(),
+        baseEpci: z.boolean(),
       }),
     ),
     projection: z.number(),
   }),
+  epciGroupName: z.string().optional().nullable(),
+  epciGroupId: z.string().optional().nullable(),
 })
 
 export type TInitSimulationDto = z.infer<typeof ZInitSimulationDto>
@@ -54,7 +62,7 @@ export const ZSimulationWithResults = ZSimulationWithEpciAndScenario.extend({
 
 export type TSimulationWithResults = z.infer<typeof ZSimulationWithResults>
 
-export const ZUpdateSimulationDto = z.object({
+export const ZUpdateBadHousingSimulationDto = z.object({
   id: z.string(),
   scenario: ZScenario.omit({
     b17_motif: true,
@@ -67,4 +75,44 @@ export const ZUpdateSimulationDto = z.object({
   }),
 })
 
-export type TUpdateSimulationDto = z.infer<typeof ZUpdateSimulationDto>
+export type TUpdateBadHousingSimulationDto = z.infer<typeof ZUpdateBadHousingSimulationDto>
+
+export const ZUpdateDemographicSimulationDto = z.object({
+  id: z.string(),
+  scenario: z.object({
+    id: z.string(),
+    b2_scenario: z.string(),
+    epciScenarios: z.record(
+      z.string(),
+      z.object({
+        b2_tx_rs: z.number().optional(),
+        b2_tx_vacance: z.number().optional(),
+        b2_tx_vacance_courte: z.number().optional(),
+        b2_tx_vacance_longue: z.number().optional(),
+      }),
+    ),
+    projection: z.number(),
+  }),
+})
+
+export type TUpdateDemographicSimulationDto = z.infer<typeof ZUpdateDemographicSimulationDto>
+
+export const ZSimulationExportDto = ZSimulation.pick({
+  id: true,
+})
+
+export type TSimulationExportDto = z.infer<typeof ZSimulationExportDto>
+
+export const ZRequestPowerpoint = z.object({
+  nextStep: z.string().min(1, { message: 'Veuillez sélectionner la prochaine étape' }),
+  resultDate: z.string().min(1, { message: 'Veuillez sélectionner une date' }),
+  selectedSimulations: z.array(z.string()).min(1, { message: 'Veuillez sélectionner au moins 1 simulation' }),
+})
+
+export type TRequestPowerpoint = z.infer<typeof ZRequestPowerpoint>
+
+export const ZCloneSimulationDto = z.object({
+  name: z.string().min(1, 'Le nom est requis').max(100, 'Le nom ne doit pas dépasser 100 caractères'),
+})
+
+export type TCloneSimulationDto = z.infer<typeof ZCloneSimulationDto>

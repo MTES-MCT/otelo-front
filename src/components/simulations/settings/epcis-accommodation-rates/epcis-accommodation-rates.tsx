@@ -1,60 +1,70 @@
 'use client'
 
-import { RiIconClassName } from '@codegouvfr/react-dsfr'
+import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 import { AccommodationRateInput } from '~/components/simulations/settings/accommodation-rate-input'
-import { LongTermVacancyAlert } from '~/components/simulations/settings/long-term-vacancy-alert'
 import { VacancyAccommodationRatesInput } from '~/components/simulations/settings/vacancy-accommodation-rates-input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
+import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
+import { formatNumber } from '~/utils/format-numbers'
 
 interface EpcisAccommodationRatesProps {
-  bassinEpcis: Array<{ code: string; name: string; region: string }>
+  epcis: Array<{ code: string; name: string; region: string }>
+  creationMode?: boolean
 }
 
 interface TabChildrenProps {
   epci: string
+  rates: TEpcisAccommodationRates
+  creationMode: boolean
 }
 
-const TabChildren: FC<TabChildrenProps> = ({ epci }) => {
-  const { data: rates } = useAccommodationRatesByEpci()
+const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
+  const { classes } = useStyles()
   const epciRates = rates?.[epci]
   if (!epciRates) return null
 
   return (
-    <div>
-      <div style={{ marginBottom: '1rem' }}>
+    <>
+      <div className={fr.cx('fr-mb-2w')}>
         <Alert
           description={
-            <span>
-              Le volume de logements vacants longue durée est de {epciRates.vacancy.nbAccommodation} logements en {epciRates.vacancy.year}.
-              <span style={{ fontSize: '0.8rem' }}>
-                {' '}
-                (soit <span style={{ fontWeight: 'bold' }}> {epciRates.vacancy.txLvLongue.toFixed(2)}% du parc privé total</span>)
+            <>
+              <span>
+                Le volume de logements vacants longue durée est de {formatNumber(epciRates.vacancy.nbAccommodation)} logements en&nbsp;
+                {epciRates.vacancy.year}.
               </span>
-            </span>
+              <p className={classes.underline}>
+                Le taux de vacance courte durée est de {(Number(epciRates.shortTermVacancyRate) * 100).toFixed(2)}%. Il n'est pas
+                modifiable.
+              </p>
+            </>
           }
           severity="info"
           small
         />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-        <VacancyAccommodationRatesInput epci={epci} longTermValue={epciRates.vacancy.txLvLongue} shortTermValue={epciRates.txLv} />
-        <LongTermVacancyAlert />
+      <div className={classes.inputsContainer}>
+        <VacancyAccommodationRatesInput creationMode={creationMode} epci={epci} />
         <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
       </div>
-    </div>
+    </>
   )
 }
 
-export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ bassinEpcis }) => {
+export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ epcis, creationMode = false }) => {
   const { classes } = useStyles()
-  const tabs = bassinEpcis.map((bassinEpci) => ({
-    content: <TabChildren epci={bassinEpci.code} />,
+  const epcisCodes = epcis.map((epci) => epci.code)
+  const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
+  if (!rates) return null
+
+  const tabs = epcis.map((epci) => ({
+    content: <TabChildren creationMode={creationMode} epci={epci.code} rates={rates} />,
     iconId: 'ri-road-map-line' as RiIconClassName,
-    label: bassinEpci.name,
+    label: epci.name,
   }))
 
   return <Tabs classes={{ panel: classes.backgroundWhite }} tabs={tabs} />
@@ -63,5 +73,17 @@ export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ bass
 const useStyles = tss.create({
   backgroundWhite: {
     backgroundColor: 'white',
+  },
+  inputsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    justifyContent: 'space-between',
+  },
+  underline: {
+    textDecoration: 'underline',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 })

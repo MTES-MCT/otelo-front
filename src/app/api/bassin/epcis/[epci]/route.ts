@@ -1,8 +1,9 @@
+import { getServerSession } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '~/lib/auth/auth'
+import { authOptions } from '~/lib/auth/auth.config'
 
 export async function GET(_: NextRequest, { params }: { params: { epci: string } }) {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   if (!session?.accessToken) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

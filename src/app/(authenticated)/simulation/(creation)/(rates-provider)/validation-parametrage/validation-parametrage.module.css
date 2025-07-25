@@ -5,13 +5,3 @@
   padding-bottom: 1rem;
   padding-top: 1rem;
 }
-
-.subContainer {
-  background-color: var(--background-default-grey);
-  padding: 1rem;
-}
-
-.settingsContainer {
-  display: flex;
-  gap: 1rem;
-}

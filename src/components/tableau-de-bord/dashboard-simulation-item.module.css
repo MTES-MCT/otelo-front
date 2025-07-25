@@ -1,0 +1,26 @@
+/* Action icons styling */
+.deleteIcon {
+  cursor: pointer;
+  color: var(--text-action-high-red-marianne);
+}
+
+.deleteIcon:hover {
+  opacity: 0.8;
+}
+
+.cloneIcon {
+  cursor: pointer;
+  color: var(--text-action-high-blue-france);
+  margin-right: 1rem;
+}
+
+.cloneIcon:hover {
+  opacity: 0.8;
+}
+
+/* Modal actions container */
+.modalActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-around;
+}

@@ -3,13 +3,15 @@
 import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
 import Input from '@codegouvfr/react-dsfr/Input'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
-import { useSearchParams } from 'next/navigation'
+import { parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
+import { tss } from 'tss-react'
 import {
   RateSettings,
-  useBassinRates,
+  useEpcisRates,
 } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { useBassinEpcis } from '~/hooks/use-bassin-epcis'
+import { useEpcis } from '~/hooks/use-epcis'
 
 interface TabChildrenProps {
   epci: string
@@ -17,50 +19,77 @@ interface TabChildrenProps {
 }
 
 const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
-  const { txLV, txLVLD, txRS } = rates
+  const { classes } = useStyles()
+  const { shortTermVacancyRate, longTermVacancyRate, txRS } = rates
 
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
+    <div className={classes.container}>
       <Input
         disabled
         label=""
         iconId="ri-percent-line"
-        hintText="Taux cible de logements vacants"
-        nativeInputProps={{ value: (Number(txLV) * 100).toFixed(2) }}
-        style={{ flex: 1 }}
-        stateRelatedMessage={`dont ${txLVLD}% de logements vacants de longue durée`}
-        state="info"
+        hintText="Taux cible de logements vacants courte durée"
+        nativeInputProps={{ value: (Number(shortTermVacancyRate) * 100).toFixed(2) }}
+        className={classes.flex}
       />
       <Input
         disabled
         label=""
         iconId="ri-percent-line"
+        hintText="Taux cible de logements vacants longue durée"
+        nativeInputProps={{ value: (Number(longTermVacancyRate) * 100).toFixed(2) }}
+        className={classes.flex}
+      />
+      <Input
+        disabled
+        className={classes.flex}
+        label=""
+        iconId="ri-percent-line"
         hintText="Taux cible de résidences secondaires"
         nativeInputProps={{ value: (Number(txRS) * 100).toFixed(2) }}
-        style={{ flex: 1 }}
       />
     </div>
   )
 }
 
-export const ValidationSettingsRates: FC = () => {
-  const searchParams = useSearchParams()
-  const epci = searchParams.get('epci')
+type ValidationSettingsRatesProps = {
+  epcis?: string[]
+}
+export const ValidationSettingsRates: FC<ValidationSettingsRatesProps> = ({ epcis }) => {
+  const { data: epcisList } = useEpcis(epcis)
   const { data: bassinEpcis } = useBassinEpcis()
-  const { rates } = useBassinRates()
+  const [queryStates] = useQueryStates({
+    baseEpci: parseAsString,
+  })
+  const { rates } = useEpcisRates()
 
   const tabs = Object.entries(rates)
-    .sort(([code]) => (code === epci ? -1 : 1))
     .map(([epci, rates]) => ({
+      epci,
       content: <TabChildren epci={epci} rates={rates} />,
       iconId: 'ri-road-map-line' as RiIconClassName,
-      label: bassinEpcis?.find((bassinEpci) => bassinEpci.code === epci)?.name,
+      label: [...(epcisList || []), ...(bassinEpcis || [])]?.find((bassinEpci) => bassinEpci.code === epci)?.name,
     }))
+    .sort((a, b) => {
+      if (a.epci === queryStates.baseEpci) return -1
+      if (b.epci === queryStates.baseEpci) return 1
+      return 0
+    })
 
   return (
-    <div style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, padding: '1rem' }}>
+    <div className={fr.cx('fr-p-2w')} style={{ backgroundColor: fr.colors.decisions.background.default.grey.default }}>
       <h4>Taux cible de résidences secondaires et logements vacants</h4>
       <Tabs tabs={tabs} />
     </div>
   )
 }
+
+const useStyles = tss.create({
+  container: {
+    display: 'flex',
+    gap: '1rem',
+  },
+  flex: {
+    flex: 1,
+  },
+})

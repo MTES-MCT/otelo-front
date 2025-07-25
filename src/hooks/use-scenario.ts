@@ -9,14 +9,15 @@ export const useScenario = () => {
 
   const fetchSimulationScenario = async (simulationId: string) => {
     try {
-      const response = await fetch(`/api/simulations/${simulationId}/scenario`)
+      const response = await fetch(`/api/simulations/${simulationId}/scenario`, {
+        cache: 'no-store',
+      })
       if (!response.ok) {
         throw new Error('Failed to fetch user simulation scenario')
       }
       return response.json()
     } catch (error) {
       console.error('Error fetching user simulation scenario:', error)
-      return {}
     }
   }
 
@@ -24,6 +25,7 @@ export const useScenario = () => {
     enabled: !!session,
     queryFn: () => fetchSimulationScenario(id as string),
     queryKey: ['simulation-scenario', id],
+    staleTime: 0,
   })
 
   return { data, isLoading }

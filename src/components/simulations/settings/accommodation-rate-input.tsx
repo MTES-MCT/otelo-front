@@ -3,7 +3,7 @@
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC, useState } from 'react'
 import { tss } from 'tss-react'
-import { useBassinRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 type AccommodationRateInputProps = {
   disabled?: boolean
@@ -13,7 +13,7 @@ type AccommodationRateInputProps = {
 }
 
 export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ disabled = false, epci, label, txKey }) => {
-  const { rates, updateRates } = useBassinRates()
+  const { rates, updateRates } = useEpcisRates()
   const { classes } = useStyles()
   const ratesByEpci = rates[epci]
   const value = ratesByEpci[txKey as keyof typeof ratesByEpci]
@@ -22,6 +22,13 @@ export const AccommodationRateInput: FC<AccommodationRateInputProps> = ({ disabl
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value.replace(',', '.'))
     setValueInput(e.target.value)
+    if (value > 100) {
+      setValueInput('100')
+    } else if (value < 0) {
+      setValueInput('0')
+    } else {
+      setValueInput(e.target.value)
+    }
     updateRates(epci, { [txKey]: value / 100 })
   }
 

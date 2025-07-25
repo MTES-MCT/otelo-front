@@ -1,16 +1,75 @@
-import type { NextAuthConfig, Session, User } from 'next-auth'
+import type { AuthOptions, NextAuthOptions, Session, User } from 'next-auth'
+import Credentials from 'next-auth/providers/credentials'
+import { ProConnectProvider, proConnectProviderId } from '~/lib/auth/providers/pro-connect'
 
-type CustomUser = User & { role: 'USER' | 'ADMIN' }
+export type CustomUser = User & {
+  firstname: string
+  lastname: string
+  sub: string
+  hasAccess: boolean
+  id: string
+  email: string
+  provider: string
+  role: 'ADMIN' | 'USER'
+}
 
-export default {
+export const authOptions: NextAuthOptions = {
   callbacks: {
+    async signIn(params) {
+      try {
+        // We sign up user there
+        if (params.account?.provider === proConnectProviderId) {
+          const user = params.user as CustomUser
+          await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
+            body: JSON.stringify({
+              email: user.email,
+              provider: params.account?.provider,
+              firstname: user.firstName ?? user.firstname,
+              lastname: user.lastName ?? user.lastname,
+              sub: user.sub,
+              id: user.id,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+          })
+        }
+
+        const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: params.user.email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        if (!hasUserAccess.ok) {
+          throw new Error('Failed to check user access')
+        }
+        const data = await hasUserAccess.json()
+        if (data) {
+          return true
+        }
+        return '/unauthorized'
+      } catch {
+        return '/unauthorized'
+      }
+    },
     async jwt({ account, token, user }) {
       if (account) {
-        // First time coming from SSO
+        // User is already registered in the signIn callback
+        // Get session tokens
         try {
           const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/callback`, {
             body: JSON.stringify({
               email: user.email,
+              provider: account.provider,
+              firstname: (user as CustomUser).firstName ?? (user as CustomUser).firstname,
+              lastname: (user as CustomUser).lastName ?? (user as CustomUser).lastname,
+              sub: (user as CustomUser).sub,
+              id: (user as CustomUser).id,
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -20,18 +79,41 @@ export default {
           if (!response.ok) {
             throw new Error('Failed to get tokens from API')
           }
-
           const data = await response.json()
           const expiresAtUnix = Math.floor(new Date(data.session.expiresAt).getTime() / 1000)
           token.accessToken = data.session.accessToken
           token.refreshToken = data.session.refreshToken
           token.expiresAt = expiresAtUnix
           token.user = data.user
+
+          // User has passed the access check in signIn
+          token.hasAccess = true
         } catch (_error) {
           throw new Error('Failed to get tokens from API')
         }
       } else if (Date.now() < (token.expiresAt as number) * 1000) {
         // Subsequent logins, but the `access_token` is still valid
+        const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: (token.user as CustomUser)?.email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!hasUserAccess.ok) {
+          token.error = 'AccessCheckError'
+          throw new Error('Failed to check user access')
+        }
+
+        const accessData = await hasUserAccess.json()
+
+        if (!accessData) {
+          token.error = 'AccessRevoked'
+          throw new Error('User access has been revoked')
+        }
         return token
       } else {
         if (!token.refreshToken) throw new TypeError('Missing refresh_token')
@@ -49,6 +131,29 @@ export default {
           }
 
           const data = await response.json()
+
+          // Check if user still has access after refresh
+          const hasUserAccess = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/access`, {
+            method: 'POST',
+            body: JSON.stringify({
+              email: (token.user as CustomUser)?.email,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          if (!hasUserAccess.ok) {
+            token.error = 'AccessCheckError'
+            throw new Error('Failed to check user access')
+          }
+
+          const accessData = await hasUserAccess.json()
+          if (!accessData) {
+            token.error = 'AccessRevoked'
+            throw new Error('User access has been revoked')
+          }
+
           const expiresAtUnix = Math.floor(new Date(data.session.expiresAt).getTime() / 1000)
           token.accessToken = data.session.accessToken
           token.refreshToken = data.session.refreshToken
@@ -61,9 +166,6 @@ export default {
       }
       return token
     },
-    async redirect({ baseUrl }) {
-      return baseUrl
-    },
     async session({ session, token }) {
       ;(session as Session).accessToken = token.accessToken as string
       ;(session as Session).user = token.user as CustomUser
@@ -73,26 +175,36 @@ export default {
     },
   },
   providers: [
-    {
-      authorization: { params: { scope: 'openid email profile' } },
-      checks: ['none'],
-      clientId: process.env.NEXT_PRIVATE_OAUTH_CEREMA_CLIENT_ID,
-      clientSecret: process.env.NEXT_PRIVATE_OAUTH_CEREMA_CLIENT_SECRET,
-      id: 'cerema-oidc',
-      issuer: process.env.CEREMA_OIDC_ISSUER,
-      name: 'Cerema OIDC',
-      async profile(profile) {
-        return {
-          email: profile.email,
-          firstname: profile.given_name,
-          id: profile.sub,
-          lastname: profile.family_name,
-          role: 'USER',
-          sub: profile.sub,
-        }
+    ProConnectProvider(),
+    Credentials({
+      name: 'Email - Mot de passe',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Mot de passe', type: 'password' },
       },
-      type: 'oidc',
-      wellKnown: `${process.env.CEREMA_OIDC_ISSUER}/.well-known/openid-configuration`,
-    },
+      authorize: async (credentials) => {
+        try {
+          const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/signin`, {
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+          })
+          if (!response.ok) {
+            throw new Error('Failed to sign in')
+          }
+          const data = await response.json()
+          return data
+        } catch (error) {
+          console.error('Error signing in', error)
+          return null
+        }
+        return null
+      },
+    }),
   ],
-} satisfies NextAuthConfig
+} satisfies AuthOptions

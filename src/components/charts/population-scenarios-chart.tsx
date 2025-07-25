@@ -1,21 +1,19 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
 import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Select from '@codegouvfr/react-dsfr/SelectNext'
-import { parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
-import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { PopulationScenariosCustomTooltip } from '~/components/charts/population-scenarios-custom-tooltip'
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
-import { formatNumber } from '~/utils/format-numbers'
 import { roundPopulation } from '~/utils/round-chart-axis'
-
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
+  modification?: boolean
 }
 
 const SCENARIOS = [
@@ -54,66 +52,28 @@ const selectOptions = [
   },
 ]
 
-const CustomTooltip = ({
-  active,
-  basePopulation,
-  label,
-  payload,
-}: TooltipProps<ValueType, NameType> & { basePopulation: TPopulationEvolution }) => {
-  if (!active || !payload?.length) return null
-  return (
-    <div
-      style={{
-        backgroundColor: 'white',
-        border: '1px solid var(--border-default-grey)',
-        borderRadius: '4px',
-        padding: '1rem',
-      }}
-    >
-      <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{`Année ${label}`}</p>
-      {/* biome-ignore lint/suspicious/noExplicitAny: TODO */}
-      {payload.map((item: any) => {
-        const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
-        return (
-          <div
-            key={item.dataKey}
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              gap: '0.5rem',
-              marginTop: '0.25rem',
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: item.stroke,
-                borderRadius: '50%',
-                height: '8px',
-                width: '8px',
-              }}
-            />
-            <span>{item.name}:</span>
-            <span>
-              <span style={{ fontWeight: 'bold' }}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
-              <span style={{ fontWeight: 'bold' }}>2021</span>
-            </span>
-            <span style={{ fontSize: '10px' }}>({formatNumber(item.value)} habitants)</span>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
 export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ demographicEvolution }) => {
   const { classes } = useStyles()
-  const { data, metadata } = demographicEvolution
-
   const [queryStates, setQueryStates] = useQueryStates({
     population: parseAsString,
     projection: parseAsString,
     scenario: parseAsString,
+    epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    epciChart: parseAsString,
   })
+
+  const selectedEpci = queryStates.epciChart ?? queryStates.epcis[0]
+  const selectedData = selectedEpci ? demographicEvolution[selectedEpci] : null
+
+  if (!selectedData) {
+    return (
+      <div className={classes.chartContainer}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Chargement...</div>
+      </div>
+    )
+  }
+
+  const { data, metadata } = selectedData
 
   const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.map((scenario) => ({
@@ -156,18 +116,21 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
                     key={`${dataKey}-${props.payload.year}`}
                   />
                 )}
-                onClick={() => setQueryStates({ population: queryValue })}
+                onClick={() => {
+                  setQueryStates({ population: queryValue })
+                }}
               />
             ))}
             <XAxis dataKey="year" />
             <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
-            <Tooltip content={<CustomTooltip basePopulation={basePopulation} />} />
+            <Tooltip content={<PopulationScenariosCustomTooltip basePopulation={basePopulation} />} />
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className={fr.cx('fr-py-2w')}>
+      <div>
         <Select
-          label=""
+          label="Scénario de projection de population"
+          hint="Le choix de scénario s'applique au global dans votre simulation, à l'échelle du bassin d'habitat ou des EPCI."
           placeholder="Choix du scénario"
           nativeSelectProps={{
             onChange: (event) => setQueryStates({ population: event.target.value }),
@@ -204,5 +167,32 @@ const useStyles = tss.create({
     height: '500px',
     padding: '1rem',
     width: '100%',
+  },
+  tooltipContainer: {
+    backgroundColor: 'white',
+    border: '1px solid var(--border-default-grey)',
+    borderRadius: '4px',
+    padding: '1rem',
+  },
+  tooltipTitle: {
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+  },
+  tooltipItem: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipDot: {
+    borderRadius: '50%',
+    height: '8px',
+    width: '8px',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  smallText: {
+    fontSize: '10px',
   },
 })

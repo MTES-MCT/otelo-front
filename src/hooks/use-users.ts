@@ -27,7 +27,7 @@ export const useUsers = () => {
   const { data, isLoading } = useQuery({
     enabled: !!session && (session as TSession).user.role === 'ADMIN',
     queryFn: fetchUsers,
-    queryKey: ['users', (session as TSession).user.email],
+    queryKey: ['users'],
   })
 
   return { data, isLoading }

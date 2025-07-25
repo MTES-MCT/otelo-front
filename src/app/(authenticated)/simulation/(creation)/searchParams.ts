@@ -1,7 +1,8 @@
-import { createSearchParamsCache, parseAsString } from 'nuqs/server'
+import { createSearchParamsCache, parseAsArrayOf, parseAsString } from 'nuqs/server'
 
 export const searchParamsCache = createSearchParamsCache({
-  epci: parseAsString.withDefault(''),
+  epcis: parseAsArrayOf(parseAsString).withDefault([]),
+  baseEpci: parseAsString.withDefault(''),
   omphale: parseAsString.withDefault(''),
   projection: parseAsString.withDefault(''),
   q: parseAsString.withDefault(''),

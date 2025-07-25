@@ -1,5 +1,6 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { ContactForm } from '~/components/contact/contact-form'
+import { CONTACT_EMAIL } from '~/utils/resources'
 
 export default function ContactPage() {
   return (
@@ -9,9 +10,8 @@ export default function ContactPage() {
       <div className={fr.cx('fr-mb-4w')}>
         <h3>Nous contacter par e-mail</h3>
         <p>
-          Vous pouvez nous contacter par e-mail à l&apos;adresse suivante :{' '}
-          <a href="mailto:otelo@developpement-durable.gouv.fr">otelo@developpement-durable.gouv.fr</a> ou en utilisant le formulaire
-          ci-dessous.
+          Vous pouvez nous contacter par e-mail à l&apos;adresse suivante : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> ou en
+          utilisant le formulaire ci-dessous.
         </p>
       </div>
       <h3>Formulaire de contact</h3>

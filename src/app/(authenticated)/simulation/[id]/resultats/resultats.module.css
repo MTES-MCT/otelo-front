@@ -1,0 +1,36 @@
+.layoutContainer {
+  display: flex;
+}
+
+.headerContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.flowContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flowTitle {
+  padding-top: 2rem;
+}
+
+.flowChartContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.border {
+  border-left: 1px solid grey;
+  width: 1px;
+}

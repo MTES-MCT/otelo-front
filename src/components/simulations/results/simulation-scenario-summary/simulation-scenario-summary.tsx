@@ -3,7 +3,7 @@
 import { FrCxArg, fr } from '@codegouvfr/react-dsfr'
 import Tag from '@codegouvfr/react-dsfr/Tag'
 import { useQueryState } from 'nuqs'
-import React, { FC } from 'react'
+import React, { FC, Fragment } from 'react'
 import { TEpci } from '~/schemas/epci'
 import { TScenario } from '~/schemas/scenario'
 import styles from './simulation-scenario-summary.module.css'
@@ -40,7 +40,9 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
   }
 
   const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_rs
-  const epciTxVacance = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance
+  const shortTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_courte
+  const longTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_longue
+  const vacancyRate = (shortTermVacancyRate ?? 0) + (longTermVacancyRate ?? 0)
 
   const settings = [
     {
@@ -71,21 +73,34 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
           },
         ]
       : []),
-    ...(epciTxVacance
+    ...(vacancyRate
       ? [
           {
             iconId: 'ri-percent-line',
             key: 'tauxLV',
             label: 'Taux cible de logements vacants',
             tags: [
-              <>{epciTxVacance && <Tag key="tauxLV">Taux cible de logements vacants : {Number(epciTxVacance * 100).toFixed(2)} %</Tag>}</>,
+              <>
+                {shortTermVacancyRate !== undefined && (
+                  <Tag key="shortTermVacancyRate">
+                    Taux cible de logements vacants courte durée: {Number(shortTermVacancyRate * 100).toFixed(2)} %
+                  </Tag>
+                )}
+              </>,
+              <>
+                {longTermVacancyRate !== undefined && (
+                  <Tag key="longTermVacancyRate">
+                    Taux cible de logements vacants longue durée: {Number(longTermVacancyRate * 100).toFixed(2)} %
+                  </Tag>
+                )}
+              </>,
             ],
           },
         ]
       : []),
   ]
   return (
-    <nav style={{ paddingRight: '1rem' }}>
+    <nav className={fr.cx('fr-pr-2w')}>
       <div className={styles.headerContainer}>
         <h5>Votre paramétrage</h5>
       </div>
@@ -100,7 +115,11 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
             </div>
             {
               <div className={styles.stepDelimitor}>
-                <div className={styles.badgeContainer}>{setting.tags.map((tag) => tag)}</div>
+                <div className={styles.badgeContainer}>
+                  {setting.tags.map((tag, index) => (
+                    <Fragment key={index}>{tag}</Fragment>
+                  ))}
+                </div>
               </div>
             }
           </React.Fragment>

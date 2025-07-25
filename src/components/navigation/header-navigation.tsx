@@ -1,105 +1,130 @@
 'use client'
 
 import { MainNavigation, MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation'
-import dayjs from 'dayjs'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'
-import { tss } from 'tss-react'
-import { useSimulations } from '~/hooks/use-simulations'
 import { TSession } from '~/types/next-auth'
 
 export const HeaderNavigation: FC = () => {
   const pathname = usePathname()
   const { data: session } = useSession() as { data: TSession | null }
-  const { classes } = useStyles()
-  const { data } = useSimulations()
 
-  const items: MainNavigationProps.Item[] = [
-    {
-      isActive: pathname === '/accueil',
-      linkProps: { href: '/accueil', target: '_self' },
-      text: 'Accueil',
-    },
-    {
-      isActive: pathname === '/en-savoir-plus',
-      linkProps: { href: '/en-savoir-plus', target: '_self' },
-      text: 'En savoir plus sur Otelo',
-    },
-    {
-      isActive: pathname === '/ressources',
-      linkProps: { href: '/ressources', target: '_self' },
-      text: 'Ressources sur Otelo',
-    },
-    {
-      isActive: pathname === '/contact',
-      linkProps: { href: '/contact', target: '_self' },
-      text: 'Nous contacter',
-    },
-    ...(session
-      ? [
-          {
-            className: classes.margin,
-            megaMenu: {
-              categories:
-                data && data.length > 0
-                  ? [
-                      {
-                        categoryMainLink: {
-                          linkProps: {
-                            href: '#',
-                          },
-                          text: 'Historique des simulations',
-                        },
-                        links: (data || []).map((simulation) => ({
-                          linkProps: {
-                            href: `/simulation/${simulation.id}/resultats`,
-                          },
-                          text: `Simulation - ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`,
-                        })),
-                      },
-                    ]
-                  : [],
-              leader: {
-                link: {
-                  linkProps: {
-                    href: '/simulation',
-                  },
-                  text: 'Démarrer une nouvelle simulation',
-                },
-                paragraph: 'À travers ce menu, vous pouvez accéder à vos simulations précédentes et retrouver leurs résultats.',
-                title: 'Mes simulations',
-              },
-            },
-            text: 'Mes simulations',
-          },
-          {
-            linkProps: { href: '/visualiser-les-donnees', target: '_self' },
-            text: 'Visualiser les données',
-          },
-          {
-            isActive: pathname.includes('/guide-utilisateur'),
-            linkProps: { href: '/guide-utilisateur', target: '_self' },
-            text: "Guide d'utilisation",
-          },
-          ...(session.user.role === 'ADMIN'
-            ? [
-                {
-                  isActive: pathname.includes('/admin'),
-                  linkProps: { href: '/admin', target: '_self' },
-                  text: 'Gestion des utilisateurs',
-                },
-              ]
-            : []),
-        ]
-      : []),
-  ]
+  const isAdmin = session?.user?.role === 'ADMIN'
+  const items = session ? getMenuConnected(pathname, isAdmin) : getMenuDisconnected(pathname)
 
   return <MainNavigation items={items} />
 }
 
-const useStyles = tss.create({
-  margin: {
-    marginLeft: 'auto',
+const getMenuDisconnected = (pathname: string): MainNavigationProps.Item[] => [
+  {
+    isActive: pathname === '/accueil',
+    linkProps: { href: '/accueil', target: '_self' },
+    text: 'Accueil',
   },
-})
+  {
+    isActive: pathname === '/guide',
+    linkProps: { href: '/guide', target: '_self' },
+    text: "Guide d'utilisation",
+  },
+  {
+    isActive: pathname === '/ressources',
+    linkProps: { href: '/ressources', target: '_self' },
+    text: 'Ressources',
+  },
+  {
+    isActive: pathname === '/retours-d-experience',
+    linkProps: { href: '/retours-d-experience', target: '_self' },
+    text: "Retours d'expérience",
+  },
+  {
+    isActive: pathname === '/statistiques',
+    linkProps: { href: '/statistiques', target: '_self' },
+    text: 'Statistiques',
+  },
+  {
+    isActive: pathname === '/faq',
+    linkProps: { href: '/faq', target: '_self' },
+    text: 'FAQ',
+  },
+  {
+    isActive: pathname === '/contact',
+    linkProps: { href: '/contact', target: '_self' },
+    text: 'Nous contacter',
+  },
+]
+
+const getMenuConnected = (pathname: string, isAdmin = false): MainNavigationProps.Item[] => [
+  {
+    isActive: pathname === '/accueil',
+    linkProps: { href: '/accueil', target: '_self' },
+    text: 'Accueil',
+  },
+  {
+    isActive: /tableaux?-de-bord/.test(pathname),
+    linkProps: { href: '/tableaux-de-bord', target: '_self' },
+    text: 'Tableaux de bord',
+  },
+  {
+    isActive: pathname === '/infographies',
+    linkProps: { href: '/infographies', target: '_self' },
+    text: 'Infographies',
+  },
+  {
+    isActive: ['/guide', '/ressources', '/retours-d-experience', '/faq'].includes(pathname),
+    menuLinks: [
+      {
+        isActive: pathname === '/guide',
+        linkProps: {
+          href: '/guide',
+        },
+        text: "Guide d'utilisation",
+      },
+      {
+        isActive: pathname === '/ressources',
+        linkProps: {
+          href: '/ressources',
+        },
+        text: 'Ressources de nos partenaires',
+      },
+      {
+        isActive: pathname === '/retours-d-experience',
+        linkProps: { href: '/retours-d-experience', target: '_self' },
+        text: "Retours d'expérience",
+      },
+      {
+        isActive: pathname === '/faq',
+        linkProps: { href: '/faq', target: '_self' },
+        text: 'FAQ',
+      },
+    ],
+    text: 'Aides et ressources',
+  },
+  {
+    isActive: ['/a-propos', '/statistiques'].includes(pathname),
+    menuLinks: [
+      {
+        isActive: pathname === '/a-propos',
+        linkProps: {
+          href: '/a-propos',
+        },
+        text: 'À propos',
+      },
+      {
+        isActive: pathname === '/statistiques',
+        linkProps: { href: '/statistiques', target: '_self' },
+        text: 'Statistiques',
+      },
+    ],
+    text: "À propos d'Otelo",
+  },
+  ...(isAdmin
+    ? [
+        {
+          isActive: pathname.includes('/admin'),
+          linkProps: { href: '/admin', target: '_self' },
+          text: 'Gestion des utilisateurs',
+        },
+      ]
+    : []),
+]

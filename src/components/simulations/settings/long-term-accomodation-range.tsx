@@ -1,32 +1,41 @@
 import { Range } from '@codegouvfr/react-dsfr/Range'
-import { FC } from 'react'
-import {
-  getComputedTxLv,
-  useBassinRates,
-} from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { FC, useEffect } from 'react'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 
 interface LongTermAccomodationRangeProps {
   epci: string
-  longTermValue: number
-  shortTermValue: number
+  creationMode: boolean
 }
 
-export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ epci, longTermValue, shortTermValue }) => {
-  const { rates, updateRates } = useBassinRates()
+export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ epci, creationMode }) => {
+  const { defaultRates, rates, updateRates } = useEpcisRates()
   const currentRates = rates[epci]
+  const defaultEpciRates = defaultRates[epci]
+  useEffect(() => {
+    if (creationMode) {
+      const reductionAmount = (15 / 100) * defaultEpciRates.longTermVacancyRate
+      const longTermRate = defaultEpciRates.longTermVacancyRate - reductionAmount
+
+      updateRates(epci, {
+        longTermVacancyRate: longTermRate,
+      })
+    }
+  }, [])
 
   const getCurrentRangeValue = (): number => {
-    if (!currentRates.txLVLD) return 100
-    return ((longTermValue - currentRates.txLVLD) / longTermValue) * 100
+    if (currentRates?.longTermVacancyRate === undefined || !defaultEpciRates?.longTermVacancyRate) return 0
+    const reduction = defaultEpciRates.longTermVacancyRate - currentRates.longTermVacancyRate
+    const percentage = (reduction / defaultEpciRates.longTermVacancyRate) * 100
+    return Math.round(percentage * 100) / 100
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rangeValue = Number(e.target.value)
-    const rate = longTermValue * (1 - rangeValue / 100)
+    const reductionAmount = (rangeValue / 100) * defaultEpciRates.longTermVacancyRate
+    const longTermRate = defaultEpciRates.longTermVacancyRate - reductionAmount
 
     updateRates(epci, {
-      txLV: getComputedTxLv(shortTermValue, rate),
-      txLVLD: rate,
+      longTermVacancyRate: longTermRate,
     })
   }
 

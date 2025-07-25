@@ -10,28 +10,30 @@ import { getOmphaleLabel } from '~/utils/omphale-label'
 
 interface CreationGuideTagProps {
   step: {
-    data?: string
+    data?: string | Array<string>
     disabled?: boolean
     label: string
     path: string
-    queryKey: string
+    queryKeys: Array<string>
   }
 }
 
 export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
-  const { data, disabled = false, label, path, queryKey } = step
-  const [value] = useQueryState(queryKey)
-  const { classes } = useStyles({ disabled, value })
+  const { data, disabled = false, label, path, queryKeys } = step
+  const [value] = useQueryState(queryKeys[0])
+
+  const { classes } = useStyles({ disabled, value, queryKeys })
   const searchParams = useSearchParams()
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
   let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
 
-  if (data) {
+  if (data && typeof data === 'string') {
     formattedValue = data
   }
-  if (queryKey === 'omphale') {
+
+  if (queryKeys.includes('omphale')) {
     formattedValue = getOmphaleLabel(value)
   }
   const defaultTagProps = {
@@ -48,6 +50,13 @@ export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({
       }
     : defaultTagProps
 
+  if (data && Array.isArray(data)) {
+    return data.map((item) => (
+      <Tag key={item} iconId="fr-icon-checkbox-circle-line" className={classes.tag} linkProps={{ href }}>
+        {item}
+      </Tag>
+    ))
+  }
   return (
     <Tag iconId="fr-icon-question-line" className={classes.tag} {...tagProps}>
       {formattedValue ?? label}
@@ -55,31 +64,33 @@ export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({
   )
 }
 
-const useStyles = tss.withParams<{ disabled: boolean; value: string | null }>().create(({ disabled, value }) => {
-  let backgroundColor = undefined
-  let hoverBackgroundColor = undefined
-  let color = undefined
+const useStyles = tss
+  .withParams<{ disabled: boolean; value: string | null; queryKeys: string[] }>()
+  .create(({ disabled, value, queryKeys }) => {
+    let backgroundColor = undefined
+    let hoverBackgroundColor = undefined
+    let color = undefined
 
-  if (!value) {
-    backgroundColor = `${fr.colors.decisions.background.contrast.grey.default} !important`
-    hoverBackgroundColor = `${fr.colors.decisions.background.contrast.grey.hover} !important`
-    color = `${fr.colors.decisions.text.default.grey.default} !important`
-  }
+    if (!value && queryKeys.length === 1) {
+      backgroundColor = `${fr.colors.decisions.background.contrast.grey.default} !important`
+      hoverBackgroundColor = `${fr.colors.decisions.background.contrast.grey.hover} !important`
+      color = `${fr.colors.decisions.text.default.grey.default} !important`
+    }
 
-  if (disabled) {
-    backgroundColor = `${fr.colors.decisions.background.disabled.grey.default} !important`
-    hoverBackgroundColor = undefined
-    color = `${fr.colors.decisions.text.disabled.grey.default} !important`
-  }
+    if (disabled) {
+      backgroundColor = `${fr.colors.decisions.background.disabled.grey.default} !important`
+      hoverBackgroundColor = undefined
+      color = `${fr.colors.decisions.text.disabled.grey.default} !important`
+    }
 
-  return {
-    tag: {
-      '&:hover': {
-        backgroundColor: hoverBackgroundColor,
+    return {
+      tag: {
+        '&:hover': {
+          backgroundColor: hoverBackgroundColor,
+        },
+        backgroundColor,
+        color,
+        cursor: disabled ? 'not-allowed' : undefined,
       },
-      backgroundColor,
-      color,
-      cursor: disabled ? 'not-allowed' : undefined,
-    },
-  }
-})
+    }
+  })

@@ -4,7 +4,11 @@ import Select from '@codegouvfr/react-dsfr/SelectNext'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { tss } from 'tss-react'
 
-export const SelectOmphale = () => {
+type SelectOmphaleProps = {
+  onChange?: (value: string) => void
+}
+
+export const SelectOmphale = ({ onChange }: SelectOmphaleProps) => {
   const { classes } = useStyles()
   const [queryStates, setQueryStates] = useQueryStates({
     omphale: parseAsString,
@@ -59,14 +63,21 @@ export const SelectOmphale = () => {
     },
   ]
 
+  const handleChange = (value: string) => {
+    if (onChange) {
+      onChange(value)
+    }
+    setQueryStates({ omphale: value })
+  }
   const filteredScenarios = scenarios.filter((scenario) => scenario.id === queryStates.population)
   return (
     <Select
-      label=""
+      label="Scénario de projection de population"
+      hint="Le choix de scénario s'applique au global dans votre simulation, à l'échelle du bassin d'habitat ou des EPCI."
       className={classes.select}
       placeholder="Choix du scénario"
       nativeSelectProps={{
-        onChange: (event) => setQueryStates({ omphale: event.target.value }),
+        onChange: (event) => handleChange(event.target.value),
         value: queryStates.omphale ?? undefined,
       }}
       options={filteredScenarios}

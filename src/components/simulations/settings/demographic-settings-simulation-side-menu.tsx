@@ -1,37 +1,43 @@
 'use client'
 
 import { fr } from '@codegouvfr/react-dsfr'
+import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import React from 'react'
 import { DemographicSettingsCreationGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
-import { useEpci } from '~/hooks/use-epci'
+import { useEpcis } from '~/hooks/use-epcis'
 import styles from './simulation-side-menu.module.css'
 
 export default function DemographicSettingsSimulationSideMenu() {
-  const { data: epci } = useEpci()
+  const [epcisParam] = useQueryState('epcis', parseAsArrayOf(parseAsString).withDefault([]))
+  const { data: epcis } = useEpcis(epcisParam)
+
+  // Explicitly check the URL params, not the fetched data
+  const epciNames = epcisParam.length > 0 && epcis ? epcis.map((epci) => epci.name) : undefined
+
   const demographicSteps = [
     {
-      data: epci?.name,
+      data: epciNames,
       label: 'Territoire à étudier',
       path: '/simulation/choix-du-territoire',
-      queryKey: 'epci',
+      queryKeys: ['epci', 'epcis'],
       title: <span>Choix du territoire</span>,
     },
     {
       label: 'Cadrage temporel de la simulation',
       path: '/simulation/cadrage-temporel',
-      queryKey: 'projection',
+      queryKeys: ['projection'],
       title: <span>Déterminer l&apos;horizon de temps</span>,
     },
     {
       label: "Scénario de l'évolution démographique",
       path: '/simulation/parametrages-demographique',
-      queryKey: 'omphale',
+      queryKeys: ['omphale'],
       title: <span>Paramétrage évolution démographique</span>,
     },
     {
       label: 'Taux de résidences secondaires / logements vacants',
       path: '/simulation/taux-cibles-logements',
-      queryKey: 'tauxRS',
+      queryKeys: ['tauxRS'],
       title: <span>Paramétrage résidences secondaires et logements vacants</span>,
     },
   ]
@@ -47,13 +53,11 @@ export default function DemographicSettingsSimulationSideMenu() {
               </div>
               <span>{step.title}</span>
             </div>
-            {
-              <div className={styles.stepDelimitor}>
-                <div className={styles.badgeContainer}>
-                  <DemographicSettingsCreationGuideTag step={step} />
-                </div>
+            <div className={styles.stepDelimitor}>
+              <div className={styles.badgeContainer}>
+                <DemographicSettingsCreationGuideTag step={step} />
               </div>
-            }
+            </div>
           </React.Fragment>
         ))}
         <div className={styles.stepContainer}>

@@ -11,7 +11,8 @@ import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
 import { UploadDemographicEvolutionCustom } from '~/components/charts/upload-demographic-evolution-custom'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
-import { useMultipleDemographicEvolutionCustom } from '~/hooks/use-multiple-demographic-evolution-custom'
+import { useDemographicEvolutionCustom } from '~/hooks/use-demographic-evolution-custom'
+import { useEpcis } from '~/hooks/use-epcis'
 import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
 import { formatNumber } from '~/utils/format-numbers'
 import { roundPopulation } from '~/utils/round-chart-axis'
@@ -159,7 +160,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
   const [isUsingCustomData, setIsUsingCustomData] = useState(false)
 
   // Fetch all custom demographic data with a single query
-  const { data: allCustomData = [] } = useMultipleDemographicEvolutionCustom(queryStates.demographicEvolutionOmphaleCustomIds)
+  const { data: allCustomData = [] } = useDemographicEvolutionCustom(queryStates.demographicEvolutionOmphaleCustomIds)
 
   // Find custom data that matches the current EPCI and scenario (if provided)
   const customDataEpci = allCustomData.find((data) => data.epciCode === currentEpci) || null
@@ -179,6 +180,9 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
       setIsUsingCustomData(false)
     }
   }, [customDataEpci, currentEpci])
+  const { data: epcis } = useEpcis([currentEpci])
+  const currentEpciData = epcis?.[0]
+  const currentEpciName = currentEpciData?.name || ''
 
   const period = queryStates.projection ? queryStates.projection : '2030'
   const displayedScenarios = SCENARIOS.filter(
@@ -226,7 +230,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     <>
       {isUsingCustomData ? (
         <Alert
-          description={`Vous utilisez actuellement des données démographiques personnalisées importées pour ${currentEpci}. Les scénarios affichés utilisent ces données personnalisées.`}
+          description={`Vous utilisez actuellement des données démographiques personnalisées importées pour ${currentEpciName}. Les scénarios affichés utilisent ces données personnalisées.`}
           severity="warning"
           small
           className={fr.cx('fr-mb-2w')}

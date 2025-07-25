@@ -44,7 +44,7 @@ export default async function ParametragesDemographiquePage({ params, searchPara
     })
 
     // Add the custom IDs
-    customIds.forEach((id) => searchParamsObj.append('demographicEvolutionOmphaleCustomIds', id))
+    searchParamsObj.append('demographicEvolutionOmphaleCustomIds', customIds.join(','))
 
     redirect(`/simulation/${params.id}/modifier/parametrages-demographique?${searchParamsObj.toString()}`)
   }

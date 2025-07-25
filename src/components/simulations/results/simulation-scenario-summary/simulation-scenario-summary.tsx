@@ -81,14 +81,14 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
             label: 'Taux cible de logements vacants',
             tags: [
               <>
-                {shortTermVacancyRate && (
+                {shortTermVacancyRate !== undefined && (
                   <Tag key="shortTermVacancyRate">
                     Taux cible de logements vacants courte durée: {Number(shortTermVacancyRate * 100).toFixed(2)} %
                   </Tag>
                 )}
               </>,
               <>
-                {longTermVacancyRate && (
+                {longTermVacancyRate !== undefined && (
                   <Tag key="longTermVacancyRate">
                     Taux cible de logements vacants longue durée: {Number(longTermVacancyRate * 100).toFixed(2)} %
                   </Tag>

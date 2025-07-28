@@ -23,8 +23,8 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Validate file extension
-    const validExtensions = ['.xlsx', '.xls', '.csv']
+    // Validate file extension, support xls and xlsx in the future
+    const validExtensions = ['.csv']
     const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'))
 
     if (!validExtensions.includes(fileExtension)) {
@@ -79,14 +79,7 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
 
   return (
     <div className={fr.cx('fr-mb-3w')}>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".xlsx,.xls,.csv"
-        onChange={handleFileUpload}
-        style={{ display: 'none' }}
-        disabled={isProcessing}
-      />
+      <input ref={fileInputRef} type="file" accept=".csv" onChange={handleFileUpload} style={{ display: 'none' }} disabled={isProcessing} />
       <Button
         iconId="fr-icon-upload-line"
         onClick={() => fileInputRef.current?.click()}

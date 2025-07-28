@@ -6,11 +6,18 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
+import { useContactForm } from '~/hooks/use-contact-form'
 import { TContactForm, ZContactForm } from '~/schemas/contact-form'
 
 export const ContactForm: FC = () => {
   const { classes } = useStyles()
-  const { register } = useForm<TContactForm>({
+  const { submitContactForm, isLoading, error } = useContactForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<TContactForm>({
     resolver: zodResolver(ZContactForm),
     values: {
       consent: false,
@@ -22,24 +29,43 @@ export const ContactForm: FC = () => {
     },
   })
 
+  const onSubmit = async (data: TContactForm) => {
+    await submitContactForm(data)
+    if (!error) {
+      reset()
+    }
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
-        label="Prénom :"
+        label={
+          <span>
+            Prénom <span style={{ color: 'red' }}>*</span> :
+          </span>
+        }
         nativeInputProps={{
           autoComplete: 'given-name',
           name: 'firstname',
           placeholder: 'Votre prénom',
         }}
+        state={errors.firstname ? 'error' : 'default'}
+        stateRelatedMessage={errors.firstname?.message}
         {...register('firstname')}
       />
       <Input
-        label="Nom de famille :"
+        label={
+          <span>
+            Nom de famille <span style={{ color: 'red' }}>*</span> :
+          </span>
+        }
         nativeInputProps={{
           autoComplete: 'family-name',
           name: 'lastname',
           placeholder: 'Votre nom de famille',
         }}
+        state={errors.lastname ? 'error' : 'default'}
+        stateRelatedMessage={errors.lastname?.message}
         {...register('lastname')}
       />
 
@@ -55,6 +81,8 @@ export const ContactForm: FC = () => {
           placeholder: 'Votre adresse e-mail',
         }}
         hintText="Format attendu : nom@domaine.fr"
+        state={errors.email ? 'error' : 'default'}
+        stateRelatedMessage={errors.email?.message}
         {...register('email')}
       />
 
@@ -68,6 +96,8 @@ export const ContactForm: FC = () => {
           name: 'subject',
           placeholder: 'Sujet de votre demande',
         }}
+        state={errors.subject ? 'error' : 'default'}
+        stateRelatedMessage={errors.subject?.message}
         {...register('subject')}
       />
       <Input
@@ -82,6 +112,8 @@ export const ContactForm: FC = () => {
           name: 'message',
           placeholder: 'Votre message',
         }}
+        state={errors.message ? 'error' : 'default'}
+        stateRelatedMessage={errors.message?.message}
         {...register('message')}
       />
       <Checkbox
@@ -94,10 +126,12 @@ export const ContactForm: FC = () => {
               </span>
             ),
             nativeInputProps: {
-              name: 'consent',
+              ...register('consent'),
             },
           },
         ]}
+        state={errors.consent ? 'error' : 'default'}
+        stateRelatedMessage={errors.consent?.message}
       />
       <div className="fr-grid-row fr-grid-row--right">
         <Button
@@ -106,8 +140,9 @@ export const ContactForm: FC = () => {
           type="submit"
           iconPosition="right"
           iconId="fr-icon-send-plane-line"
+          disabled={isLoading}
         >
-          Envoyer ma demande
+          {isLoading ? 'Envoi en cours...' : 'Envoyer ma demande'}
         </Button>
       </div>
     </form>

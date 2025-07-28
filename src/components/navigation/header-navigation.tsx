@@ -33,11 +33,6 @@ const getMenuDisconnected = (pathname: string): MainNavigationProps.Item[] => [
     text: 'Ressources',
   },
   {
-    isActive: pathname === '/retours-d-experience',
-    linkProps: { href: '/retours-d-experience', target: '_self' },
-    text: "Retours d'expérience",
-  },
-  {
     isActive: pathname === '/statistiques',
     linkProps: { href: '/statistiques', target: '_self' },
     text: 'Statistiques',
@@ -86,11 +81,6 @@ const getMenuConnected = (pathname: string, isAdmin = false): MainNavigationProp
           href: '/ressources',
         },
         text: 'Ressources de nos partenaires',
-      },
-      {
-        isActive: pathname === '/retours-d-experience',
-        linkProps: { href: '/retours-d-experience', target: '_self' },
-        text: "Retours d'expérience",
       },
       {
         isActive: pathname === '/faq',

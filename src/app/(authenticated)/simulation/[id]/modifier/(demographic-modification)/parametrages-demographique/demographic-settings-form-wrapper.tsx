@@ -12,12 +12,22 @@ type DemographicSettingsFormWrapperProps = {
   populationEvolution: TPopulationDemographicEvolution
   omphaleEvolution: TOmphaleDemographicEvolution
   epcis: string[]
+  scenarioId: string
 }
 
-export const DemographicSettingsFormWrapper = ({ epcis, populationEvolution, omphaleEvolution }: DemographicSettingsFormWrapperProps) => {
+export const DemographicSettingsFormWrapper = ({
+  epcis,
+  populationEvolution,
+  omphaleEvolution,
+  scenarioId,
+}: DemographicSettingsFormWrapperProps) => {
   const [epciChart, setEpciChart] = useQueryState('epciChart')
   const { simulationSettings, setSimulationSettings } = useSimulationSettings()
-  const handleChange = (value: string) => setSimulationSettings({ ...simulationSettings, b2_scenario: value })
+  const handleChange = (value: string) =>
+    setSimulationSettings({
+      ...simulationSettings,
+      b2_scenario: value,
+    })
 
   useEffect(() => {
     if (!epciChart) {
@@ -30,7 +40,7 @@ export const DemographicSettingsFormWrapper = ({ epcis, populationEvolution, omp
   return (
     <DemographicSettingsHeader epcis={epcis}>
       <PopulationScenariosChart demographicEvolution={populationEvolution} />
-      <OmphaleScenariosChart demographicEvolution={omphaleEvolution} onChange={handleChange} />
+      <OmphaleScenariosChart demographicEvolution={omphaleEvolution} scenarioId={scenarioId} onChange={handleChange} />
     </DemographicSettingsHeader>
   )
 }

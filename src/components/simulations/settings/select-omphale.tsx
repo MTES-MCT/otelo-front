@@ -1,7 +1,8 @@
 'use client'
 
 import Select from '@codegouvfr/react-dsfr/SelectNext'
-import { parseAsString, useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
+import { useEffect } from 'react'
 import { tss } from 'tss-react'
 
 type SelectOmphaleProps = {
@@ -13,7 +14,14 @@ export const SelectOmphale = ({ onChange }: SelectOmphaleProps) => {
   const [queryStates, setQueryStates] = useQueryStates({
     omphale: parseAsString,
     population: parseAsString,
+    demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
+  const hasCustomData = queryStates.demographicEvolutionOmphaleCustomIds.length > 0
+  const selectValue = hasCustomData ? 'Central_C' : (queryStates.omphale ?? undefined)
+
+  useEffect(() => {
+    setQueryStates({ omphale: selectValue })
+  }, [selectValue])
 
   const scenarios = [
     {
@@ -78,9 +86,10 @@ export const SelectOmphale = ({ onChange }: SelectOmphaleProps) => {
       placeholder="Choix du scénario"
       nativeSelectProps={{
         onChange: (event) => handleChange(event.target.value),
-        value: queryStates.omphale ?? undefined,
+        value: selectValue,
       }}
       options={filteredScenarios}
+      disabled={hasCustomData}
     />
   )
 }

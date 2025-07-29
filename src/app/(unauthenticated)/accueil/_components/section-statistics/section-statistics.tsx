@@ -23,10 +23,8 @@ export const SectionStatistics: FC = () => {
 
           <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
             <div className={styles.statItem}>
-              <div className={styles.statValue}>14 600</div>
-              <p className={styles.statDescription}>
-                situations de <strong>mal logement résorbées</strong> (territoires concernés ayant fait le choix d'un scénario ambitieux)
-              </p>
+              <div className={styles.statValue}>220</div>
+              <p className={styles.statDescription}>le nombre de collectivités inscrites</p>
             </div>
           </div>
 

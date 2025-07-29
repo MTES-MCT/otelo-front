@@ -1,5 +1,4 @@
 import book from '@assets/img/book.svg'
-import ecosystem from '@assets/img/ecosystem.svg'
 import methodologie from '@assets/img/methodologie.svg'
 import { fr } from '@codegouvfr/react-dsfr'
 import { Tile } from '@codegouvfr/react-dsfr/Tile'
@@ -13,7 +12,7 @@ export const SectionServices = () => {
         <h2 className={fr.cx('fr-h2', 'fr-mb-3w')}>Les services en libre accès</h2>
 
         <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-6')}>
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={methodologie.src}
@@ -25,7 +24,7 @@ export const SectionServices = () => {
               linkProps={{ href: '/guide' }}
             />
           </div>
-          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-6')}>
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={book.src}
@@ -35,18 +34,6 @@ export const SectionServices = () => {
               titleAs="h3"
               desc="Mettez à jour vos connaissances sur l'urbanisme et l'habitat grâce aux ressources de nos partenaires et aux replays de nos webinaires."
               linkProps={{ href: '/ressources' }}
-            />
-          </div>
-          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
-            <Tile
-              classes={{ img: 'fr-mb-0' }}
-              imageUrl={ecosystem.src}
-              small
-              orientation="vertical"
-              title="Retours d'expérience"
-              titleAs="h3"
-              desc="Découvrez des exemples concrets d'autres territoires : diagnostics de leurs besoins en logement, extraits de documents d'urbanisme..."
-              linkProps={{ href: 'retours-d-experience' }}
             />
           </div>
         </div>

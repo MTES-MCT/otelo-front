@@ -155,7 +155,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
   const currentEpci = queryStates.epciChart || queryStates.epcis[0]
-  const { data } = demographicEvolution[currentEpci]
+  const { data, metadata } = demographicEvolution[currentEpci]
   const [chartData, setChartData] = useState<TOmphaleEvolutionWithCustom[]>(data)
   const [isUsingCustomData, setIsUsingCustomData] = useState(false)
 
@@ -177,6 +177,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
       )
       setIsUsingCustomData(true)
     } else {
+      setChartData(data)
       setIsUsingCustomData(false)
     }
   }, [customDataEpci, currentEpci])
@@ -285,7 +286,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
             <XAxis dataKey="year" />
             <Tooltip content={<OmphaleScenariosTooltip basePopulation={basePopulation as TOmphaleEvolutionWithCustom} />} />
 
-            <YAxis tickFormatter={(value) => roundPopulation(value).toString()} />
+            <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
           </LineChart>
         </ResponsiveContainer>
       </div>

@@ -9,6 +9,8 @@ const ZAccommodationRates = z.object({
     nbAccommodation: z.number(),
     year: z.number().optional(),
   }),
+  restructuringRate: z.number(),
+  disappearanceRate: z.number(),
 })
 
 export type TAccommodationRates = z.infer<typeof ZAccommodationRates>

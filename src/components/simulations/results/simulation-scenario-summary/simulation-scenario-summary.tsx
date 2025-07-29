@@ -43,6 +43,8 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
   const shortTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_courte
   const longTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_longue
   const vacancyRate = (shortTermVacancyRate ?? 0) + (longTermVacancyRate ?? 0)
+  const restructuringRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_restructuration
+  const disappearanceRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_disparition
 
   const settings = [
     {
@@ -95,6 +97,26 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
                 )}
               </>,
             ],
+          },
+        ]
+      : []),
+    ...(restructuringRate
+      ? [
+          {
+            iconId: 'ri-percent-line',
+            key: 'tauxRestructuration',
+            label: 'Taux annuel de restructuration',
+            tags: [<Tag key="tauxRestructuration">Taux annuel de restructuration : {Number(restructuringRate * 100).toFixed(2)} %</Tag>],
+          },
+        ]
+      : []),
+    ...(disappearanceRate
+      ? [
+          {
+            iconId: 'ri-percent-line',
+            key: 'tauxDisparition',
+            label: 'Taux annuel de disparition',
+            tags: [<Tag key="tauxDisparition">Taux annuel de disparition : {Number(disappearanceRate * 100).toFixed(2)} %</Tag>],
           },
         ]
       : []),

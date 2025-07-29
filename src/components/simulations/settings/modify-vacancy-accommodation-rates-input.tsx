@@ -3,18 +3,17 @@
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
-import { LongTermAccomodationRange } from '~/components/simulations/settings/long-term-accomodation-range'
+import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
+import { ModifyLongTermAccomodationRange } from '~/components/simulations/settings/modify-long-term-accomodation-range'
 
-type VacancyAccommodationRatesInputProps = {
+type ModifyVacancyAccommodationRatesInputProps = {
   epci: string
-  creationMode: boolean
 }
 
-export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputProps> = ({ epci, creationMode }) => {
-  const { rates } = useEpcisRates()
+export const ModifyVacancyAccommodationRatesInput: FC<ModifyVacancyAccommodationRatesInputProps> = ({ epci }) => {
+  const { simulationSettings } = useSimulationSettings()
   const { classes } = useStyles()
-  const ratesByEpci = rates[epci]
+  const ratesByEpci = simulationSettings.epciScenarios[epci]
   const shortTermVacancyRate = ratesByEpci.shortTermVacancyRate
   const longTermVacancyRate = ratesByEpci.longTermVacancyRate
 
@@ -42,7 +41,7 @@ export const VacancyAccommodationRatesInput: FC<VacancyAccommodationRatesInputPr
           />
         </div>
         <div className={classes.flex}>
-          <LongTermAccomodationRange creationMode={creationMode} epci={epci} />
+          <ModifyLongTermAccomodationRange epci={epci} />
         </div>
       </div>
     </div>

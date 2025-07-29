@@ -1,7 +1,7 @@
 'use client'
 
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
-import { RatesProvider } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { RatesProvider } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 
 interface SimulationFormContextWrapperProps {

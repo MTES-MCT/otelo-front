@@ -2,7 +2,7 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
@@ -21,26 +21,35 @@ interface CreationGuideTagProps {
 export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
   const { data, disabled = false, label, path, queryKeys } = step
   const [value] = useQueryState(queryKeys[0])
+  const pathname = usePathname()
 
-  const { classes } = useStyles({ disabled, value, queryKeys })
+  // Simulate value for steps with empty queryKeys based on path conditions
+  const shouldSimulateValue =
+    (queryKeys.length === 0 && pathname === path) ||
+    (label === 'Taux de résidences secondaires / logements vacants' && pathname === '/simulation/taux-restructuration-disparition') ||
+    (label === 'Taux de restructuration et taux de disparition' && pathname === '/simulation/validation-parametrage')
+
+  const effectiveValue = shouldSimulateValue ? step.label : value
+
+  const { classes } = useStyles({ disabled, value: effectiveValue, queryKeys })
   const searchParams = useSearchParams()
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
-  let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
+  let formattedValue = effectiveValue && Number(effectiveValue) < 1 ? (Number(effectiveValue) * 100).toFixed(2) : effectiveValue
 
   if (data && typeof data === 'string') {
     formattedValue = data
   }
 
   if (queryKeys.includes('omphale')) {
-    formattedValue = getOmphaleLabel(value)
+    formattedValue = getOmphaleLabel(effectiveValue)
   }
   const defaultTagProps = {
     value: formattedValue,
   }
 
-  const tagProps = value
+  const tagProps = effectiveValue
     ? {
         iconId: 'fr-icon-checkbox-circle-line' as const,
         ...defaultTagProps,

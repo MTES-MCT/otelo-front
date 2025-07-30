@@ -6,6 +6,8 @@ export interface RateSettings {
   longTermVacancyRate: number
   shortTermVacancyRate: number
   txRS: number
+  restructuringRate: number
+  disappearanceRate: number
 }
 
 interface RatesState {
@@ -31,6 +33,8 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
         shortTermVacancyRate: rates.shortTermVacancyRate,
         txRS: rates.txRs,
         initialRates: rates,
+        restructuringRate: rates.restructuringRate,
+        disappearanceRate: rates.disappearanceRate,
       },
     }
   }, {})
@@ -47,7 +51,17 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
     }))
   }
 
-  return <RatesSettingsContext.Provider value={{ rates, updateRates, defaultRates }}>{children}</RatesSettingsContext.Provider>
+  return (
+    <RatesSettingsContext.Provider
+      value={{
+        rates,
+        updateRates,
+        defaultRates,
+      }}
+    >
+      {children}
+    </RatesSettingsContext.Provider>
+  )
 }
 
 export const useEpcisRates = () => {

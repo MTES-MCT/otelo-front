@@ -5,24 +5,22 @@ import Alert from '@codegouvfr/react-dsfr/Alert'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { AccommodationRateInput } from '~/components/simulations/settings/accommodation-rate-input'
-import { VacancyAccommodationRatesInput } from '~/components/simulations/settings/vacancy-accommodation-rates-input'
+import { CreateAccommodationRateInput } from '~/components/simulations/settings/create-accommodation-rate-input'
+import { CreateVacancyAccommodationRatesInput } from '~/components/simulations/settings/create-vacancy-accommodation-rates-input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
 import { formatNumber } from '~/utils/format-numbers'
 
-interface EpcisAccommodationRatesProps {
+interface CreateEpcisAccomodationRatesProps {
   epcis: Array<{ code: string; name: string; region: string }>
-  creationMode?: boolean
 }
 
 interface TabChildrenProps {
   epci: string
   rates: TEpcisAccommodationRates
-  creationMode: boolean
 }
 
-const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
+const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
   const { classes } = useStyles()
   const epciRates = rates?.[epci]
   if (!epciRates) return null
@@ -48,21 +46,21 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates, creationMode }) => {
         />
       </div>
       <div className={classes.inputsContainer}>
-        <VacancyAccommodationRatesInput creationMode={creationMode} epci={epci} />
-        <AccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
+        <CreateVacancyAccommodationRatesInput epci={epci} />
+        <CreateAccommodationRateInput txKey="txRS" epci={epci} label="Taux cible de résidences secondaires" />
       </div>
     </>
   )
 }
 
-export const EpcisAccommodationRates: FC<EpcisAccommodationRatesProps> = ({ epcis, creationMode = false }) => {
+export const CreateEpcisAccommodationRates: FC<CreateEpcisAccomodationRatesProps> = ({ epcis }) => {
   const { classes } = useStyles()
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
   if (!rates) return null
 
   const tabs = epcis.map((epci) => ({
-    content: <TabChildren creationMode={creationMode} epci={epci.code} rates={rates} />,
+    content: <TabChildren epci={epci.code} rates={rates} />,
     iconId: 'ri-road-map-line' as RiIconClassName,
     label: epci.name,
   }))

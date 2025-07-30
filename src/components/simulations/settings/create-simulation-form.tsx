@@ -7,9 +7,10 @@ import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryStates } from 'n
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
-import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
+import { CreateValidationAccommodationsSettingsRates } from '~/components/simulations/validation-settings/create-validation-accommodation-rates'
+import { CreateValidationRestructurationDisparitionRates } from '~/components/simulations/validation-settings/create-validation-restructuration-disparition-rates'
 import { ValidationSettingsInputEpci } from '~/components/simulations/validation-settings/validation-settings-input-epci'
-import { ValidationSettingsRates } from '~/components/simulations/validation-settings/validation-settings-rates'
 import { useCreateSimulation } from '~/hooks/use-create-simulation'
 import { TInitSimulationDto, ZInitSimulationDto } from '~/schemas/simulation'
 import { getOmphaleLabel } from '~/utils/omphale-label'
@@ -60,6 +61,8 @@ export const CreateSimulationForm: FC = () => {
                 b2_tx_vacance: epciRates.vacancyRate ?? undefined,
                 b2_tx_vacance_longue: epciRates.longTermVacancyRate ?? undefined,
                 b2_tx_vacance_courte: epciRates.shortTermVacancyRate ?? undefined,
+                b2_tx_restructuration: epciRates.restructuringRate ?? undefined,
+                b2_tx_disparition: epciRates.disappearanceRate ?? undefined,
                 baseEpci: queryStates.baseEpci === epciCode,
               }
             }
@@ -116,7 +119,8 @@ export const CreateSimulationForm: FC = () => {
           nativeInputProps={{ value: getOmphaleLabel(queryStates.omphale as string) as string }}
         />
       </div>
-      <ValidationSettingsRates />
+      <CreateValidationAccommodationsSettingsRates />
+      <CreateValidationRestructurationDisparitionRates />
       <div className={classes.buttonContainer}>
         <Button priority="secondary" onClick={handleSubmit(onSubmitForBadHousing)} disabled={createSimulationForBadHousing.isPending}>
           Paramétrer le mal-logement

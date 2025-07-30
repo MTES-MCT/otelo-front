@@ -37,8 +37,14 @@ export default function DemographicSettingsSimulationSideMenu() {
     {
       label: 'Taux de résidences secondaires / logements vacants',
       path: '/simulation/taux-cibles-logements',
-      queryKeys: ['tauxRS'],
+      queryKeys: [],
       title: <span>Paramétrage résidences secondaires et logements vacants</span>,
+    },
+    {
+      label: 'Taux de restructuration et taux de disparition',
+      path: '/simulation/taux-restructuration-disparition',
+      queryKeys: [],
+      title: <span>Paramétrage des dynamiques de renouvellement du parc de logements</span>,
     },
   ]
 

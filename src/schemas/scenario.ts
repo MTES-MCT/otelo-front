@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { ZCommonDateFields } from '~/schemas/common-date-fields'
+import { ZDemographicEvolutionOmphaleCustom } from '~/schemas/demographic-evolution-custom'
 
 export enum ESourceB11 {
   RP = 'RP',
@@ -59,6 +60,7 @@ export const ZScenario = ZCommonDateFields.extend({
   source_b11: z.nativeEnum(ESourceB11),
   source_b14: z.union([z.literal('RP'), z.literal('Filo'), z.literal('FF')]),
   source_b15: z.union([z.literal('RP'), z.literal('Filo')]),
+  demographicEvolutionOmphaleCustom: z.array(ZDemographicEvolutionOmphaleCustom),
 })
 
 export type TScenario = z.infer<typeof ZScenario>

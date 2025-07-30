@@ -1,25 +1,21 @@
 import { Range } from '@codegouvfr/react-dsfr/Range'
 import { FC, useEffect } from 'react'
-import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 
-interface LongTermAccomodationRangeProps {
+interface CreateLongTermAccomodationRangeProps {
   epci: string
-  creationMode: boolean
 }
-
-export const LongTermAccomodationRange: FC<LongTermAccomodationRangeProps> = ({ epci, creationMode }) => {
+export const CreateLongTermAccomodationRange: FC<CreateLongTermAccomodationRangeProps> = ({ epci }) => {
   const { defaultRates, rates, updateRates } = useEpcisRates()
   const currentRates = rates[epci]
   const defaultEpciRates = defaultRates[epci]
   useEffect(() => {
-    if (creationMode) {
-      const reductionAmount = (15 / 100) * defaultEpciRates.longTermVacancyRate
-      const longTermRate = defaultEpciRates.longTermVacancyRate - reductionAmount
+    const reductionAmount = (15 / 100) * defaultEpciRates.longTermVacancyRate
+    const longTermRate = defaultEpciRates.longTermVacancyRate - reductionAmount
 
-      updateRates(epci, {
-        longTermVacancyRate: longTermRate,
-      })
-    }
+    updateRates(epci, {
+      longTermVacancyRate: longTermRate,
+    })
   }, [])
 
   const getCurrentRangeValue = (): number => {

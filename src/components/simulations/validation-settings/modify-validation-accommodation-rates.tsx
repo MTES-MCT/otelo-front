@@ -6,21 +6,18 @@ import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import {
-  RateSettings,
-  useEpcisRates,
-} from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
+import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import { useBassinEpcis } from '~/hooks/use-bassin-epcis'
 import { useEpcis } from '~/hooks/use-epcis'
+import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
 
 interface TabChildrenProps {
-  epci: string
-  rates: RateSettings
+  rates: TEpcisAccommodationRates[string]
 }
 
 const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
   const { classes } = useStyles()
-  const { shortTermVacancyRate, longTermVacancyRate, txRS } = rates
+  const { shortTermVacancyRate, longTermVacancyRate, txRs } = rates
 
   return (
     <div className={classes.container}>
@@ -46,27 +43,27 @@ const TabChildren: FC<TabChildrenProps> = ({ rates }) => {
         label=""
         iconId="ri-percent-line"
         hintText="Taux cible de résidences secondaires"
-        nativeInputProps={{ value: (Number(txRS) * 100).toFixed(2) }}
+        nativeInputProps={{ value: (Number(txRs) * 100).toFixed(2) }}
       />
     </div>
   )
 }
 
-type ValidationSettingsRatesProps = {
+type ModifyValidationSettingsRatesProps = {
   epcis?: string[]
 }
-export const ValidationSettingsRates: FC<ValidationSettingsRatesProps> = ({ epcis }) => {
+export const ModifyValidationAccommodationsSettingsRates: FC<ModifyValidationSettingsRatesProps> = ({ epcis }) => {
   const { data: epcisList } = useEpcis(epcis)
   const { data: bassinEpcis } = useBassinEpcis()
   const [queryStates] = useQueryStates({
     baseEpci: parseAsString,
   })
-  const { rates } = useEpcisRates()
+  const { simulationSettings } = useSimulationSettings()
 
-  const tabs = Object.entries(rates)
+  const tabs = Object.entries(simulationSettings.epciScenarios)
     .map(([epci, rates]) => ({
       epci,
-      content: <TabChildren epci={epci} rates={rates} />,
+      content: <TabChildren rates={rates} />,
       iconId: 'ri-road-map-line' as RiIconClassName,
       label: [...(epcisList || []), ...(bassinEpcis || [])]?.find((bassinEpci) => bassinEpci.code === epci)?.name,
     }))

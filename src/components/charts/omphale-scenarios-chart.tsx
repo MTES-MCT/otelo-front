@@ -2,13 +2,17 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
+import Button from '@codegouvfr/react-dsfr/Button'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { UploadDemographicEvolutionCustom } from '~/components/charts/upload-demographic-evolution-custom'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
+import { useDemographicEvolutionCustom } from '~/hooks/use-demographic-evolution-custom'
+import { useEpcis } from '~/hooks/use-epcis'
 import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
 import { formatNumber } from '~/utils/format-numbers'
 import { roundPopulation } from '~/utils/round-chart-axis'
@@ -16,6 +20,7 @@ import { roundPopulation } from '~/utils/round-chart-axis'
 interface DemographicEvolutionChartProps {
   demographicEvolution: TOmphaleDemographicEvolution
   onChange?: (e: string) => void
+  scenarioId?: string
 }
 
 const SCENARIOS = [
@@ -82,14 +87,28 @@ const SCENARIOS = [
     queryValue: 'PH_C',
     stroke: '#169B62',
   },
+  {
+    dataKey: 'custom',
+    id: 'custom',
+    name: 'Personnalisé',
+    queryValue: 'PH_C',
+    stroke: '#31c51d',
+  },
 ]
 
-export const OmphaleScenariosTooltip = ({
+type TOmphaleEvolutionWithCustom = TOmphaleEvolution & { custom?: number }
+
+const OmphaleScenariosTooltip = ({
   active,
   basePopulation,
   label,
   payload,
-}: { active?: boolean; label?: string; payload?: TooltipPayload<ValueType, NameType>[]; basePopulation: TOmphaleEvolution }) => {
+}: {
+  active?: boolean
+  label?: string
+  payload?: TooltipPayload<ValueType, NameType>[]
+  basePopulation: TOmphaleEvolution
+}) => {
   const { classes } = useStyles()
   if (!active || !payload?.length) return null
   return (
@@ -124,7 +143,7 @@ const findMaxValueYear = (data: TOmphaleEvolution[], scenarioKey?: string) => {
   }, data[0]).year
 }
 
-export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution, onChange }) => {
+export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution, onChange, scenarioId }) => {
   const { classes } = useStyles()
 
   const [queryStates, setQueryStates] = useQueryStates({
@@ -133,37 +152,110 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     projection: parseAsString,
     epciChart: parseAsString.withDefault(''),
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
+    demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
-  const { data, metadata } = demographicEvolution[queryStates.epciChart || queryStates.epcis[0]]
+  const currentEpci = queryStates.epciChart || queryStates.epcis[0]
+  const { data, metadata } = demographicEvolution[currentEpci]
+  const [chartData, setChartData] = useState<TOmphaleEvolutionWithCustom[]>(data)
+  const [isUsingCustomData, setIsUsingCustomData] = useState(false)
+
+  // Fetch all custom demographic data with a single query
+  const { data: allCustomData = [] } = useDemographicEvolutionCustom(queryStates.demographicEvolutionOmphaleCustomIds)
+
+  // Find custom data that matches the current EPCI and scenario (if provided)
+  const customDataEpci = allCustomData.find((data) => data.epciCode === currentEpci) || null
+
+  // Transform custom data to match the chart format if available
+  useEffect(() => {
+    if (customDataEpci && customDataEpci.data) {
+      // Only use custom data if it matches the current EPCI and scenario
+      setChartData(
+        data.map((item) => {
+          const yearCustomData = customDataEpci.data.find((d) => d.year === item.year)
+          return { ...item, custom: yearCustomData?.value || 0 }
+        }),
+      )
+      setIsUsingCustomData(true)
+    } else {
+      setChartData(data)
+      setIsUsingCustomData(false)
+    }
+  }, [customDataEpci, currentEpci])
+  const { data: epcis } = useEpcis([currentEpci])
+  const currentEpciData = epcis?.[0]
+  const currentEpciName = currentEpciData?.name || ''
 
   const period = queryStates.projection ? queryStates.projection : '2030'
-  const displayedScenarios = SCENARIOS.filter((scenario) => scenario.id === queryStates.population).map((scenario) => ({
-    ...scenario,
-    stroke: queryStates.omphale
-      ? scenario.queryValue === queryStates.omphale
-        ? scenario.stroke
-        : `${scenario.stroke}33`
-      : scenario.stroke,
-    strokeWidth: queryStates.omphale && scenario.queryValue === queryStates.omphale ? 2 : 1,
-  }))
-  const basePopulation = data.find((item) => item.year === 2021) as TOmphaleEvolution
-  const popEvolution = data.find((item) => item.year === Number(period)) as TOmphaleEvolution
+  const displayedScenarios = SCENARIOS.filter(
+    (scenario) => scenario.id === queryStates.population || (isUsingCustomData && scenario.dataKey === 'custom'),
+  ).map((scenario) => {
+    const isActive = scenario.queryValue === queryStates.omphale || (isUsingCustomData && scenario.dataKey === 'custom')
+    return {
+      ...scenario,
+      stroke: queryStates.omphale ? (isActive ? scenario.stroke : `${scenario.stroke}33`) : scenario.stroke,
+      strokeWidth: isActive ? 2 : 1,
+    }
+  })
+
+  const basePopulation = chartData.find((item) => item.year === 2021)
+  const popEvolution = chartData.find((item) => item.year === Number(period))
   const formattedOmphale = queryStates.omphale?.replace('Central_', 'central').replace('PB_', 'pb').replace('PH_', 'ph')
-  const evol = popEvolution[formattedOmphale as keyof typeof popEvolution] - basePopulation[formattedOmphale as keyof typeof basePopulation]
-  const maxYear = findMaxValueYear(data, formattedOmphale)
+  const basePopulationValue = isUsingCustomData ? basePopulation?.custom : basePopulation?.[formattedOmphale as keyof typeof basePopulation]
+  const popEvolutionValue = isUsingCustomData ? popEvolution?.custom : popEvolution?.[formattedOmphale as keyof typeof popEvolution]
+  const evol = basePopulationValue && popEvolutionValue ? popEvolutionValue - basePopulationValue : 0
+  const maxYear = findMaxValueYear(chartData, formattedOmphale)
+
+  const onDeleteCustomData = async () => {
+    if (!customDataEpci?.id) return
+
+    try {
+      // Call the delete API
+      const response = await fetch(`/api/demographic-evolution-custom/${customDataEpci.id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete custom demographic data')
+      }
+
+      // Remove the deleted ID from search params
+      const remainingIds = queryStates.demographicEvolutionOmphaleCustomIds.filter((id) => id !== customDataEpci.id)
+      await setQueryStates({ demographicEvolutionOmphaleCustomIds: remainingIds })
+    } catch (error) {
+      console.error('Error deleting custom demographic data:', error)
+      alert('Erreur lors de la suppression des données personnalisées')
+    }
+  }
 
   return (
     <>
-      <Alert
-        description="Les scénarios d'évolution proposés sont basés sur votre choix de projection par population à l'étape précédente.
-        Vous avez la possibilité de revenir à l'étape précèdente pour modifier votre choix de projection par population."
-        severity="info"
-        small
-        className={fr.cx('fr-mb-2w')}
-      />
+      {isUsingCustomData ? (
+        <Alert
+          description={`Vous utilisez actuellement des données démographiques personnalisées importées pour ${currentEpciName}. Les scénarios affichés utilisent ces données personnalisées.`}
+          severity="warning"
+          small
+          className={fr.cx('fr-mb-2w')}
+        />
+      ) : (
+        <Alert
+          description="Les scénarios d'évolution proposés sont basés sur votre choix de projection par population à l'étape précédente.
+          Vous avez la possibilité de revenir à l'étape précèdente pour modifier votre choix de projection par population."
+          severity="info"
+          small
+          className={fr.cx('fr-mb-2w')}
+        />
+      )}
+      <div className={fr.cx('fr-mb-2w')}>
+        <UploadDemographicEvolutionCustom epciCode={currentEpci} scenarioId={scenarioId} />
+        {isUsingCustomData && (
+          <Button iconId="fr-icon-delete-line" onClick={onDeleteCustomData} priority="tertiary" size="small" className={fr.cx('fr-mt-1w')}>
+            Supprimer les données personnalisées
+          </Button>
+        )}
+      </div>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart width={500} height={300} data={data}>
+          <LineChart width={500} height={300} data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
 
             {displayedScenarios.map(({ dataKey, name, queryValue, stroke, strokeWidth }) => (
@@ -192,7 +284,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
             ))}
 
             <XAxis dataKey="year" />
-            <Tooltip content={<OmphaleScenariosTooltip basePopulation={basePopulation} />} />
+            <Tooltip content={<OmphaleScenariosTooltip basePopulation={basePopulation as TOmphaleEvolutionWithCustom} />} />
 
             <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
           </LineChart>

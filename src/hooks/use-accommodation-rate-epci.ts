@@ -19,7 +19,7 @@ export const useAccommodationRatesByEpci = (epcis: Array<string>) => {
 
   const { data, isLoading } = useQuery({
     enabled: !!epcis.length,
-    queryFn: () => getAccommodationRatesByEpci(),
+    queryFn: getAccommodationRatesByEpci,
     queryKey: ['accommodation-rates-by-epci', epcis],
   })
   return { data, isLoading }

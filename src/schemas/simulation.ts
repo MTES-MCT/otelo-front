@@ -35,14 +35,17 @@ export const ZInitSimulationDto = z.object({
     epcis: z.record(
       z.string(),
       z.object({
-        b2_tx_rs: z.number().optional(),
-        b2_tx_vacance: z.number().optional(),
-        b2_tx_vacance_longue: z.number().optional(),
-        b2_tx_vacance_courte: z.number().optional(),
+        b2_tx_rs: z.number(),
+        b2_tx_vacance: z.number(),
+        b2_tx_vacance_longue: z.number(),
+        b2_tx_vacance_courte: z.number(),
+        b2_tx_restructuration: z.number(),
+        b2_tx_disparition: z.number(),
         baseEpci: z.boolean(),
       }),
     ),
     projection: z.number(),
+    demographicEvolutionOmphaleCustomIds: z.array(z.string().uuid()).optional(),
   }),
   epciGroupName: z.string().optional().nullable(),
   epciGroupId: z.string().optional().nullable(),
@@ -72,6 +75,7 @@ export const ZUpdateBadHousingSimulationDto = z.object({
     isConfidential: true,
     projection: true,
     updatedAt: true,
+    demographicEvolutionOmphaleCustom: true,
   }),
 })
 
@@ -89,6 +93,8 @@ export const ZUpdateDemographicSimulationDto = z.object({
         b2_tx_vacance: z.number().optional(),
         b2_tx_vacance_courte: z.number().optional(),
         b2_tx_vacance_longue: z.number().optional(),
+        b2_tx_restructuration: z.number().optional(),
+        b2_tx_disparition: z.number().optional(),
       }),
     ),
     projection: z.number(),

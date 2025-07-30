@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { tss } from 'tss-react'
-import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/taux-cibles-logements/rates-provider'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import { useUpdateDemographicSimulation } from '~/hooks/use-update-simulation'
 import { TUpdateDemographicSimulationDto, ZUpdateDemographicSimulationDto } from '~/schemas/simulation'
@@ -13,8 +12,6 @@ import { TUpdateDemographicSimulationDto, ZUpdateDemographicSimulationDto } from
 export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
   const { classes } = useStyles()
   const updateSimulationForResults = useUpdateDemographicSimulation()
-
-  const { rates } = useEpcisRates()
 
   const { simulationSettings } = useSimulationSettings()
   const { b2_scenario, projection } = simulationSettings
@@ -30,13 +27,15 @@ export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
       scenario: {
         id: simulationSettings.id,
         b2_scenario,
-        epciScenarios: Object.entries(rates).reduce(
+        epciScenarios: Object.entries(simulationSettings.epciScenarios).reduce(
           (acc, [epci, rates]) => {
             acc[epci] = {
-              b2_tx_rs: rates.txRS ?? undefined,
+              b2_tx_rs: rates.txRs ?? undefined,
               b2_tx_vacance: (rates.shortTermVacancyRate ?? 0) + (rates.longTermVacancyRate ?? 0),
               b2_tx_vacance_courte: rates.shortTermVacancyRate ?? undefined,
               b2_tx_vacance_longue: rates.longTermVacancyRate ?? undefined,
+              b2_tx_restructuration: rates.restructuringRate ?? undefined,
+              b2_tx_disparition: rates.disappearanceRate ?? undefined,
             }
             return acc
           },

@@ -33,6 +33,12 @@ export default function UpdateDemographicSettingsSimulationSideMenu({ id }: Upda
       title: <span>Paramétrage résidences secondaires et logements vacants</span>,
       value: 'Taux de résidences secondaires / logements vacants',
     },
+    {
+      label: 'Taux de restructuration et taux de disparition',
+      path: `/simulation/${id}/modifier/taux-restructuration-disparition`,
+      title: <span>Paramétrage des dynamiques de renouvellement du parc de logements</span>,
+      value: 'Taux de restructuration et taux de disparition',
+    },
   ]
 
   return (

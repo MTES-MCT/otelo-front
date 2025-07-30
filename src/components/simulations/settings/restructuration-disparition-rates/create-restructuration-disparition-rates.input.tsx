@@ -73,9 +73,9 @@ export const CreateRestructurationDisparitionRatesInput: FC<CreateRestructuratio
         />
       </div>
       <p>
-        Avec ce paramétrage, le rythme de renouvellement urbain impliquerait une{' '}
-        <strong>{urbanRenewalAccommodationsTotal > 0 ? 'augmentation' : 'diminution'}</strong> de{' '}
-        <strong>{urbanRenewalAccommodationsTotal}</strong> logements par an.
+        Le rythme de renouvellement urbain impliquerait une{' '}
+        <strong>{restructuringRate > disappearanceRate ? 'diminution' : 'hausse'}</strong> du besoin en logements supplémentaires à hauteur
+        de <strong>{urbanRenewalAccommodationsTotal}</strong> logements par an.
       </p>
     </div>
   )

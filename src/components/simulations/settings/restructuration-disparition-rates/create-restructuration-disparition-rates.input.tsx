@@ -3,6 +3,7 @@
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC, useState } from 'react'
 import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
+import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 
 type CreateRestructurationDisparitionRatesInputProps = {
   epci: string
@@ -10,6 +11,9 @@ type CreateRestructurationDisparitionRatesInputProps = {
 
 export const CreateRestructurationDisparitionRatesInput: FC<CreateRestructurationDisparitionRatesInputProps> = ({ epci }) => {
   const { rates, updateRates } = useEpcisRates()
+  const { data: accommodationRates } = useAccommodationRatesByEpci([epci])
+  const accommodationRate = accommodationRates?.[epci]
+  const urbanRenewalAccommodations = accommodationRate?.urbanRenewal ?? 0
   const ratesByEpci = rates[epci]
   const restructuringRate = ratesByEpci.restructuringRate
   const disappearanceRate = ratesByEpci.disappearanceRate
@@ -42,29 +46,37 @@ export const CreateRestructurationDisparitionRatesInput: FC<CreateRestructuratio
     }
     updateRates(epci, { disappearanceRate: value / 100 })
   }
+  const urbanRenewalAccommodationsTotal = Math.round(Math.abs(disappearanceRate - restructuringRate) * urbanRenewalAccommodations)
 
   return (
-    <div className="fr-flex fr-flex-gap-4v">
-      <Input
-        className="fr-width-full"
-        iconId="ri-percent-line"
-        label="Taux annuel de restructuration"
-        nativeInputProps={{
-          type: 'text',
-          value: restructuringRateInput,
-          onChange: handleRestructuringRateChange,
-        }}
-      />
-      <Input
-        className="fr-width-full"
-        iconId="ri-percent-line"
-        label="Taux annuel de disparition"
-        nativeInputProps={{
-          type: 'text',
-          value: disappearanceRateInput,
-          onChange: handleDisappearanceRateChange,
-        }}
-      />
+    <div className="fr-flex fr-direction-column">
+      <div className="fr-flex fr-flex-gap-4v">
+        <Input
+          className="fr-width-full"
+          iconId="ri-percent-line"
+          label="Taux annuel de restructuration"
+          nativeInputProps={{
+            type: 'text',
+            value: restructuringRateInput,
+            onChange: handleRestructuringRateChange,
+          }}
+        />
+        <Input
+          className="fr-width-full"
+          iconId="ri-percent-line"
+          label="Taux annuel de disparition"
+          nativeInputProps={{
+            type: 'text',
+            value: disappearanceRateInput,
+            onChange: handleDisappearanceRateChange,
+          }}
+        />
+      </div>
+      <p>
+        Le rythme de renouvellement urbain impliquerait une{' '}
+        <strong>{restructuringRate > disappearanceRate ? 'diminution' : 'hausse'}</strong> du besoin en logements supplémentaires à hauteur
+        de <strong>{urbanRenewalAccommodationsTotal}</strong> logements par an.
+      </p>
     </div>
   )
 }

@@ -33,6 +33,7 @@ function transformInitialSettings(initialSettings: SimulationInitialSettings): S
       longTermVacancyRate: scenario.b2_tx_vacance_longue,
       shortTermVacancyRate: scenario.b2_tx_vacance_courte,
       txRs: scenario.b2_tx_rs,
+      urbanRenewal: 0,
       vacancy: {
         nbAccommodation: 0,
         year: undefined,

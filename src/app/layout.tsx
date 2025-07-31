@@ -47,6 +47,7 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                     <main className={classes.main}>{children}</main>
                     <Footer
                       accessibility="non compliant"
+                      accessibilityLinkProps={{ href: '/accessibilite' }}
                       brandTop={<BrandTop />}
                       homeLinkProps={{
                         href: '/',

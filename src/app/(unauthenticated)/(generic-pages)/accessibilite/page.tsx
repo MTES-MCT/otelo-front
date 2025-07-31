@@ -6,9 +6,9 @@ export default function AccessibilitePage() {
       </h1>
 
       <p>
-        Le Ministère de la Transition Écologique s'engage à rendre le site internet
-        Otelo (<a href="http://otelo.beta.gouv.fr">otelo.beta.gouv.fr</a>) accessible conformément à l'article 47 de la
-        loi n° 2005-102 du 11 février 2005.
+        Le Ministère de la Transition Écologique s'engage à rendre le site internet Otelo (
+        <a href="http://otelo.beta.gouv.fr">otelo.beta.gouv.fr</a>) accessible conformément à l'article 47 de la loi n° 2005-102 du 11
+        février 2005.
       </p>
 
       <h2>
@@ -16,8 +16,7 @@ export default function AccessibilitePage() {
       </h2>
 
       <p>
-        Otelo (otelo.beta.gouv.fr) est <strong>non conforme</strong> avec le référentiel général d'amélioration de l'
-        accessibilité (RGAA).
+        Otelo (otelo.beta.gouv.fr) est <strong>non conforme</strong> avec le référentiel général d'amélioration de l' accessibilité (RGAA).
       </p>
 
       <h2>
@@ -116,13 +115,14 @@ export default function AccessibilitePage() {
       </h2>
 
       <p>
-        Si vous n'arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable
-        du site internet pour être orienté vers une alternative accessible ou obtenir le contenu sous une
-        autre forme.
+        Si vous n'arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable du site internet pour être
+        orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.
       </p>
 
       <ul>
-        <li>Envoyer un message : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a></li>
+        <li>
+          Envoyer un message : <a href="mailto:otelo@beta.gouv.fr">otelo@beta.gouv.fr</a>
+        </li>
         <li>Contacter le Ministère de la Transition Écologique : Tour Séquoia 92055 La Défense Cedex France</li>
       </ul>
 
@@ -133,17 +133,29 @@ export default function AccessibilitePage() {
       <p>Cette procédure est à utiliser dans le cas suivant.</p>
 
       <p>
-        Vous avez signalé au responsable du site internet un défaut d'accessibilité qui vous empêche d'
-        accéder à un contenu ou à un des services du portail et vous n'avez pas obtenu de réponse
-        satisfaisante.
+        Vous avez signalé au responsable du site internet un défaut d'accessibilité qui vous empêche d' accéder à un contenu ou à un des
+        services du portail et vous n'avez pas obtenu de réponse satisfaisante.
       </p>
 
       <ul>
-        <li>Écrire un message au Défenseur des droits (<a href="https://www.defenseurdesdroits.fr/nous-contacter-355" target="_blank" rel="noreferrer">https://www.defenseurdesdroits.fr/nous-contacter-355</a>)</li>
-        <li>Contacter le délégué du Défenseur des droits près de chez
-          vous (<a href="https://www.defenseurdesdroits.fr/carte-des-delegues" target="_blank" rel="noreferrer">https://www.defenseurdesdroits.fr/carte-des-delegues</a>)</li>
-        <li>Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) : Défenseur des droits Libre
-          réponse 71120 75342 Paris CEDEX 07</li>
+        <li>
+          Écrire un message au Défenseur des droits (
+          <a href="https://www.defenseurdesdroits.fr/nous-contacter-355" target="_blank" rel="noreferrer">
+            https://www.defenseurdesdroits.fr/nous-contacter-355
+          </a>
+          )
+        </li>
+        <li>
+          Contacter le délégué du Défenseur des droits près de chez vous (
+          <a href="https://www.defenseurdesdroits.fr/carte-des-delegues" target="_blank" rel="noreferrer">
+            https://www.defenseurdesdroits.fr/carte-des-delegues
+          </a>
+          )
+        </li>
+        <li>
+          Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) : Défenseur des droits Libre réponse 71120 75342 Paris CEDEX
+          07
+        </li>
       </ul>
     </section>
   )

@@ -11,7 +11,7 @@ export const SectionStatistics: FC = () => {
         <h2 className={styles.statisticsTitle}>Une solution qui fait ses preuves</h2>
 
         <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-6')}>
             <div className={styles.statItem}>
               <div className={styles.statValue}>15</div>
               <p className={styles.statDescription}>
@@ -21,17 +21,10 @@ export const SectionStatistics: FC = () => {
             </div>
           </div>
 
-          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
+          <div className={fr.cx('fr-col-12', 'fr-col-lg-6')}>
             <div className={styles.statItem}>
               <div className={styles.statValue}>220</div>
               <p className={styles.statDescription}>collectivités inscrites</p>
-            </div>
-          </div>
-
-          <div className={fr.cx('fr-col-12', 'fr-col-lg-4')}>
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>100%</div>
-              <p className={styles.statDescription}>de taux de fiabilité des données</p>
             </div>
           </div>
         </div>

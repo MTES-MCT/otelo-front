@@ -47,12 +47,13 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                     <main className={classes.main}>{children}</main>
                     <Footer
                       accessibility="non compliant"
+                      accessibilityLinkProps={{ href: '/accessibilite', title: 'Accessibilité' }}
                       brandTop={<BrandTop />}
                       homeLinkProps={{
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
-                      termsLinkProps={{ href: '/mentions-legales' }}
+                      termsLinkProps={{ href: '/mentions-legales', title: 'Mentions légales' }}
                       bottomItems={[
                         headerFooterDisplayItem,
                         <Link className={fr.cx('fr-footer__bottom-link')} href="/donnees-personnelles">

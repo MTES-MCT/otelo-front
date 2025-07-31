@@ -20,7 +20,7 @@ export const SectionAcquisition = () => {
               size="large"
               linkProps={{ href: WEBINAIRE_URL, target: '_blank', rel: 'noreferrer' }}
             >
-              Voir le calendrier
+              S'inscrire à une formation
             </Button>
           </div>
 

@@ -8,6 +8,7 @@ export const UnauthenticatedBreadcrumb = () => {
   const pathname = usePathname()
 
   const labelsMap: Record<string, string> = {
+    accessibilite: 'Accessibilité',
     guide: 'Guide Otelo',
     ressources: 'Ressources',
     faq: 'FAQ',

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 
 export const AdminBreadcrumb = () => {
   const pathname = usePathname()
-  
+
   const getCurrentPageLabel = () => {
     if (pathname.includes('/gestion-des-utilisateurs')) {
       return 'Gestion des utilisateurs'
@@ -23,8 +23,8 @@ export const AdminBreadcrumb = () => {
     return [
       {
         label: 'Administration',
-        linkProps: { href: '/admin' }
-      }
+        linkProps: { href: '/admin' },
+      },
     ]
   }
 

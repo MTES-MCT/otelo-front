@@ -117,7 +117,7 @@ const getMenuConnected = (pathname: string, isAdmin = false): MainNavigationProp
               isActive: pathname.includes('/admin/gestion-des-utilisateurs'),
               linkProps: {
                 href: '/admin/gestion-des-utilisateurs',
-                target: '_self'
+                target: '_self',
               },
               text: 'Gestion des utilisateurs',
             },
@@ -125,7 +125,7 @@ const getMenuConnected = (pathname: string, isAdmin = false): MainNavigationProp
               isActive: pathname.includes('/admin/statistiques'),
               linkProps: {
                 href: '/admin/statistiques',
-                target: '_self'
+                target: '_self',
               },
               text: 'Statistiques',
             },

@@ -71,9 +71,16 @@ export const useGeoApiSearch = (debounceTime = 200) => {
   const isLoading = results.some((result) => result.isLoading)
   const isError = results.some((result) => result.isError)
 
+  const communes = results[0]?.data || []
+  const epcis = results[1]?.data || []
+
+  // Filter out EPCIS and communes in IDF
+  const filteredCommunes = communes.filter((commune) => commune.codeRegion !== '11')
+  const filteredEpcis = epcis.filter((epci) => !epci.codesRegions.includes('11'))
+
   const data: GeoApiSearchResults = {
-    communes: results[0]?.data || [],
-    epcis: results[1]?.data || [],
+    communes: filteredCommunes,
+    epcis: filteredEpcis,
   }
 
   return {

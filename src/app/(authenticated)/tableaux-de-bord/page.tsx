@@ -1,8 +1,13 @@
 import { fr } from '@codegouvfr/react-dsfr'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { DashboardSimulationItem } from '~/components/tableau-de-bord/dashboard-simulation-item'
 import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
 import { NoResults } from './no-results'
+
+export const metadata: Metadata = {
+  title: 'Tableaux de bord Otelo',
+}
 
 export default async function TableauxDeBordPage() {
   const dashboardGroups = await getDashboardList()

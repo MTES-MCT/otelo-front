@@ -1,4 +1,5 @@
 import { fr } from '@codegouvfr/react-dsfr'
+import type { Metadata } from 'next'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
 import { OmphaleScenariosChart } from '~/components/charts/omphale-scenarios-chart'
@@ -8,6 +9,10 @@ import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
 import classes from './parametrages-demographique.module.css'
+
+export const metadata: Metadata = {
+  title: 'Elaborer scenario - étape 3 sur 6 - Otelo',
+}
 
 type PageProps = {
   searchParams: Promise<SearchParams>

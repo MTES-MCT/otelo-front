@@ -1,5 +1,6 @@
 'use client'
 
+import { fr } from '@codegouvfr/react-dsfr'
 import { FC } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
@@ -43,7 +44,7 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
 
   return (
     <div className={classes.container}>
-      <h5>Besoins en construction neuves annualisés</h5>
+      <h3 className={fr.cx('fr-h5')}>Besoins en construction neuves annualisés</h3>
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart

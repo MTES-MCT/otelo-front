@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -44,9 +45,9 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
     )
   return (
     <>
-      <h5>
+      <h2 className={fr.cx('fr-h5')}>
         {title} - {epciName}
-      </h5>
+      </h2>
       <div className={classes.chartContainer}>
         <div className={classes.chartLabelContainer}>
           <ResponsiveContainer width="100%" height="100%">

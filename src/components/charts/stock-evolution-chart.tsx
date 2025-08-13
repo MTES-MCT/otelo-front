@@ -100,7 +100,7 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, hor
 
   return (
     <div className={classes.container}>
-      <h5>Besoins liés aux situations de mal logement</h5>
+      <h3 className={fr.cx('fr-h5')}>Besoins liés aux situations de mal logement</h3>
       <div className={classes.rowContainer}>
         <div className={classes.chartContainer}>
           <ResponsiveContainer height="100%">

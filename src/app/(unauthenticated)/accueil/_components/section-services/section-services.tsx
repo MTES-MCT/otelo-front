@@ -16,6 +16,7 @@ export const SectionServices = () => {
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={methodologie.src}
+              imageAlt="Illustration"
               small
               orientation="vertical"
               title="Guide d'utilisation"
@@ -28,6 +29,7 @@ export const SectionServices = () => {
             <Tile
               classes={{ img: 'fr-mb-0' }}
               imageUrl={book.src}
+              imageAlt="Illustration"
               small
               orientation="vertical"
               title="Ressources"

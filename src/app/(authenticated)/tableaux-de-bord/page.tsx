@@ -19,9 +19,9 @@ export default async function TableauxDeBordPage() {
           return (
             <div key={group.id} className={fr.cx('fr-col-12', 'fr-col-md-6', 'fr-mb-3w')}>
               <div className={fr.cx('fr-p-2w')}>
-                <h6>
+                <h2 className={fr.cx('fr-h6')}>
                   <Link href={`/tableau-de-bord/${group.id}`}>{group.name}</Link>
-                </h6>
+                </h2>
                 <div>
                   {group.simulations.map((simulation) => (
                     <DashboardSimulationItem key={simulation.id} simulation={simulation} />

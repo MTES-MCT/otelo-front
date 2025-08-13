@@ -41,7 +41,7 @@ export const ContactForm: FC = () => {
       <Input
         label={
           <span>
-            Prénom <span style={{ color: 'red' }}>*</span> :
+            Prénom <RequiredMark /> :
           </span>
         }
         nativeInputProps={{
@@ -56,9 +56,10 @@ export const ContactForm: FC = () => {
       <Input
         label={
           <span>
-            Nom de famille <span style={{ color: 'red' }}>*</span> :
+            Nom de famille <RequiredMark /> :
           </span>
         }
+        required
         nativeInputProps={{
           autoComplete: 'family-name',
           name: 'lastname',
@@ -72,7 +73,7 @@ export const ContactForm: FC = () => {
       <Input
         label={
           <span>
-            Adresse e-mail <span style={{ color: 'red' }}>*</span> :
+            Adresse e-mail <RequiredMark /> :
           </span>
         }
         nativeInputProps={{
@@ -89,7 +90,7 @@ export const ContactForm: FC = () => {
       <Input
         label={
           <span>
-            Objet de la demande <span style={{ color: 'red' }}>*</span> :
+            Objet de la demande <RequiredMark /> :
           </span>
         }
         nativeInputProps={{
@@ -105,7 +106,7 @@ export const ContactForm: FC = () => {
         textArea
         label={
           <span>
-            Message <span style={{ color: 'red' }}>*</span> :
+            Message <RequiredMark /> :
           </span>
         }
         nativeTextAreaProps={{
@@ -122,7 +123,7 @@ export const ContactForm: FC = () => {
             label: (
               <span>
                 En cochant cette case, vous comprenez que les données personnelles entrées, adresse IP comprise, pourront être utilisées
-                afin de vous contacter dans le cadre de votre intérêt légitime. <span style={{ color: 'red' }}>*</span>
+                afin de vous contacter dans le cadre de votre intérêt légitime. <RequiredMark />
               </span>
             ),
             nativeInputProps: {
@@ -148,6 +149,8 @@ export const ContactForm: FC = () => {
     </form>
   )
 }
+
+const RequiredMark = () => <span aria-hidden="true">*</span>
 
 const useStyles = tss.create({
   textareaWrapper: {

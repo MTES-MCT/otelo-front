@@ -1,5 +1,10 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { Card } from '@codegouvfr/react-dsfr/Card'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Guide d'utilisation Otelo",
+}
 export default function FaqRedirectPage() {
   return (
     <div className={fr.cx('fr-grid-row', 'fr-grid-row--center', 'fr-my-10v')}>

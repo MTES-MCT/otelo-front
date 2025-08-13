@@ -201,7 +201,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
                 )}
                 {isEditing && (
                   <div className={fr.cx('fr-py-5w')}>
-                    <CheckboxEpcis epcis={bassinEpcis} />
+                    <CheckboxEpcis epcis={bassinEpcis} legend="Sélection des territoires du bassin" />
                   </div>
                 )}
               </div>

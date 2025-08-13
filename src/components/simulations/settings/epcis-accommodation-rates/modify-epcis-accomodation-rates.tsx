@@ -35,7 +35,7 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
                 Le volume de logements vacants longue durée est de {formatNumber(epciRates.vacancy.nbAccommodation)} logements en&nbsp;
                 {epciRates.vacancy.year}.
               </span>
-              <p className={classes.underline}>
+              <p className={classes.boldItalic}>
                 Le taux de vacance courte durée est de {(Number(epciRates.shortTermVacancyRate) * 100).toFixed(2)}%. Il n'est pas
                 modifiable.
               </p>
@@ -79,7 +79,8 @@ const useStyles = tss.create({
     gap: '1rem',
     justifyContent: 'space-between',
   },
-  underline: {
-    textDecoration: 'underline',
+  boldItalic: {
+    fontWeight: 'bold',
+    fontStyle: 'italic',
   },
 })

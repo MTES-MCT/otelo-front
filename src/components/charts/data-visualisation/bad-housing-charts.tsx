@@ -179,9 +179,9 @@ export const BadHousingChart: FC<BadHousingChartProps> = ({ data }) => {
   return (
     <>
       <div className={styles.headerContainer}>
-        <h5>
+        <h2 className={fr.cx('fr-h5')}>
           {title} - {name}
-        </h5>
+        </h2>
         <div>
           <Select
             label=""

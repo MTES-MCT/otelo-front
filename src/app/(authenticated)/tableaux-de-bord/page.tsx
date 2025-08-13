@@ -1,8 +1,13 @@
 import { fr } from '@codegouvfr/react-dsfr'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { DashboardSimulationItem } from '~/components/tableau-de-bord/dashboard-simulation-item'
 import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
 import { NoResults } from './no-results'
+
+export const metadata: Metadata = {
+  title: 'Tableaux de bord Otelo',
+}
 
 export default async function TableauxDeBordPage() {
   const dashboardGroups = await getDashboardList()
@@ -19,7 +24,7 @@ export default async function TableauxDeBordPage() {
           return (
             <div key={group.id} className={fr.cx('fr-col-12', 'fr-col-md-6', 'fr-mb-3w')}>
               <div className={fr.cx('fr-p-2w')}>
-                <h2 className={fr.cx('fr-h6')}>
+                <h2 className={fr.cx('fr-h4')}>
                   <Link href={`/tableau-de-bord/${group.id}`}>{group.name}</Link>
                 </h2>
                 <div>

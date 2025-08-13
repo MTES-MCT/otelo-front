@@ -11,6 +11,7 @@ import { NextAppDirEmotionCacheProvider } from 'tss-react/next/appDir'
 import Matomo from '~/app/matomo'
 import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
+import { SkipLinks } from '~/components/skip-links'
 import { DsfrHead, getHtmlAttributes } from '~/dsfr/dsfr-head'
 import { DsfrProvider } from '~/dsfr/dsfr-provider'
 import { authOptions } from '~/lib/auth/auth.config'
@@ -46,9 +47,11 @@ export default async function RootLayout({ children }: { children: JSX.Element }
               <TanstackQueryClientProvider>
                 <NuqsAdapter>
                   <NextAuthProvider session={session}>
+                    <SkipLinks />
                     <HeaderComponent />
-                    <main className={classes.main}>{children}</main>
+                    <main id="content" tabIndex={-1} className={classes.main}>{children}</main>
                     <Footer
+                      id="footer"
                       accessibility="non compliant"
                       accessibilityLinkProps={{ href: '/accessibilite', title: 'Accessibilité' }}
                       brandTop={<BrandTop />}

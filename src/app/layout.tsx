@@ -49,7 +49,9 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                   <NextAuthProvider session={session}>
                     <SkipLinks />
                     <HeaderComponent />
-                    <main id="content" tabIndex={-1} className={classes.main}>{children}</main>
+                    <main id="content" tabIndex={-1} className={classes.main}>
+                      {children}
+                    </main>
                     <Footer
                       id="footer"
                       accessibility="non compliant"

@@ -1,5 +1,5 @@
-import { CONTACT_EMAIL } from '~/utils/resources'
 import type { Metadata } from 'next'
+import { CONTACT_EMAIL } from '~/utils/resources'
 
 export const metadata: Metadata = {
   title: "CGU (Conditions générales d'utilisation) et gestion des cookies sur le site Otelo",

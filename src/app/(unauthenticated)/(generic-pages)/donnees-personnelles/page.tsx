@@ -1,5 +1,5 @@
-import { CONTACT_EMAIL } from '~/utils/resources'
 import type { Metadata } from 'next'
+import { CONTACT_EMAIL } from '~/utils/resources'
 
 export const metadata: Metadata = {
   title: 'Données personnelles sur le site Otelo',

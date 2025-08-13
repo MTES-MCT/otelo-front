@@ -11,6 +11,7 @@ import { NextAppDirEmotionCacheProvider } from 'tss-react/next/appDir'
 import Matomo from '~/app/matomo'
 import { BrandTop } from '~/components/brand-top'
 import { HeaderComponent } from '~/components/header'
+import { SkipLinks } from '~/components/skip-links'
 import { DsfrHead, getHtmlAttributes } from '~/dsfr/dsfr-head'
 import { DsfrProvider } from '~/dsfr/dsfr-provider'
 import { authOptions } from '~/lib/auth/auth.config'
@@ -22,7 +23,10 @@ import '~/global.css'
 
 export const metadata: Metadata = {
   description: "Otelo - votre assistant pour l'estimation des besoins en logements",
-  title: 'Otelo',
+  title: {
+    default: 'Otelo',
+    template: "%s (outil d'urbanisme de l'Etat)",
+  },
 }
 
 export default async function RootLayout({ children }: { children: JSX.Element }) {
@@ -43,9 +47,13 @@ export default async function RootLayout({ children }: { children: JSX.Element }
               <TanstackQueryClientProvider>
                 <NuqsAdapter>
                   <NextAuthProvider session={session}>
+                    <SkipLinks />
                     <HeaderComponent />
-                    <main className={classes.main}>{children}</main>
+                    <main id="content" tabIndex={-1} className={classes.main}>
+                      {children}
+                    </main>
                     <Footer
+                      id="footer"
                       accessibility="non compliant"
                       accessibilityLinkProps={{ href: '/accessibilite', title: 'Accessibilité' }}
                       brandTop={<BrandTop />}
@@ -53,7 +61,7 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
-                      termsLinkProps={{ href: '/mentions-legales', title: 'Mentions légales' }}
+                      termsLinkProps={{ href: '/mentions-legales', title: 'Mentions légales - Otelo' }}
                       bottomItems={[
                         headerFooterDisplayItem,
                         <Link className={fr.cx('fr-footer__bottom-link')} href="/donnees-personnelles">

@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import { CONTACT_EMAIL } from '~/utils/resources'
+
+export const metadata: Metadata = {
+  title: 'Mentions légales Otelo',
+}
 
 export default function MentionsLegalesPage() {
   return (
@@ -7,7 +12,7 @@ export default function MentionsLegalesPage() {
       <p>
         Des questions ? Une difficulté ? Envoyez-nous un email à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
-      <h1>Mentions légales</h1>
+      <h2>Mentions légales</h2>
       <h3>Éditeur de la Plateforme</h3>
       <p>
         L'outil Otelo est éditée par le <b>Ministère de la transition écologique</b> (Direction Habitat, Urbanisme et Paysages).

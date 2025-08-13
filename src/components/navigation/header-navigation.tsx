@@ -13,7 +13,7 @@ export const HeaderNavigation: FC = () => {
   const isAdmin = session?.user?.role === 'ADMIN'
   const items = session ? getMenuConnected(pathname, isAdmin) : getMenuDisconnected(pathname)
 
-  return <MainNavigation items={items} />
+  return <MainNavigation id="header-navigation" items={items} />
 }
 
 const getMenuDisconnected = (pathname: string): MainNavigationProps.Item[] => [

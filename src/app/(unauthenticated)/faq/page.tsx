@@ -2,13 +2,18 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Accordion from '@codegouvfr/react-dsfr/Accordion'
 import CallOut from '@codegouvfr/react-dsfr/CallOut'
 import classNames from 'classnames'
+import type { Metadata } from 'next'
 import { CONTACT_EMAIL } from '~/utils/resources'
 import styles from './faq.module.css'
+
+export const metadata: Metadata = {
+  title: 'FAQ (Foire Aux Questions) Otelo',
+}
 
 export default function FaqPage() {
   return (
     <section className={fr.cx('fr-container')}>
-      <h1 className={fr.cx('fr-mb-16v')}>Questions fréquentes</h1>
+      <h1 className={fr.cx('fr-mb-16v')}>Foire aux question</h1>
       <div className={fr.cx('fr-grid-row')}>
         <div className={classNames(fr.cx('fr-col-12', 'fr-col-md-8'), styles.aideContainer)}>
           <div className={fr.cx('fr-accordions-group', 'fr-mb-12v')}>

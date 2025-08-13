@@ -22,7 +22,10 @@ import '~/global.css'
 
 export const metadata: Metadata = {
   description: "Otelo - votre assistant pour l'estimation des besoins en logements",
-  title: 'Otelo',
+  title: {
+    default: 'Otelo',
+    template: "%s (outil d'urbanisme de l'Etat)",
+  },
 }
 
 export default async function RootLayout({ children }: { children: JSX.Element }) {
@@ -53,7 +56,7 @@ export default async function RootLayout({ children }: { children: JSX.Element }
                         href: '/',
                         title: 'Accueil - Otelo',
                       }}
-                      termsLinkProps={{ href: '/mentions-legales', title: 'Mentions légales' }}
+                      termsLinkProps={{ href: '/mentions-legales', title: 'Mentions légales - Otelo' }}
                       bottomItems={[
                         headerFooterDisplayItem,
                         <Link className={fr.cx('fr-footer__bottom-link')} href="/donnees-personnelles">

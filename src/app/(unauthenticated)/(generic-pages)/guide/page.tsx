@@ -1,4 +1,9 @@
 import { Table } from '@codegouvfr/react-dsfr/Table'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Guide d'utilisation Otelo",
+}
 
 export default function GuidePage() {
   return (
@@ -307,21 +312,18 @@ export default function GuidePage() {
 
       <h4>🔁 Méthodes de répartition</h4>
 
-      <ul>
-        <li>
-          <u>Cas général : à partir du bassin d'habitat</u>
-          <br />
-          Quand plusieurs EPCI d'un bassin n'ont pas de projection propre, Otelo répartit la projection globale du bassin entre eux. Cette
-          répartition suit une clé dynamique, qui évolue chaque année selon les tendances récentes observées (
-          <em>voir rubrique dédiée à la ventilation dynamique</em>).
-        </li>
-        <li>
-          <u>Cas particulier : à partir du département</u>
-          <br />
-          Dans certains bassins, les projections Omphale ont été jugées non fiables (fortes ruptures de tendance). Otelo utilise alors la
-          projection du département, ventilée entre les EPCI selon leur poids démographique.
-        </li>
-      </ul>
+      <strong>Cas général : à partir du bassin d'habitat</strong>
+      <p>
+        Quand plusieurs EPCI d'un bassin n'ont pas de projection propre, Otelo répartit la projection globale du bassin entre eux. Cette
+        répartition suit une clé dynamique, qui évolue chaque année selon les tendances récentes observées (
+        <em>voir rubrique dédiée à la ventilation dynamique</em>).
+      </p>
+
+      <strong>Cas particulier : à partir du département</strong>
+      <p>
+        Dans certains bassins, les projections Omphale ont été jugées non fiables (fortes ruptures de tendance). Otelo utilise alors la
+        projection du département, ventilée entre les EPCI selon leur poids démographique.
+      </p>
 
       <p>
         <strong>🧭 Les scénarios de population dans Otelo</strong>

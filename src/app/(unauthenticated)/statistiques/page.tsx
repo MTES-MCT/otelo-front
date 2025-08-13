@@ -2,8 +2,13 @@ import AccesCollectivitesImg from '@assets/img/Acces_collectivites_juin_2025_tri
 import OteloDdtImg from '@assets/img/Otelo_ddt_Juin_2025_trimmed.png'
 import { fr } from '@codegouvfr/react-dsfr'
 import classNames from 'classnames'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import styles from './statistiques.module.css'
+
+export const metadata: Metadata = {
+  title: "Statistiques de l'application Otelo",
+}
 
 export default function StatistiquesPage() {
   return (
@@ -32,9 +37,9 @@ export default function StatistiquesPage() {
             </div>
           </div>
           <div className={classNames(fr.cx('fr-col-12', 'fr-col-md-4'), styles.cardStatContainer)}>
-            <StatCard title="# de DDT (départements) engagées" stat="82/89" metric="ddt engagées" />
-            <StatCard title="# de scénarii réalisés par l'utilisateur" stat="2,5" metric="scenarii / utilisateur 'déployé'" />
-            <StatCard title="# de territoires (EPCI ou bassins d'habitat) utilisateurs d'Otelo" stat="220" metric="territoires" />
+            <StatCard title="Nombre de DDT (départements) engagées" stat="82/89" metric="ddt engagées" />
+            <StatCard title="Nombre de scénarii réalisés par l'utilisateur" stat="2,5" metric="scenarii / utilisateur 'déployé'" />
+            <StatCard title="Nombre de territoires (EPCI ou bassins d'habitat) utilisateurs d'Otelo" stat="220" metric="territoires" />
             <StatCard title="NPS utilisateurs déployés (territoires / agences / bureaux d'étude)" stat="57%" />
           </div>
         </div>

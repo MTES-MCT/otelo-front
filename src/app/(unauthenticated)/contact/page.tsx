@@ -1,6 +1,11 @@
 import { fr } from '@codegouvfr/react-dsfr'
+import type { Metadata } from 'next'
 import { ContactForm } from '~/components/contact/contact-form'
 import { CONTACT_EMAIL } from '~/utils/resources'
+
+export const metadata: Metadata = {
+  title: 'Contacter Otelo',
+}
 
 export default function ContactPage() {
   return (
@@ -8,7 +13,7 @@ export default function ContactPage() {
       <h1>Contactez-nous</h1>
 
       <div className={fr.cx('fr-mb-4w')}>
-        <h3>Nous contacter par e-mail</h3>
+        <h2>Nous contacter par e-mail</h2>
         <p>
           Vous pouvez nous contacter par e-mail à l&apos;adresse suivante : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> ou en
           utilisant le formulaire ci-dessous.
@@ -16,7 +21,7 @@ export default function ContactPage() {
       </div>
       <h3>Formulaire de contact</h3>
       <p>
-        Les champs marqués d&apos;un <span style={{ color: 'red' }}>*</span> sont obligatoires.
+        Les champs marqués d&apos;un <span aria-hidden="true">*</span> sont obligatoires.
       </p>
       <ContactForm />
     </div>

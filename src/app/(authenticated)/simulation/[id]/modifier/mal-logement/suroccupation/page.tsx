@@ -13,6 +13,26 @@ export default async function SuroccupationPage({ params }: { params: { id: stri
   return (
     <div className={styles.container}>
       <h5>Niveaux de suroccupation</h5>
+      <Alert
+        severity="info"
+        description={
+          <>
+            <p>
+              Deux définitions coexistent pour mesurer le surpeuplement : celle de l’INSEE, fondée sur le nombre de pièces nécessaires selon
+              la composition familiale, et celle du CGDD/SDES, qui repose sur la surface habitable par personne. Exemple : pour un couple
+              avec deux enfants de plus de 7 ans est considéré en situation de suroccupation lourde si:
+            </p>
+            <ul>
+              <li>
+                FILOCOM : le logement fait moins de 36 m². Ils sont considérés en suroccupation légère si la surface est comprise entre 36
+                et 49 m².
+              </li>
+              <li>INSEE : le logement est un T2 ou un studio (T3 pour la suroccupation modérée). </li>
+            </ul>
+          </>
+        }
+        small
+      />
       <SelectSuroccupationSource />
       <SelectSuroccupationLevel />
       <h5>Catégories prises en compte</h5>

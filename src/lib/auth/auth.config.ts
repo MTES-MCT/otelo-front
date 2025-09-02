@@ -52,9 +52,9 @@ export const authOptions: NextAuthOptions = {
         if (data) {
           return true
         }
-        return '/unauthorized'
+        return false
       } catch {
-        return '/unauthorized'
+        return false
       }
     },
     async jwt({ account, token, user }) {
@@ -183,27 +183,22 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Mot de passe', type: 'password' },
       },
       authorize: async (credentials) => {
-        try {
-          const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/signin`, {
-            body: JSON.stringify({
-              email: credentials?.email,
-              password: credentials?.password,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-          })
-          if (!response.ok) {
-            throw new Error('Failed to sign in')
-          }
-          const data = await response.json()
-          return data
-        } catch (error) {
-          console.error('Error signing in', error)
-          return null
+        const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/auth/signin`, {
+          body: JSON.stringify({
+            email: credentials?.email,
+            password: credentials?.password,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        })
+
+        const data = await response.json()
+        if (!response.ok) {
+          throw new Error(data.message)
         }
-        return null
+        return data
       },
     }),
   ],

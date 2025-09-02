@@ -24,7 +24,7 @@ export default async function SuroccupationPage({ params }: { params: { id: stri
             </p>
             <ul>
               <li>
-                FILOCOM : le logement fait moins de 36 m². Ils sont considérés en suroccupation légère si la surface est comprise entre 36
+                CGDD/SDES : le logement fait moins de 36 m². Ils sont considérés en suroccupation légère si la surface est comprise entre 36
                 et 49 m².
               </li>
               <li>INSEE : le logement est un T2 ou un studio (T3 pour la suroccupation modérée). </li>

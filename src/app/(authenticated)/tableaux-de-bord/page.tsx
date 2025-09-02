@@ -6,10 +6,10 @@ import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
 import { NoResults } from './no-results'
 
 export const metadata: Metadata = {
-  title: 'Tableaux de bord Otelo',
+  title: 'Tableau de bord Otelo',
 }
 
-export default async function TableauxDeBordPage() {
+export default async function TableauDeBordPage() {
   const dashboardGroups = await getDashboardList()
 
   if (dashboardGroups.length === 0) {
@@ -18,7 +18,7 @@ export default async function TableauxDeBordPage() {
 
   return (
     <div className={fr.cx('fr-container')}>
-      <h1>Tableaux de bord</h1>
+      <h1>Tableau de bord</h1>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         {dashboardGroups.map((group) => {
           return (

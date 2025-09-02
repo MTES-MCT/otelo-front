@@ -84,7 +84,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
         homeLinkProps={{
           href: '/',
         }}
-        segments={[{ label: 'Tableaux de bord', linkProps: { href: '/tableaux-de-bord' } }]}
+        segments={[{ label: 'Tableau de bord', linkProps: { href: '/tableaux-de-bord' } }]}
       />
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         <div className={fr.cx('fr-col-offset-lg-2')} />

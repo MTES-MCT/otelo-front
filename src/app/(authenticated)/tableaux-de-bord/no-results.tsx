@@ -5,7 +5,7 @@ export function NoResults() {
   return (
     <div className={fr.cx('fr-container', 'fr-my-12w')} style={{ textAlign: 'center' }}>
       <h1>Aucun scénario créé</h1>
-      <p>Vous n'avez pas encore enregistré de scénarios.</p>
+      <p>Vous n'avez pas encore enregistré de scénario.</p>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button priority="secondary" linkProps={{ href: '/accueil' }} style={{ marginRight: '1rem' }}>
           Accueil

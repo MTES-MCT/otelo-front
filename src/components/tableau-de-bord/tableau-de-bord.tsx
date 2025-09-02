@@ -45,6 +45,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
     formState: { errors, isValid },
     reset,
     getValues,
+    watch,
   } = useForm<TRequestPowerpoint>({
     resolver: zodResolver(ZRequestPowerpoint),
     defaultValues: {
@@ -54,7 +55,8 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
     },
     mode: 'onChange',
   })
-  const { nextStep, selectedSimulations, resultDate } = getValues()
+  const { nextStep, resultDate } = getValues()
+  const selectedSimulations = watch('selectedSimulations')
 
   const onRequestPowerpoint = async (data: TRequestPowerpoint) => {
     try {
@@ -110,7 +112,9 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
 
           <form>
             <div className={fr.cx('fr-mb-6w')}>
-              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des scénarios à inclure :</p>
+              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>
+                Sélectionnez des scénarios à inclure : <span className={fr.cx('fr-text--sm')}>({selectedSimulations.length}/4)</span>
+              </p>
               <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mb-2w')}>
                 {simulations.map((simulation) => (
                   <div key={simulation.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>
@@ -137,6 +141,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                                   label: '',
                                   nativeInputProps: {
                                     checked: field.value.includes(simulation.id),
+                                    disabled: !field.value.includes(simulation.id) && field.value.length >= 4,
                                     onChange: (e) => {
                                       if (e.target.checked) {
                                         field.onChange([...field.value, simulation.id])

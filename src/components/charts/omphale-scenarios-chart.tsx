@@ -300,7 +300,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
               <p>
                 Votre scénario anticipe une évolution du nombre de ménages de {evol > 0 ? `+${evol}` : evol} sur la période 2021 - {period}.
               </p>
-              <p>Le pic de ménages sera atteint en {maxYear}.</p>
+              <p>Le pic de ménages sera atteint {maxYear < 2050 ? `en ${maxYear}` : `après ${maxYear}`}.</p>
             </>
           }
           severity="info"

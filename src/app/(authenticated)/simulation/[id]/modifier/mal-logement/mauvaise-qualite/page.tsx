@@ -23,7 +23,7 @@ export default async function BadQualityPage({ params }: { params: { id: string 
               Une part des logements de mauvaise qualité peut faire l&apos;objet d&apos;une rénovation. Plus la part de logements rénovés
               est importante, plus le besoin lié à la mauvaise qualité des logements diminuera.
             </p>
-            <p>Par défaut elle s&apos;élève à 80%.</p>
+            <p>Par défaut elle s&apos;élève à 50%.</p>
           </>
         }
         small

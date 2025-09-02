@@ -42,7 +42,7 @@ export default async function FinancialInadequationPage({ params }: { params: { 
               partie des logements concernés par l’inadéquation peut être réallouée à d’autres ménages. Plus la part de logements réalloués
               est élevée, plus le besoin en logement lié à l&apos;inadéquation financière est faible.
             </p>
-            <p>Par défaut elle s&apos;élève à 80%.</p>
+            <p>Par défaut elle s&apos;élève à 90%.</p>
           </>
         }
         small

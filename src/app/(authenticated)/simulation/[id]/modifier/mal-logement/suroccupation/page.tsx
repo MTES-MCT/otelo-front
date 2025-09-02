@@ -27,7 +27,7 @@ export default async function SuroccupationPage({ params }: { params: { id: stri
               partie des logements concernés par l’inadéquation peut être réallouée à d’autres ménages plus petits. Plus la part de
               logements réalloués est élevée, plus le besoin en logement lié à l&apos;inadéquation physique est faible.
             </p>
-            <p>Par défaut elle s&apos;élève à 80%.</p>
+            <p>Par défaut elle s&apos;élève à 90%.</p>
           </>
         }
         small

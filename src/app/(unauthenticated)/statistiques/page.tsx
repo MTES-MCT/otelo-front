@@ -38,7 +38,7 @@ export default function StatistiquesPage() {
           </div>
           <div className={classNames(fr.cx('fr-col-12', 'fr-col-md-4'), styles.cardStatContainer)}>
             <StatCard title="Nombre de DDT (départements) engagées" stat="82/89" metric="ddt engagées" />
-            <StatCard title="Nombre de scénarii réalisés par l'utilisateur" stat="2,5" metric="scenarii / utilisateur 'déployé'" />
+            <StatCard title="Nombre de scénarios réalisés par l'utilisateur" stat="2,5" metric="scénarios / utilisateur 'déployé'" />
             <StatCard title="Nombre de territoires (EPCI ou bassins d'habitat) utilisateurs d'Otelo" stat="220" metric="territoires" />
             <StatCard title="NPS utilisateurs déployés (territoires / agences / bureaux d'étude)" stat="57%" />
           </div>

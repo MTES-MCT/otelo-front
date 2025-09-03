@@ -116,6 +116,7 @@ export const ZRequestPowerpoint = z.object({
     .array(z.string())
     .min(1, { message: 'Veuillez sélectionner au moins 1 simulation' })
     .max(4, { message: 'Vous ne pouvez sélectionner que 4 simulations maximum' }),
+  privilegedSimulation: z.string().min(1, { message: 'Veuillez sélectionner un scénario privilégié' }),
 })
 
 export type TRequestPowerpoint = z.infer<typeof ZRequestPowerpoint>

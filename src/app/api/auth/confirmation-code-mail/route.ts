@@ -10,7 +10,6 @@ export async function POST(request: Request) {
     body: JSON.stringify(body),
   })
 
-  console.log('res', res)
   if (!res.ok) {
     return NextResponse.json({ error: 'Failed to resend confirmation code email' }, { status: res.status })
   }

@@ -29,7 +29,6 @@ export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({
     (label === 'Taux de résidences secondaires / logements vacants' &&
       ['/simulation/taux-restructuration-disparition', '/simulation/validation-parametrage'].includes(pathname)) ||
     (label === 'Taux de restructuration et taux de disparition' && pathname === '/simulation/validation-parametrage')
-  // console.log('should', step.label, shouldSimulateValue, value)
 
   const effectiveValue = shouldSimulateValue ? step.label : value
 

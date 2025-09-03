@@ -9,8 +9,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import z from 'zod'
 import { RedAsterisk } from '~/components/ui/red-asterisk'
+import { useResendVerificationEmail } from '~/hooks/use-resend-verification-email'
 import { proConnectProviderId } from '~/lib/auth/providers/pro-connect'
 
 const loginSchema = z.object({
@@ -24,10 +25,12 @@ export const LoginForm: FC = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [authError, setAuthError] = useState<string | null>(null)
+  const { mutateAsync } = useResendVerificationEmail()
 
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -44,7 +47,11 @@ export const LoginForm: FC = () => {
         callbackUrl: '/accueil',
       })
       if (result?.error) {
-        setAuthError('Email ou mot de passe incorrect.')
+        if (result.error === 'user_has_no_access') {
+          router.push('/unauthorized')
+          return
+        }
+        setAuthError(result.error)
         return
       }
       if (result?.ok && result.url) {
@@ -55,7 +62,7 @@ export const LoginForm: FC = () => {
       router.push('/accueil')
     } catch (error) {
       console.error('Error signing in', error)
-      setAuthError('Une erreur est survenue. Veuillez réessayer.')
+      setAuthError('unknown')
     } finally {
       setIsLoading(false)
     }
@@ -70,11 +77,32 @@ export const LoginForm: FC = () => {
       console.error('Error signing in with ProConnect', error)
     }
   }
+  const handleResendMail = async () => {
+    const { email } = getValues()
+    await mutateAsync(email)
+  }
+
+  const AUTH_ERRORS = {
+    email_not_verified: (
+      <>
+        <span>
+          Nous vous avons envoyé un e-mail de confirmation. Veuillez cliquer sur le lien qu’il contient pour activer votre compte. Si vous
+          ne l’avez pas reçu, vous pouvez redemander un lien en utilisant le bouton ci-dessous :
+        </span>
+        <br />
+        <Button className="fr-mt-2w" type="button" onClick={handleResendMail}>
+          Renvoyer l’e-mail de confirmation
+        </Button>
+      </>
+    ),
+    invalid_password: 'Email ou mot de passe incorrect',
+    unknown: 'Une erreur est survenue. Veuillez réessayer.',
+  }
 
   return (
     <div className="fr-container">
       <div className="fr-flex fr-justify-content-space-between fr-direction-column fr-direction-md-row">
-        <div>
+        <div className="fr-px-4w">
           <h1 className="fr-h3 fr-mb-3w">Connexion avec votre adresse email</h1>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <Input
@@ -110,10 +138,10 @@ export const LoginForm: FC = () => {
               }}
             />
 
-            {authError && (
+            {!!authError && (
               <div className="fr-alert fr-alert--error fr-mb-3w" role="alert">
                 <p className="fr-alert__title">Échec de la connexion</p>
-                <p>{authError}</p>
+                <p>{AUTH_ERRORS[authError as keyof typeof AUTH_ERRORS] || 'Une erreur est survenue.'}</p>
               </div>
             )}
             <div className="fr-flex fr-justify-content-space-between fr-align-items-center">

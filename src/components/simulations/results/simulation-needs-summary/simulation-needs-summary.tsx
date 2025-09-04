@@ -46,7 +46,7 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
               }
               detail={
                 <Button priority="secondary" linkProps={{ href: `/simulation/${id}/modifier/cadrage-temporel` }}>
-                  Affiner la démographie
+                  Modifier mes hypothèses
                 </Button>
               }
             />

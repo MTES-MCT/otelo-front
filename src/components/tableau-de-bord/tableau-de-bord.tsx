@@ -256,7 +256,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                 description={
                   <>
                     Votre présentation PowerPoint personnalisée avec les simulations sélectionnées est en cours de préparation. Vous la
-                    recevrez à l'adresse e-mail <Tag>{userEmail}</Tag> dans un délai de 24h ouvrées.
+                    recevrez à l'adresse e-mail <Tag>{userEmail}</Tag> dans un délai de 72h ouvrées.
                   </>
                 }
                 severity="success"

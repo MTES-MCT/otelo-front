@@ -29,6 +29,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
     epcis: parseAsArrayOf(parseAsString).withDefault([]),
     epciGroupName: parseAsString,
     epciGroupId: parseAsString,
+    epciChart: parseAsString,
   })
   const { data: selectedEpcis, isLoading: isLoadingEpcis } = useEpcis(epcis)
   const { data: groups } = useEpciGroups()
@@ -72,7 +73,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
     // Mark if this is a bassin habitat selection
     setIsBassinHabitat(selectedMethod === 'bassin-habitat')
 
-    await setQueryStates({ baseEpci: code, epcis: [] })
+    await setQueryStates({ baseEpci: code, epciChart: code, epcis: [] })
 
     router.refresh()
   }
@@ -201,7 +202,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
                 )}
                 {isEditing && (
                   <div className={fr.cx('fr-py-5w')}>
-                    <CheckboxEpcis epcis={bassinEpcis} />
+                    <CheckboxEpcis epcis={bassinEpcis} legend="Sélection des territoires du bassin" />
                   </div>
                 )}
               </div>

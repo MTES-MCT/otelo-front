@@ -34,21 +34,13 @@ export const ContiguousEpcisCheckboxes = ({ epcis }: ContiguousEpcisCheckboxesPr
     )
   }
 
-  // Split EPCIs into two columns
-  const midpoint = Math.ceil(filteredContiguousEpcis.length / 2)
-  const firstColumn = filteredContiguousEpcis.slice(0, midpoint)
-  const secondColumn = filteredContiguousEpcis.slice(midpoint)
-
   return (
     <div className={fr.cx('fr-py-4w')}>
-      <h6 className={fr.cx('fr-mb-2w')}>EPCIs limitrophes</h6>
+      <h4 className={fr.cx('fr-mb-2w')}>EPCIs limitrophes</h4>
       <p className={fr.cx('fr-text--sm', 'fr-mb-2w')}>Vous pouvez sélectionner des EPCIs limitrophes à inclure dans votre simulation :</p>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-        <div className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-          <CheckboxEpcis epcis={firstColumn} />
-        </div>
-        <div className={fr.cx('fr-col-12', 'fr-col-md-6')}>
-          <CheckboxEpcis epcis={secondColumn} />
+        <div className={fr.cx('fr-col-12', 'fr-col-md-12')}>
+          <CheckboxEpcis epcis={filteredContiguousEpcis} legend="Sélection des EPCIs" />
         </div>
       </div>
     </div>

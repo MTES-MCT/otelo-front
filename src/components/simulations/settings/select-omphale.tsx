@@ -17,10 +17,12 @@ export const SelectOmphale = ({ onChange }: SelectOmphaleProps) => {
     demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
   const hasCustomData = queryStates.demographicEvolutionOmphaleCustomIds.length > 0
-  const selectValue = hasCustomData ? 'Central_C' : (queryStates.omphale ?? undefined)
+  const selectValue = hasCustomData ? 'Central_C' : queryStates.omphale
 
   useEffect(() => {
-    setQueryStates({ omphale: selectValue })
+    if (selectValue) {
+      setQueryStates({ omphale: selectValue })
+    }
   }, [selectValue])
 
   const scenarios = [
@@ -86,7 +88,7 @@ export const SelectOmphale = ({ onChange }: SelectOmphaleProps) => {
       placeholder="Choix du scénario"
       nativeSelectProps={{
         onChange: (event) => handleChange(event.target.value),
-        value: selectValue,
+        value: selectValue || '',
       }}
       options={filteredScenarios}
       disabled={hasCustomData}

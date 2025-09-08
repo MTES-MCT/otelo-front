@@ -125,7 +125,7 @@ const OmphaleScenariosTooltip = ({
               <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> ménages par rapport à{' '}
               <span className={classes.bold}>2021</span>
             </span>
-            <span className={classes.smallText}>({formatNumber(item.value)} habitants)</span>
+            <span className={classes.smallText}>({formatNumber(item.value)} ménages)</span>
           </div>
         )
       })}
@@ -300,7 +300,7 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
               <p>
                 Votre scénario anticipe une évolution du nombre de ménages de {evol > 0 ? `+${evol}` : evol} sur la période 2021 - {period}.
               </p>
-              <p>Le pic de ménages sera atteint en {maxYear}.</p>
+              <p>Le pic de ménages sera atteint {maxYear < 2050 ? `en ${maxYear}` : `après ${maxYear}`}.</p>
             </>
           }
           severity="info"

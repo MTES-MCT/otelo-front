@@ -79,17 +79,30 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
 
   return (
     <div className={fr.cx('fr-mb-3w')}>
-      <input ref={fileInputRef} type="file" accept=".csv" onChange={handleFileUpload} style={{ display: 'none' }} disabled={isProcessing} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv"
+        onChange={handleFileUpload}
+        style={{ display: 'none' }}
+        disabled={isProcessing}
+        aria-label="Importer des données démographiques personnalisées"
+        id="demographic-upload-input"
+      />
       <Button
         iconId="fr-icon-upload-line"
         onClick={() => fileInputRef.current?.click()}
         disabled={isProcessing}
         priority="secondary"
         size="small"
+        aria-describedby="upload-format-hint"
+        title="Importer des données démographiques personnalisées au format CSV, Excel"
       >
         {isProcessing ? 'Traitement en cours...' : 'Importer des données personnalisées'}
       </Button>
-      <p className={fr.cx('fr-text--xs', 'fr-mt-1w')}>Formats acceptés : Excel (.xlsx, .xls) ou CSV</p>
+      <p id="upload-format-hint" className={fr.cx('fr-text--xs', 'fr-mt-1w')}>
+        Formats acceptés : Excel (.xlsx, .xls) ou CSV
+      </p>
     </div>
   )
 }

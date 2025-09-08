@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
@@ -66,9 +67,9 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
   return (
     <>
       <div className={styles.headerContainer}>
-        <h5>
+        <h2 className={fr.cx('fr-h5')}>
           {title} - {epciName}
-        </h5>
+        </h2>
         <Select
           label=""
           nativeSelectProps={{

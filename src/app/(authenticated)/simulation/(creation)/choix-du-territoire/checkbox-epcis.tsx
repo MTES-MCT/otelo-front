@@ -5,9 +5,10 @@ import { TEpci } from '~/schemas/epci'
 
 type CheckboxEpcisProps = {
   epcis: TEpci[]
+  legend?: string
 }
 
-export function CheckboxEpcis({ epcis }: CheckboxEpcisProps) {
+export function CheckboxEpcis({ epcis, legend }: CheckboxEpcisProps) {
   const [paramsEpcis, setEpcis] = useQueryState('epcis', parseAsArrayOf(parseAsString).withDefault([]))
 
   const createOptions = (epcis: TEpci[]): ComponentProps<typeof Checkbox>['options'] =>
@@ -24,5 +25,5 @@ export function CheckboxEpcis({ epcis }: CheckboxEpcisProps) {
       },
     }))
 
-  return <Checkbox options={createOptions(epcis)} />
+  return <Checkbox options={createOptions(epcis)} legend={legend} />
 }

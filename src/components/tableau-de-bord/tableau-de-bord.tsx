@@ -8,6 +8,7 @@ import Button from '@codegouvfr/react-dsfr/Button'
 import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Input from '@codegouvfr/react-dsfr/Input'
 import { createModal } from '@codegouvfr/react-dsfr/Modal'
+import RadioButtons from '@codegouvfr/react-dsfr/RadioButtons'
 import { Select } from '@codegouvfr/react-dsfr/SelectNext'
 import Table from '@codegouvfr/react-dsfr/Table'
 import Tag from '@codegouvfr/react-dsfr/Tag'
@@ -45,16 +46,21 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
     formState: { errors, isValid },
     reset,
     getValues,
+    watch,
+    setValue,
   } = useForm<TRequestPowerpoint>({
     resolver: zodResolver(ZRequestPowerpoint),
     defaultValues: {
       nextStep: '',
       resultDate: '',
       selectedSimulations: [],
+      privilegedSimulation: '',
     },
     mode: 'onChange',
   })
-  const { nextStep, selectedSimulations, resultDate } = getValues()
+  const { nextStep, resultDate } = getValues()
+  const selectedSimulations = watch('selectedSimulations')
+  const privilegedSimulation = watch('privilegedSimulation')
 
   const onRequestPowerpoint = async (data: TRequestPowerpoint) => {
     try {
@@ -82,7 +88,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
         homeLinkProps={{
           href: '/',
         }}
-        segments={[{ label: 'Tableaux de bord', linkProps: { href: '/tableaux-de-bord' } }]}
+        segments={[{ label: 'Tableau de bord', linkProps: { href: '/tableaux-de-bord' } }]}
       />
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         <div className={fr.cx('fr-col-offset-lg-2')} />
@@ -110,7 +116,14 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
 
           <form>
             <div className={fr.cx('fr-mb-6w')}>
-              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>Sélectionnez des scénarios à inclure :</p>
+              <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>
+                Sélectionnez des scénarios à inclure : <span className={fr.cx('fr-text--sm')}>({selectedSimulations.length}/4)</span>
+              </p>
+              {selectedSimulations.length > 0 && (
+                <p className={fr.cx('fr-text--sm', 'fr-mb-2w')} style={{ color: '#666' }}>
+                  Le scénario privilégié sera mis en avant dans la présentation PowerPoint.
+                </p>
+              )}
               <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mb-2w')}>
                 {simulations.map((simulation) => (
                   <div key={simulation.id} className={fr.cx('fr-col-12', 'fr-col-md-6')}>
@@ -125,31 +138,57 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                         </div>
                       }
                       headerAction={
-                        <Controller
-                          control={control}
-                          name="selectedSimulations"
-                          render={({ field }) => (
-                            <Checkbox
-                              small
-                              className={styles.checkbox}
-                              options={[
-                                {
-                                  label: '',
-                                  nativeInputProps: {
-                                    checked: field.value.includes(simulation.id),
-                                    onChange: (e) => {
-                                      if (e.target.checked) {
-                                        field.onChange([...field.value, simulation.id])
-                                      } else {
-                                        field.onChange(field.value.filter((id: string) => id !== simulation.id))
-                                      }
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+                          <Controller
+                            control={control}
+                            name="selectedSimulations"
+                            render={({ field }) => (
+                              <Checkbox
+                                small
+                                className={styles.checkbox}
+                                options={[
+                                  {
+                                    label: 'Inclure',
+                                    nativeInputProps: {
+                                      checked: field.value.includes(simulation.id),
+                                      disabled: !field.value.includes(simulation.id) && field.value.length >= 4,
+                                      onChange: (e) => {
+                                        if (e.target.checked) {
+                                          field.onChange([...field.value, simulation.id])
+                                        } else {
+                                          field.onChange(field.value.filter((id: string) => id !== simulation.id))
+                                          // If this was the privileged simulation, clear it
+                                          if (privilegedSimulation === simulation.id) {
+                                            setValue('privilegedSimulation', '', { shouldValidate: true, shouldDirty: true })
+                                          }
+                                        }
+                                      },
                                     },
                                   },
-                                },
-                              ]}
-                            />
-                          )}
-                        />
+                                ]}
+                              />
+                            )}
+                          />
+                          <Controller
+                            control={control}
+                            name="privilegedSimulation"
+                            render={({ field }) => (
+                              <RadioButtons
+                                small
+                                options={[
+                                  {
+                                    label: 'Privilégié',
+                                    nativeInputProps: {
+                                      checked: field.value === simulation.id,
+                                      disabled: !selectedSimulations.includes(simulation.id),
+                                      onChange: () => field.onChange(simulation.id),
+                                    },
+                                  },
+                                ]}
+                              />
+                            )}
+                          />
+                        </div>
                       }
                       title={<Link href={`/simulation/${simulation.id}/resultats`}>{simulation.name}</Link>}
                       footer={<div className={styles.cardMention}>MàJ le {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}</div>}
@@ -159,6 +198,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
               </div>
 
               {errors.selectedSimulations && <p className={fr.cx('fr-error-text', 'fr-mb-3w')}>{errors.selectedSimulations.message}</p>}
+              {errors.privilegedSimulation && <p className={fr.cx('fr-error-text', 'fr-mb-3w')}>{errors.privilegedSimulation.message}</p>}
             </div>
 
             <div className={fr.cx('fr-mb-6w')}>
@@ -216,7 +256,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                 description={
                   <>
                     Votre présentation PowerPoint personnalisée avec les simulations sélectionnées est en cours de préparation. Vous la
-                    recevrez à l'adresse e-mail <Tag>{userEmail}</Tag> dans un délai de 24h ouvrées.
+                    recevrez à l'adresse e-mail <Tag>{userEmail}</Tag> dans un délai de 72h ouvrées.
                   </>
                 }
                 severity="success"
@@ -266,15 +306,23 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             caption="Récapitulatif des données"
             data={[
               [
-                'Simulation(s)',
-                selectedSimulations.map((simId) => {
-                  const simulation = simulations.find((sim) => sim.id === simId)
-                  return simulation ? (
-                    <Badge small key={simId}>
-                      {simulation.name} (Horizon {simulation.scenario.projection})
-                    </Badge>
-                  ) : null
-                }),
+                'Scénario(s)',
+                selectedSimulations
+                  .sort((a, b) => {
+                    // Put privileged scenario first
+                    if (a === privilegedSimulation) return -1
+                    if (b === privilegedSimulation) return 1
+                    return 0
+                  })
+                  .map((simId) => {
+                    const simulation = simulations.find((sim) => sim.id === simId)
+                    const isPrivileged = simId === privilegedSimulation
+                    return simulation ? (
+                      <Badge small key={simId} severity={isPrivileged ? 'success' : undefined}>
+                        {simulation.name} (Horizon {simulation.scenario.projection})
+                      </Badge>
+                    ) : null
+                  }),
               ],
               ['Prochaine étape', nextStep],
               ['Date de restitution prévue', resultDate ? dayjs(resultDate).format('DD/MM/YYYY') : 'Non spécifiée'],

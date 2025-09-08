@@ -1,8 +1,13 @@
+import type { Metadata } from 'next'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { CreateRestructurationDisparitionRates } from '~/components/simulations/settings/restructuration-disparition-rates/create-restructuration-disparition-rates'
 import { getEpcis } from '~/server-only/epcis/get-epcis'
+
+export const metadata: Metadata = {
+  title: 'Elaborer scenario - étape 5 sur 6 - Otelo',
+}
 
 type PageProps = {
   searchParams: Promise<SearchParams>

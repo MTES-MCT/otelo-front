@@ -44,6 +44,7 @@ export const DemographicSettingsHeader = ({ children, epcis }: DemographicSettin
     population: parseAsString,
     scenario: parseAsString,
   })
+
   const { classes } = useStyles({ population: queryState.population })
   const selectedTabId = queryState.scenario ?? 'population'
 

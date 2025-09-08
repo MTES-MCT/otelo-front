@@ -1,3 +1,4 @@
+import { fr } from '@codegouvfr/react-dsfr'
 import { parseAsArrayOf } from 'nuqs'
 import { parseAsString } from 'nuqs'
 import { useQueryStates } from 'nuqs'
@@ -121,9 +122,9 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
 
   return (
     <>
-      <h5>
+      <h2 className={fr.cx('fr-h5')}>
         {title} - {epciName}
-      </h5>
+      </h2>
       <div className={classes.chartContainer}>
         <div className={classes.chartLabelContainer}>
           <ResponsiveContainer width="100%" height="100%">

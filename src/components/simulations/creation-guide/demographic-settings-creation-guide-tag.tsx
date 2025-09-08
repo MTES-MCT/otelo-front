@@ -26,7 +26,8 @@ export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({
   // Simulate value for steps with empty queryKeys based on path conditions
   const shouldSimulateValue =
     (queryKeys.length === 0 && pathname === path) ||
-    (label === 'Taux de résidences secondaires / logements vacants' && pathname === '/simulation/taux-restructuration-disparition') ||
+    (label === 'Taux de résidences secondaires / logements vacants' &&
+      ['/simulation/taux-restructuration-disparition', '/simulation/validation-parametrage'].includes(pathname)) ||
     (label === 'Taux de restructuration et taux de disparition' && pathname === '/simulation/validation-parametrage')
 
   const effectiveValue = shouldSimulateValue ? step.label : value

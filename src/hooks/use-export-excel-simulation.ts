@@ -1,15 +1,15 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-export const useExportSimulationSettings = () => {
+export const useExportExcelSimulation = () => {
   const exportSettings = async (id: string) => {
     try {
-      const response = await fetch(`/api/simulations/${id}/export/scenario`, {
+      const response = await fetch(`/api/export-excel/${id}`, {
         method: 'GET',
       })
 
       if (!response.ok) {
-        throw new Error('Failed to export simulation settings')
+        throw new Error('Failed to export simulation')
       }
 
       const contentDisposition = response.headers.get('content-disposition')
@@ -36,7 +36,7 @@ export const useExportSimulationSettings = () => {
   const { isPending, mutateAsync } = useMutation({
     mutationFn: exportSettings,
     onError: () => {
-      toast.error("Une erreur est survenue lors de l'exportation des paramètres de la simulation")
+      toast.error("Une erreur est survenue lors de l'exportation de la simulation")
     },
   })
 

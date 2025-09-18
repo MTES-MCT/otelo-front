@@ -3,7 +3,7 @@ import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/clas
 import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
-import { ExportSimulationSettings } from '~/components/simulations/results/export/export-simulation-settings'
+import { ExportExcelSimulation } from '~/components/simulations/results/export/export-simulation-settings'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData } from '~/schemas/results'
@@ -135,7 +135,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   return (
     <>
       <div className={styles.headerContainer}>
-        <ExportSimulationSettings id={params.id} />
+        <ExportExcelSimulation id={params.id} />
       </div>
       <SimulationResultsTabs tabs={tabs} />
     </>

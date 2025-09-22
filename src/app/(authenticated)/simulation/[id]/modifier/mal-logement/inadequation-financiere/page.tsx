@@ -3,6 +3,7 @@ import Alert from '@codegouvfr/react-dsfr/Alert'
 import { SelectInadequationFinanciereCategories } from '~/components/simulations/settings/modification/mal-logement/inadequation-financiere/select-inadequation-financiere-categories'
 import { SelectInadequationFinancierePart } from '~/components/simulations/settings/modification/mal-logement/inadequation-financiere/select-inadequation-financiere-part'
 import { SelectMaxEffortPart } from '~/components/simulations/settings/modification/mal-logement/inadequation-financiere/select-max-effort-part'
+import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import styles from './inadequation-financiere.module.css'
 
@@ -48,8 +49,11 @@ export default async function FinancialInadequationPage({ params }: { params: { 
         small
       />
       <SelectInadequationFinancierePart />
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLinkWithoutValidation href={href} />
+      <div className="fr-flex fr-flex-gap-2v fr-my-1w">
+        <div className={fr.cx('fr-ml-auto')}>
+          <NextStepLinkWithoutValidation href={href} />
+        </div>
+        <UpdateBadHousingSimulationForm />
       </div>
     </div>
   )

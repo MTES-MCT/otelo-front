@@ -1,6 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { SelectHebergesAccommodationTypes } from '~/components/simulations/settings/modification/mal-logement/heberges/select-heberges-accommodation-types'
 import { SelectHebergesPart } from '~/components/simulations/settings/modification/mal-logement/heberges/select-heberges-part'
+import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import styles from './heberges.module.css'
 export default async function HebergesPage({ params }: { params: { id: string } }) {
@@ -12,8 +13,11 @@ export default async function HebergesPage({ params }: { params: { id: string } 
       <SelectHebergesPart />
       <h5>Cohabitation subie (hors cohabitation intergénérationnelle)</h5>
       <SelectHebergesAccommodationTypes />
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLinkWithoutValidation href={href} />
+      <div className="fr-flex fr-flex-gap-2v fr-my-1w">
+        <div className={fr.cx('fr-ml-auto')}>
+          <NextStepLinkWithoutValidation href={href} />
+        </div>
+        <UpdateBadHousingSimulationForm />
       </div>
     </div>
   )

@@ -34,3 +34,10 @@
   border-left: 1px solid grey;
   width: 1px;
 }
+
+.gridContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 2rem;
+}

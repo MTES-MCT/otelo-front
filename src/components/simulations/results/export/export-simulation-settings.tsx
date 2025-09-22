@@ -4,11 +4,11 @@ import Button from '@codegouvfr/react-dsfr/Button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { useExportSimulationSettings } from '~/hooks/use-export-simulation-settings'
+import { useExportExcelSimulation } from '~/hooks/use-export-excel-simulation'
 import { TSimulationExportDto, ZSimulationExportDto } from '~/schemas/simulation'
 
-export const ExportSimulationSettings: FC<{ id: string }> = ({ id }) => {
-  const { isPending, mutateAsync } = useExportSimulationSettings()
+export const ExportExcelSimulation: FC<{ id: string }> = ({ id }) => {
+  const { isPending, mutateAsync } = useExportExcelSimulation()
 
   const { handleSubmit } = useForm<TSimulationExportDto>({
     resolver: zodResolver(ZSimulationExportDto),

@@ -4,6 +4,7 @@ import { SelectSuroccupationCategories } from '~/components/simulations/settings
 import { SelectSuroccupationLevel } from '~/components/simulations/settings/modification/mal-logement/suroccupation /select-suroccupation-level'
 import { SelectSuroccupationPart } from '~/components/simulations/settings/modification/mal-logement/suroccupation /select-suroccupation-part'
 import { SelectSuroccupationSource } from '~/components/simulations/settings/modification/mal-logement/suroccupation /select-suroccupation-source'
+import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import styles from './suroccupation.module.css'
 
@@ -53,8 +54,11 @@ export default async function SuroccupationPage({ params }: { params: { id: stri
         small
       />
       <SelectSuroccupationPart />
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLinkWithoutValidation href={href} />
+      <div className="fr-flex fr-flex-gap-2v fr-my-1w">
+        <div className={fr.cx('fr-ml-auto')}>
+          <NextStepLinkWithoutValidation href={href} />
+        </div>
+        <UpdateBadHousingSimulationForm />
       </div>
     </div>
   )

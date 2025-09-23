@@ -11,6 +11,7 @@ export type CustomUser = User & {
   email: string
   provider: string
   role: 'ADMIN' | 'USER'
+  type?: 'DDT' | 'AgenceUrbanisme' | 'Collectivite' | 'DREAL' | 'BureauEtudes'
 }
 
 export const authOptions: NextAuthOptions = {
@@ -24,8 +25,8 @@ export const authOptions: NextAuthOptions = {
             body: JSON.stringify({
               email: user.email,
               provider: params.account?.provider,
-              firstname: user.firstName ?? user.firstname,
-              lastname: user.lastName ?? user.lastname,
+              firstname: user.firstname,
+              lastname: user.lastname,
               sub: user.sub,
               id: user.id,
             }),
@@ -57,7 +58,26 @@ export const authOptions: NextAuthOptions = {
         return false
       }
     },
-    async jwt({ account, token, user }) {
+    async jwt({ account, token, user, trigger }) {
+      // Handle session update trigger (when update() is called -> in case we update the type)
+      if (trigger === 'update' && token.accessToken && token.user) {
+        try {
+          const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/users/me`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token.accessToken}`,
+            },
+          })
+          if (response.ok) {
+            const updatedUser = await response.json()
+            token.user = updatedUser
+          }
+        } catch (error) {
+          console.error('Failed to fetch updated user data:', error)
+        }
+      }
+
       if (account) {
         // User is already registered in the signIn callback
         // Get session tokens
@@ -66,8 +86,8 @@ export const authOptions: NextAuthOptions = {
             body: JSON.stringify({
               email: user.email,
               provider: account.provider,
-              firstname: (user as CustomUser).firstName ?? (user as CustomUser).firstname,
-              lastname: (user as CustomUser).lastName ?? (user as CustomUser).lastname,
+              firstname: (user as CustomUser).firstname,
+              lastname: (user as CustomUser).lastname,
               sub: (user as CustomUser).sub,
               id: (user as CustomUser).id,
             }),

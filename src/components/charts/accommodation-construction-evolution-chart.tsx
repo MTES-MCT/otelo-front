@@ -4,6 +4,7 @@ import { fr } from '@codegouvfr/react-dsfr'
 import { FC } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
+import { dsfrRealColors, getChartColor } from '~/components/charts/data-visualisation/colors'
 import { TChartData, TFlowRequirementChartData } from '~/schemas/results'
 
 interface AccommodationContructionEvolutionChartProps {
@@ -60,19 +61,19 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
             <CartesianGrid strokeDasharray="3 3" />
             <ReferenceLine
               x={horizon}
-              stroke="#666"
+              stroke={dsfrRealColors.blueFrance}
               strokeDasharray="3 3"
               label={{
                 value: 'Horizon de projection',
                 position: 'top',
-                fill: '#666',
+                fill: dsfrRealColors.blueFrance,
                 fontSize: 12,
                 offset: 10,
               }}
             />
-            <Bar name="Permis de construire autorisés (Sit@del)" dataKey="sitadelValue" fill="#8884d8" />
-            <Bar name="Besoins en logements" dataKey="housingNeeds" fill="#82ca9d" />
-            <Bar name="Logements excédentaires" dataKey="surplusHousing" fill="#ffc658" />
+            <Bar name="Permis de construire autorisés (Sit@del)" dataKey="sitadelValue" fill={getChartColor('sitadelValue')} />
+            <Bar name="Besoins en logements" dataKey="housingNeeds" fill={getChartColor('housingNeeds')} />
+            <Bar name="Logements excédentaires" dataKey="surplusHousing" fill={getChartColor('surplusHousing')} />
             <XAxis dataKey="year" angle={-45} textAnchor="end" height={60} />
             <Tooltip />
             <Legend />

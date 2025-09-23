@@ -7,7 +7,7 @@ import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContai
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
-import { barChartColors } from '~/components/charts/data-visualisation/colors'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TDemographicProjectionEvolution } from '~/schemas/population-evolution'
 import { formatNumber } from '~/utils/format-numbers'
@@ -15,15 +15,15 @@ import { formatNumber } from '~/utils/format-numbers'
 const SCENARIOS = [
   {
     dataKey: 'haute',
-    stroke: '#666666',
+    stroke: getChartColor('haute'),
   },
   {
     dataKey: 'central',
-    stroke: '#000091',
+    stroke: getChartColor('central'),
   },
   {
     dataKey: 'basse',
-    stroke: '#161616',
+    stroke: getChartColor('basse'),
   },
 ]
 
@@ -116,7 +116,7 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
   const displayedScenarios = SCENARIOS.map((scenario) => ({
     ...scenario,
-    stroke: `${scenario.stroke}33`,
+    stroke: scenario.stroke,
     strokeWidth: 2,
   }))
 
@@ -184,21 +184,22 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
                 content={() => (
                   <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[0] }} />
+                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('haute') }} />
                       <span>Population haute</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[1] }} />
+                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('central') }} />
                       <span>Population centrale</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[2] }} />
+                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('basse') }} />
                       <span>Population basse</span>
                     </div>
                   </div>
                 )}
               />
               <XAxis dataKey="period" ticks={['2021-2030', '2030-2040', '2040-2050']} />
+
               <YAxis />
               <Tooltip
                 formatter={(value: number, name: string) => {
@@ -214,9 +215,9 @@ export const ProjectionPopulationEvolutionChart: FC<ProjectionPopulationEvolutio
                   return label
                 }}
               />
-              <Bar dataKey="haute" name="Population haute" fill={barChartColors[0]} />
-              <Bar dataKey="central" name="Population centrale" fill={barChartColors[1]} />
-              <Bar dataKey="basse" name="Population basse" fill={barChartColors[2]} />
+              <Bar dataKey="haute" name="Population haute" fill={getChartColor('haute')} />
+              <Bar dataKey="central" name="Population centrale" fill={getChartColor('central')} />
+              <Bar dataKey="basse" name="Population basse" fill={getChartColor('basse')} />
             </BarChart>
           </ResponsiveContainer>
           <div style={{ textAlign: 'center', marginBottom: '1rem' }}>

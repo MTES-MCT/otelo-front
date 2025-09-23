@@ -11,6 +11,7 @@ import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-t
 import { TInadequateHousing } from '~/schemas/population-evolution'
 import { formatNumber } from '~/utils/format-numbers'
 import styles from './accommodation-evolution-charts.module.css'
+import { getChartColor } from './colors'
 
 interface BadHousingChartProps {
   data: TInadequateHousing
@@ -216,11 +217,11 @@ export const BadHousingChart: FC<BadHousingChartProps> = ({ data }) => {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="badQuality" name="Mauvaise qualité" fill="#4F46E5" />
-            <Bar dataKey="financialInadequation" name="Inadéquation financière" fill="#F59E0B" />
-            <Bar dataKey="physicalInadequation" name="Inadéquation physique" fill="#10B981" />
-            <Bar dataKey="hosted" name="Hébergés" fill="#4F46E5" />
-            <Bar dataKey="noAccommodation" name="Sans logement" fill="#EC4899" />
+            <Bar dataKey="badQuality" name="Mauvaise qualité" fill={getChartColor('badQuality')} />
+            <Bar dataKey="financialInadequation" name="Inadéquation financière" fill={getChartColor('financialInadequation')} />
+            <Bar dataKey="physicalInadequation" name="Inadéquation physique" fill={getChartColor('physicalInadequation')} />
+            <Bar dataKey="hosted" name="Hébergés" fill={getChartColor('hosted')} />
+            <Bar dataKey="noAccommodation" name="Sans logement" fill={getChartColor('noAccommodation')} />
             <Legend />
           </BarChart>
         </ResponsiveContainer>

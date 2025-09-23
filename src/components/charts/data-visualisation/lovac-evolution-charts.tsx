@@ -5,7 +5,7 @@ import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Payload } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
-import { barChartColors } from '~/components/charts/data-visualisation/colors'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TAccommodationLovacEvolution } from '~/schemas/accommodation-evolution'
 import styles from './accommodation-evolution-charts.module.css'
@@ -169,8 +169,8 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
                 return label
               }}
             />
-            <Bar dataKey="nbLogVac2Less" name="Logements vacants < 2 ans" fill={barChartColors[2]} key="nbLogVac2Less" />
-            <Bar dataKey="nbLogVac2More" name="Logements vacants longue durée" fill={barChartColors[3]} key="nbLogVac2More" />
+            <Bar dataKey="nbLogVac2Less" name="Logements vacants < 2 ans" fill={getChartColor('nbLogVac2Less')} key="nbLogVac2Less" />
+            <Bar dataKey="nbLogVac2More" name="Logements vacants longue durée" fill={getChartColor('nbLogVac2More')} key="nbLogVac2More" />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -7,6 +7,7 @@ import { CartesianGrid } from 'recharts'
 import { BarChart } from 'recharts'
 import { ResponsiveContainer } from 'recharts'
 import { tss } from 'tss-react'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DemographicEvolutionResultsTable } from '~/components/simulations/results/demographic-evolution-results-table'
 import { formatNumber } from '~/utils/format-numbers'
 
@@ -82,12 +83,27 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill="#4F46E5" />
-            <Bar dataKey="secondaryResidenceAccomodationEvolution" name="Résidences secondaires" stackId="a" fill="#EC4899" />
-            <Bar dataKey="longTermVacantAccomodation" name="Logements vacants de longue durée" stackId="a" fill="#10B981" />
-            <Bar dataKey="shortTermVacantAccomodation" name="Logements vacants de courte durée" stackId="a" fill="#10B981" />
-            <Bar dataKey="renewalNeeds" name="Renouvellement" stackId="a" fill="#F59E0B" />
-            <Bar dataKey="totalFlux" name="Demande potentielle" stackId="a" fill="#6366F1" />
+            <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill={getChartColor('demographicEvolution')} />
+            <Bar
+              dataKey="secondaryResidenceAccomodationEvolution"
+              name="Résidences secondaires"
+              stackId="a"
+              fill={getChartColor('secondaryResidenceAccomodationEvolution')}
+            />
+            <Bar
+              dataKey="longTermVacantAccomodation"
+              name="Logements vacants de longue durée"
+              stackId="a"
+              fill={getChartColor('longTermVacantAccomodation')}
+            />
+            <Bar
+              dataKey="shortTermVacantAccomodation"
+              name="Logements vacants de courte durée"
+              stackId="a"
+              fill={getChartColor('shortTermVacantAccomodation')}
+            />
+            <Bar dataKey="renewalNeeds" name="Renouvellement" stackId="a" fill={getChartColor('renewalNeeds')} />
+            <Bar dataKey="totalFlux" name="Demande potentielle" stackId="a" fill={getChartColor('totalFlux')} />
             <Legend
               content={
                 <p style={{ color: 'rgb(136, 132, 216)', margin: 0 }}>

@@ -1,8 +1,9 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { Signout } from '~/app/(authenticated)/signout'
+import { UserTypeSelectionModal } from '~/components/auth/user-type-selection-modal'
 import { AuthenticatedBreadcrumb } from '~/components/breadcrumbs/authenticated-breadcrumb'
 
-export default async function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
+export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Signout />
@@ -12,6 +13,7 @@ export default async function AuthenticatedLayout({ children }: { children: Reac
         style={{ backgroundColor: fr.colors.decisions.background.default.grey.default, flex: 1 }}
       >
         {children}
+        <UserTypeSelectionModal />
       </div>
     </>
   )

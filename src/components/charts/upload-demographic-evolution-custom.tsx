@@ -2,6 +2,7 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
+import Link from 'next/link'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -100,8 +101,17 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
       >
         {isProcessing ? 'Traitement en cours...' : 'Importer des données personnalisées'}
       </Button>
-      <p id="upload-format-hint" className={fr.cx('fr-text--xs', 'fr-mt-1w')}>
-        Formats acceptés : Excel (.xlsx, .xls) ou CSV
+      <p id="upload-format-hint" className={fr.cx('fr-text--xs', 'fr-mt-1w', 'fr-mb-0')}>
+        Formats acceptés : Excel (.xlsx, .xls) ou CSV.
+      </p>
+      <p className="fr-text--xs">
+        <Link className="fr-link fr-text--xs" href="/assets/pdf/guide_projection_facon.pdf" target="_blank">
+          Guide explicatif de la fonctionnalité
+        </Link>
+        <span className="fr-mx-1w">•</span>
+        <Link className="fr-link fr-text--xs" href="/assets/csv/template_import_a_facon.csv" download>
+          Template de données (CSV)
+        </Link>
       </p>
     </div>
   )

@@ -5,6 +5,7 @@ import { createModal } from '@codegouvfr/react-dsfr/Modal'
 import { Select } from '@codegouvfr/react-dsfr/Select'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -18,16 +19,18 @@ const USER_TYPE_OPTIONS = [
   { label: 'Collectivité', value: UserType.Collectivite },
   { label: 'DREAL', value: UserType.DREAL },
   { label: "Bureau d'études", value: UserType.BureauEtudes },
+  { label: 'Autre', value: UserType.Autre },
 ] as const
 
 const UserTypeModal = createModal({
   id: 'user-type-selection-modal',
-  isOpenedByDefault: false,
+  isOpenedByDefault: true,
 })
 
 export function UserTypeSelectionModal() {
   const { data: session, update } = useSession() as unknown as { data: TSession; update: () => Promise<unknown> }
   const { mutateAsync, isPending } = useUpdateUserType()
+  const pathname = usePathname()
 
   const form = useForm<TUpdateUserType>({
     resolver: zodResolver(ZUpdateUserType),
@@ -36,12 +39,6 @@ export function UserTypeSelectionModal() {
       userId: session?.user?.id,
     },
   })
-
-  useEffect(() => {
-    if (!!UserTypeModal && session?.user && !session.user.type) {
-      UserTypeModal.open()
-    }
-  }, [session])
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
@@ -52,6 +49,21 @@ export function UserTypeSelectionModal() {
       toast.error("Erreur lors de la mise à jour du type d'organisation de l'utilisateur")
     }
   })
+
+  useEffect(() => {
+    // trick to wait for the modal to be bound and mounted
+    const timer = setTimeout(() => {
+      if (session.user && !session.user.type) {
+        UserTypeModal.open()
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [session, pathname])
+
+  if (session.user?.type) {
+    return null
+  }
 
   return (
     <UserTypeModal.Component title="Sélectionnez votre type d'organisation" concealingBackdrop={false} size="medium">

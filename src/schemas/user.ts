@@ -7,6 +7,7 @@ export enum UserType {
   Collectivite = 'Collectivite',
   DREAL = 'DREAL',
   BureauEtudes = 'BureauEtudes',
+  Autre = 'Autre',
 }
 
 export const ZUser = ZCommonDateFields.extend({

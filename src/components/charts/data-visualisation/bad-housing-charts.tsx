@@ -27,19 +27,22 @@ export const BadHousingChart: FC<BadHousingChartProps> = ({ data }) => {
 
   const chartData = [
     {
-      ...data[queryStates.epci as string],
+      name: data[queryStates.epci as string].name,
       noAccommodation: data[queryStates.epci as string].noAccommodation.total,
       hosted: data[queryStates.epci as string].hosted.total,
+      financialInadequation: data[queryStates.epci as string].financialInadequation,
+      badQuality: data[queryStates.epci as string].badQuality,
+      physicalInadequation: data[queryStates.epci as string].physicalInadequation,
     },
   ]
   const chartDataOteloParams = [
     {
-      badQuality: chartData[0].badQuality * 0.5,
-      financialInadequation: chartData[0].financialInadequation * 0.3,
-      physicalInadequation: chartData[0].physicalInadequation * 0.9,
-      hosted: chartData[0].hosted * 0.3,
-      noAccommodation: chartData[0].noAccommodation * 0.5,
       name: chartData[0].name,
+      noAccommodation: chartData[0].noAccommodation * 0.5,
+      hosted: chartData[0].hosted * 0.3,
+      financialInadequation: chartData[0].financialInadequation * 0.3,
+      badQuality: chartData[0].badQuality * 0.5,
+      physicalInadequation: chartData[0].physicalInadequation * 0.9,
     },
   ]
 
@@ -103,6 +106,69 @@ export const BadHousingChart: FC<BadHousingChartProps> = ({ data }) => {
   }
 
   const maxPercentage = totalVolume > 0 ? Math.round((maxValue / totalVolume) * 100) : 0
+
+  const legendOrder = [
+    { dataKey: 'noAccommodation', name: 'Sans logement', color: getChartColor('noAccommodation') },
+    { dataKey: 'hosted', name: 'Hébergés', color: getChartColor('hosted') },
+    { dataKey: 'financialInadequation', name: 'Inadéquation financière', color: getChartColor('financialInadequation') },
+    { dataKey: 'badQuality', name: 'Mauvaise qualité', color: getChartColor('badQuality') },
+    { dataKey: 'physicalInadequation', name: 'Inadéquation physique', color: getChartColor('physicalInadequation') },
+  ]
+
+  const customLegend = () => {
+    return (
+      <ul style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', listStyle: 'none', margin: 0, padding: 0 }}>
+        {legendOrder.map((entry) => (
+          <li key={entry.dataKey} style={{ display: 'flex', alignItems: 'center', marginRight: '20px', marginBottom: '5px' }}>
+            <span
+              style={{
+                display: 'inline-block',
+                width: '12px',
+                height: '12px',
+                backgroundColor: entry.color,
+                marginRight: '5px',
+              }}
+            />
+            <span style={{ fontSize: '14px', color: entry.color }}>{entry.name}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  const customTooltip = (props: { active?: boolean; payload?: Array<{ dataKey: string; value: number }>; label?: string | number }) => {
+    const { active, payload, label } = props
+    if (active && payload && payload.length) {
+      return (
+        <div style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '10px', borderRadius: '4px' }}>
+          <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>{label}</p>
+          {legendOrder.map((entry) => {
+            const payloadItem = payload.find((p) => p.dataKey === entry.dataKey)
+            if (payloadItem && payloadItem.value > 0) {
+              return (
+                <p key={entry.dataKey} style={{ margin: '5px 0', display: 'flex', alignItems: 'center' }}>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '12px',
+                      height: '12px',
+                      backgroundColor: entry.color,
+                      marginRight: '8px',
+                    }}
+                  />
+                  <span style={{ color: entry.color }}>
+                    {entry.name}: {formatNumber(payloadItem.value)}
+                  </span>
+                </p>
+              )
+            }
+            return null
+          })}
+        </div>
+      )
+    }
+    return null
+  }
 
   const chartDescription = withOteloParams ? (
     <>
@@ -216,13 +282,13 @@ export const BadHousingChart: FC<BadHousingChartProps> = ({ data }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
-            <Tooltip />
-            <Bar dataKey="badQuality" name="Mauvaise qualité" fill={getChartColor('badQuality')} />
-            <Bar dataKey="financialInadequation" name="Inadéquation financière" fill={getChartColor('financialInadequation')} />
-            <Bar dataKey="physicalInadequation" name="Inadéquation physique" fill={getChartColor('physicalInadequation')} />
-            <Bar dataKey="hosted" name="Hébergés" fill={getChartColor('hosted')} />
+            <Tooltip content={customTooltip} />
             <Bar dataKey="noAccommodation" name="Sans logement" fill={getChartColor('noAccommodation')} />
-            <Legend />
+            <Bar dataKey="hosted" name="Hébergés" fill={getChartColor('hosted')} />
+            <Bar dataKey="financialInadequation" name="Inadéquation financière" fill={getChartColor('financialInadequation')} />
+            <Bar dataKey="badQuality" name="Mauvaise qualité" fill={getChartColor('badQuality')} />
+            <Bar dataKey="physicalInadequation" name="Inadéquation physique" fill={getChartColor('physicalInadequation')} />
+            <Legend content={customLegend} />
           </BarChart>
         </ResponsiveContainer>
         <div className={classes.titleContainer}>

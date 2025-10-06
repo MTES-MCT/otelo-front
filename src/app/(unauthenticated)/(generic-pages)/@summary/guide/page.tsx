@@ -9,7 +9,6 @@ export default function SummarySlot() {
             href: '#quest-ce-qu-otelo',
           },
           text: "Qu'est-ce qu'Otelo ?",
-          expandedByDefault: false,
           items: [
             {
               linkProps: {
@@ -82,7 +81,7 @@ export default function SummarySlot() {
             href: '#briques-besoin-logements',
           },
           text: 'Les briques du besoin en logements',
-          expandedByDefault: false,
+          expandedByDefault: true,
           items: [
             {
               linkProps: {
@@ -127,93 +126,94 @@ export default function SummarySlot() {
                 href: '#situations-mal-logement',
               },
               text: '🎯 Les situations de mal-logement et de hors-logement',
+              items: [
+                {
+                  linkProps: {
+                    href: '#horizon-resorption',
+                  },
+                  text: 'Horizon de résorption',
+                },
+                {
+                  linkProps: {
+                    href: '#hors-logement',
+                  },
+                  text: 'Hors-logement',
+                  items: [
+                    {
+                      linkProps: {
+                        href: '#sans-abris-habitations-fortune',
+                      },
+                      text: "Sans-abris, habitations de fortune et logés à l'hôtel",
+                    },
+                    {
+                      linkProps: {
+                        href: '#hebergement-social',
+                      },
+                      text: 'Hébergement social',
+                    },
+                  ],
+                },
+                {
+                  linkProps: {
+                    href: '#heberges',
+                  },
+                  text: 'Hébergés',
+                  items: [
+                    {
+                      linkProps: {
+                        href: '#cohabitation-intergenerationnelle',
+                      },
+                      text: 'Cohabitation intergénérationnelle présumée subie',
+                    },
+                    {
+                      linkProps: {
+                        href: '#heberges-chez-tiers',
+                      },
+                      text: 'Hébergés chez un tiers',
+                    },
+                  ],
+                },
+                {
+                  linkProps: {
+                    href: '#mal-logement',
+                  },
+                  text: 'Mal-logement',
+                  items: [
+                    {
+                      linkProps: {
+                        href: '#depense-excessive-logement',
+                      },
+                      text: 'Dépense excessive en logement',
+                    },
+                    {
+                      linkProps: {
+                        href: '#menages-logement-degrade',
+                      },
+                      text: 'Ménages habitant un logement dégradé',
+                    },
+                    {
+                      linkProps: {
+                        href: '#sur-occupation',
+                      },
+                      text: 'Sur-occupation',
+                    },
+                  ],
+                },
+                {
+                  linkProps: {
+                    href: '#doublons',
+                  },
+                  text: 'Prise en compte de doublons éventuels',
+                },
+              ],
             },
           ],
-        },
-        {
-          linkProps: {
-            href: '#horizon-resorption',
-          },
-          text: 'Horizon de résorption',
-        },
-        {
-          linkProps: {
-            href: '#hors-logement',
-          },
-          text: 'Hors-logement',
-          items: [
-            {
-              linkProps: {
-                href: '#sans-abris-habitations-fortune',
-              },
-              text: "Sans-abris, habitations de fortune et logés à l'hôtel",
-            },
-            {
-              linkProps: {
-                href: '#hebergement-social',
-              },
-              text: 'Hébergement social',
-            },
-          ],
-        },
-        {
-          linkProps: {
-            href: '#heberges',
-          },
-          text: 'Hébergés',
-          items: [
-            {
-              linkProps: {
-                href: '#cohabitation-intergenerationnelle',
-              },
-              text: 'Cohabitation intergénérationnelle présumée subie',
-            },
-            {
-              linkProps: {
-                href: '#heberges-chez-tiers',
-              },
-              text: 'Hébergés chez un tiers',
-            },
-          ],
-        },
-        {
-          linkProps: {
-            href: '#mal-logement',
-          },
-          text: 'Mal-logement',
-          items: [
-            {
-              linkProps: {
-                href: '#depense-excessive-logement',
-              },
-              text: 'Dépense excessive en logement',
-            },
-            {
-              linkProps: {
-                href: '#menages-logement-degrade',
-              },
-              text: 'Ménages habitant un logement dégradé',
-            },
-            {
-              linkProps: {
-                href: '#sur-occupation',
-              },
-              text: 'Sur-occupation',
-            },
-          ],
-        },
-        {
-          linkProps: {
-            href: '#doublons',
-          },
-          text: 'Prise en compte de doublons éventuels',
         },
         {
           linkProps: {
             href: '#elaborer-scenario',
           },
           text: '🎯 Élaborer un scénario',
-          expandedByDefault: false,
           items: [
             {
               linkProps: {
@@ -254,7 +254,6 @@ export default function SummarySlot() {
             href: '#comment-utiliser-otelo',
           },
           text: '🛠️ Comment bien utiliser Otelo',
-          expandedByDefault: false,
           items: [
             {
               linkProps: {

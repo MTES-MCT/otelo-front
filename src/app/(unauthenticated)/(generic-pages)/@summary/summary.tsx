@@ -6,5 +6,9 @@ type SummaryProps = {
 }
 
 export function Summary({ items }: SummaryProps) {
-  return <SideMenu classes={{ inner: styles.sideMenu }} align="left" burgerMenuButtonText="Sommaire" items={items} title="Sommaire" />
+  return (
+    <div className={styles.stickyContainer}>
+      <SideMenu align="left" burgerMenuButtonText="Sommaire" items={items} title="Sommaire" />
+    </div>
+  )
 }

@@ -16,8 +16,6 @@ export default function GenericPagesLayout({
     <div className={fr.cx('fr-container')}>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
         <div className={classNames(fr.cx('fr-col-12', 'fr-col-md-4'), styles.sideMenuContainer)}>
-          {summary}
-
           <div className={classNames(styles.ctaContainer, styles.padRight)}>
             <Button
               priority="tertiary"
@@ -34,11 +32,14 @@ export default function GenericPagesLayout({
               Testez vos connaissances
             </Button>
           </div>
+
           <div className={styles.padRight}>
             <CallOut>
               Contactez l’équipe Otelo à l’adresse : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </CallOut>
           </div>
+
+          {summary}
         </div>
         <div className={fr.cx('fr-col-12', 'fr-col-md-8')}>{children}</div>
       </div>

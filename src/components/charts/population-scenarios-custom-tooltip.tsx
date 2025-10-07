@@ -25,7 +25,7 @@ export const PopulationScenariosCustomTooltip = ({
               <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> ménages par rapport à{' '}
               <span className={classes.bold}>2021</span>
             </span>
-            <span className={classes.smallText}>({formatNumber(item.value)} ménages)</span>
+            <span className={classes.smallText}>({formatNumber(item.value)} habitants)</span>
           </div>
         )
       })}

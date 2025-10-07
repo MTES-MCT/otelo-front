@@ -26,7 +26,7 @@ export default async function TableauDeBordPage() {
               <div className="fr-border fr-border-radius--8 fr-p-2w">
                 <div className="fr-flex fr-justify-content-space-between">
                   <h2 className="fr-mb-0 fr-h4">{group.name}</h2>
-                  <Button linkProps={{ href: `/dashboard/${group.id}` }} size="small">
+                  <Button linkProps={{ href: `/tableau-de-bord/${group.id}` }} size="small">
                     Télécharger une présentation des scénarios
                   </Button>
                 </div>

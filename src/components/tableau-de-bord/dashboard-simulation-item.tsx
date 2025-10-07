@@ -14,23 +14,21 @@ interface DashboardSimulationItemProps {
 
 export function DashboardSimulationItem({ simulation }: DashboardSimulationItemProps) {
   return (
-    <div className={fr.cx('fr-mb-2w')}>
+    <div className={fr.cx('fr-grid-row', 'fr-grid-row--middle')}>
+      <div className={fr.cx('fr-col')}>
+        <Link href={`/simulation/${simulation.id}/resultats`} className={fr.cx('fr-link')}>
+          {simulation.name}
+        </Link>
+      </div>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--middle')}>
-        <div className={fr.cx('fr-col')}>
-          <Link href={`/simulation/${simulation.id}/resultats`} className={fr.cx('fr-link')}>
-            {simulation.name}
-          </Link>
+        <div className={fr.cx('fr-mr-1w')}>
+          <Badge severity="info" small>
+            {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}
+          </Badge>
         </div>
         <div className={fr.cx('fr-grid-row', 'fr-grid-row--middle')}>
-          <div className={fr.cx('fr-mr-1w')}>
-            <Badge severity="info" small>
-              {dayjs(simulation.updatedAt).format('DD/MM/YYYY')}
-            </Badge>
-          </div>
-          <div className={fr.cx('fr-grid-row', 'fr-grid-row--middle')}>
-            <CloneSimulationButton simulation={simulation} />
-            <DeleteSimulationButton simulation={simulation} />
-          </div>
+          <CloneSimulationButton simulation={simulation} />
+          <DeleteSimulationButton simulation={simulation} />
         </div>
       </div>
     </div>

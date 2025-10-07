@@ -34,9 +34,8 @@ export const CustomSelection = ({ bassinEpcis }: CustomSelectionProps) => {
 
   const onSelectEpci = async (item: GeoApiEpciResult | GeoApiCommuneResult) => {
     const code = 'codeEpci' in item ? (item.codeEpci ?? item.code) : item.code
-
     setIsEditing(false)
-    await setQueryStates({ baseEpci: code, epciChart: code, epcis: [] })
+    await setQueryStates({ baseEpci: code, epciChart: code, epcis: [code] })
     router.refresh()
   }
 

@@ -17,7 +17,8 @@ type SimulationNeedsSummaryProps = {
 }
 
 export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNeedsSummaryProps) => {
-  const { badQuality, total, totalFlux, totalStock, vacancy } = results
+  // const { badQuality, total, totalFlux, totalStock, vacancy } = results
+  const { total, totalFlux, totalStock, vacancy } = results
   return (
     <div className={styles.gridContainer}>
       <h5>Synthèse à projection de l&apos;année {projection}</h5>
@@ -85,7 +86,7 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
             }
           />
         </div>
-        <div className={styles.cardWrapper}>
+        {/* <div className={styles.cardWrapper}>
           <Tile
             classes={{ root: styles.root }}
             desc="Ce besoin est calculé en fonction de la demande de logements à rénover."
@@ -97,7 +98,7 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
               </span>
             }
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )

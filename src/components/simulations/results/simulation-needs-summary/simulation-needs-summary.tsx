@@ -76,9 +76,9 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
             desc={
               vacancy < 0
                 ? `Il y a une résorption de ${Math.abs(vacancy)} logements vacants d'ici ${projection}.`
-                : `Il y a ${vacancy} logements vacants à remobiliser d'ici ${projection}.`
+                : `Il y a ${vacancy < 0 ? formatNumber(Math.abs(vacancy)) : 0} logement vacant à remobiliser d'ici ${projection}.`
             }
-            start={<h4>Logements vacants {vacancy < 0 ? 'résorbés' : 'à remobiliser'}</h4>}
+            start={<h4>Logements vacants {vacancy < 0 ? 'résorbés' : `à remobiliser`}</h4>}
             title={
               <span className="fr-h2" style={{ cursor: 'default' }}>
                 {vacancy < 0 ? formatNumber(Math.abs(vacancy)) : 0}

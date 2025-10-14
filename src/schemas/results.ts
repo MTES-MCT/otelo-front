@@ -29,6 +29,8 @@ export const ZEpciTotalCalculationResult = z.object({
   total: z.number(),
   totalFlux: z.number(),
   totalStock: z.number(),
+  prepeakTotalStock: z.number(),
+  postpeakTotalStock: z.number(),
 })
 export type TEpciTotalCalculationResult = z.infer<typeof ZEpciTotalCalculationResult>
 

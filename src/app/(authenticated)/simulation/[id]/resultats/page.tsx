@@ -28,12 +28,16 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   }
 
   const epciTabs = simulation.epcis.map((epci) => {
+    const epciTotals = simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult
     const badQuality = (simulation.results.badQuality.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value
-    const totalStock = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalStock
-    const totalFlux = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalFlux
+    const prepeakTotalStock = epciTotals.prepeakTotalStock
+    const postpeakTotalStock = epciTotals.postpeakTotalStock
+    const totalStock = epciTotals.totalStock
+    const totalFlux = epciTotals.totalFlux
+    const epciFlowRequirementData = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
     const epciResults = {
       badQuality,
-      total: (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).total,
+      total: epciTotals.total,
       totalFlux,
       totalStock,
       vacancy: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
@@ -59,15 +63,20 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     )
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
-    const newConstructionsResults = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
-    const hasSurplusHousing = Object.values(newConstructionsResults.data.surplusHousing).some((value) => value !== 0)
+    const hasSurplusHousing = Object.values(epciFlowRequirementData.data.surplusHousing).some((value) => value !== 0)
+    const epciData = {
+      name: epci.name,
+      peakYear: epciFlowRequirementData.data.peakYear,
+      prepeakTotalStock,
+      postpeakTotalStock,
+    }
     return {
       content: (
         <>
-          <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={epciResults} />
+          <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={epciResults} epci={epciData} />
           <AccommodationContructionEvolutionChart
             sitadelResults={sitadelResults}
-            newConstructionsResults={newConstructionsResults}
+            newConstructionsResults={epciFlowRequirementData}
             horizon={simulation.scenario.projection}
           />
           <div>

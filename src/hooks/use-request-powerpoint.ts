@@ -3,9 +3,8 @@ import { TRequestPowerpoint } from '~/schemas/simulation'
 
 export const useRequestPowerpoint = () => {
   const postSimulation = async (params: TRequestPowerpoint) => {
-    console.log('params', params)
     try {
-      const response = await fetch('/api/simulations/request-powerpoint', {
+      const response = await fetch(`/api/simulations/request-powerpoint`, {
         body: JSON.stringify(params),
         method: 'POST',
       })

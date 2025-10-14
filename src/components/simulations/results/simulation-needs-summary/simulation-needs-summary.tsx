@@ -29,7 +29,15 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
 
   return (
     <div className={styles.gridContainer}>
-      <h5 className="fr-mb-0">Synthèse à projection de l&apos;année {projection}</h5>
+      <h5 className="fr-mb-0">
+        {epci ? (
+          <span className="fr-mb-0 fr-text--underline">
+            Synthèse : {epci.name} - 2021-{projection}
+          </span>
+        ) : (
+          <span className="fr-mb-0 fr-text--underline">Synthèse : 2021-{projection}</span>
+        )}
+      </h5>
 
       <span className="fr-h5 fr-mb-0">Besoins en logements supplémentaires</span>
       {!!epci && epci.peakYear < projection && postpeakTotalStock && (
@@ -37,7 +45,9 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
           description={
             <>
               <p>
-                L'EPCI de {epci.name} a des besoins en constructions neuves jusqu'en <span className="fr-text--bold">{epci.peakYear}</span>.
+                Une fois la croissance démographique stabilisée en <span className="fr-text--bold">{epci.peakYear}</span>, le territoire n’a
+                plus besoin de construire davantage, mais doit encore agir pour améliorer les conditions de logement des ménages les plus
+                fragiles.
               </p>
               Sur la période {epci.peakYear + 1} à {projection}, il restera{' '}
               <span className="fr-text--bold">{formatNumber(postpeakTotalStock)}</span> logements à trouver pour résorber le mal-logement.
@@ -82,6 +92,21 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
         </div>
       </div>
       <span className="fr-h5 fr-mb-0">Comment y répondre ?</span>
+      {!!epci && (
+        <Alert
+          description={
+            <>
+              <p>
+                Les besoins en logements supplémentaires peuvent être couverts à la fois par la construction neuve et par une meilleure
+                utilisation du parc existant, en particulier grâce à la remise sur le marché de logements vacants.
+              </p>
+              <p>Ci-dessous la décomposition représentant le paramétrage choisi dans le scénario :</p>
+            </>
+          }
+          small
+          severity="info"
+        />
+      )}
       <div className={styles.vacancyContainer}>
         <div className={styles.cardWrapper}>
           <Tile
@@ -99,8 +124,8 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
             classes={{ root: styles.root }}
             desc={
               vacancy < 0
-                ? `Il y a une résorption de ${Math.abs(vacancy)} logements vacants d'ici ${projection}.`
-                : `Il y a ${vacancy < 0 ? formatNumber(Math.abs(vacancy)) : 0} logement vacant à remobiliser d'ici ${projection}.`
+                ? `Il y a une résorption de ${Math.abs(vacancy)} logements vacants d'ici ${epci ? epci.peakYear : projection}.`
+                : `Il y a ${vacancy < 0 ? formatNumber(Math.abs(vacancy)) : 0} logement vacant à remobiliser d'ici ${epci ? epci.peakYear : projection}.`
             }
             start={<h4>Logements vacants {vacancy < 0 ? 'résorbés' : `à remobiliser`}</h4>}
             title={

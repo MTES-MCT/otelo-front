@@ -1,6 +1,6 @@
+import Alert from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Tile from '@codegouvfr/react-dsfr/Tile'
-import classNames from 'classnames'
 import { formatNumber } from '~/utils/format-numbers'
 import styles from './simulation-needs-summary.module.css'
 
@@ -12,29 +12,42 @@ type SimulationNeedsSummaryProps = {
     total: number
     totalFlux: number
     totalStock: number
+
     vacancy: number
+  }
+  epci?: {
+    name: string
+    peakYear: number
+    prepeakTotalStock: number
+    postpeakTotalStock: number
   }
 }
 
-export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNeedsSummaryProps) => {
-  // const { badQuality, total, totalFlux, totalStock, vacancy } = results
+export const SimulationNeedsSummary = ({ projection, id, results, epci }: SimulationNeedsSummaryProps) => {
   const { total, totalFlux, totalStock, vacancy } = results
+  const { prepeakTotalStock, postpeakTotalStock } = epci ?? {}
+
   return (
     <div className={styles.gridContainer}>
-      <h5>Synthèse à projection de l&apos;année {projection}</h5>
+      <h5 className="fr-mb-0">Synthèse à projection de l&apos;année {projection}</h5>
+
+      <span className="fr-h5 fr-mb-0">Besoins en logements supplémentaires</span>
+      {!!epci && epci.peakYear < projection && postpeakTotalStock && (
+        <Alert
+          description={
+            <>
+              <p>
+                L'EPCI de {epci.name} a des besoins en constructions neuves jusqu'en <span className="fr-text--bold">{epci.peakYear}</span>.
+              </p>
+              Sur la période {epci.peakYear + 1} à {projection}, il restera{' '}
+              <span className="fr-text--bold">{formatNumber(postpeakTotalStock)}</span> logements à trouver pour résorber le mal-logement.
+            </>
+          }
+          small
+          severity="info"
+        />
+      )}
       <div className={styles.cardContainer}>
-        <div className={styles.cardWrapper}>
-          <Tile
-            classes={{ root: styles.root, content: styles.contentCenter }}
-            start={<h4>Besoin en constructions neuves</h4>}
-            title={
-              <span className="fr-h2" style={{ cursor: 'default' }}>
-                {formatNumber(total)}
-              </span>
-            }
-          />
-        </div>
-        <span className={classNames(styles.symbol, 'fr-h2')}>=</span>
         <div className={styles.cardWrapper}>
           <Tile
             classes={{ root: styles.root, content: styles.contentSpaceBetween }}
@@ -51,14 +64,13 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
             }
           />
         </div>
-        <span className={classNames(styles.symbol, 'fr-h2')}>+</span>
         <div className={styles.cardWrapper}>
           <Tile
             classes={{ root: styles.root, content: styles.contentSpaceBetween }}
             start={<h4>Besoins liés aux situations de mal logement</h4>}
             title={
               <span className="fr-h2" style={{ cursor: 'default' }}>
-                {formatNumber(totalStock)}
+                {!!epci && prepeakTotalStock ? formatNumber(prepeakTotalStock) : formatNumber(totalStock)}
               </span>
             }
             detail={
@@ -69,7 +81,19 @@ export const SimulationNeedsSummary = ({ projection, id, results }: SimulationNe
           />
         </div>
       </div>
+      <span className="fr-h5 fr-mb-0">Comment y répondre ?</span>
       <div className={styles.vacancyContainer}>
+        <div className={styles.cardWrapper}>
+          <Tile
+            classes={{ root: styles.root, content: styles.contentCenter }}
+            start={<h4>Besoin en constructions neuves</h4>}
+            title={
+              <span className="fr-h2" style={{ cursor: 'default' }}>
+                {formatNumber(total)}
+              </span>
+            }
+          />
+        </div>
         <div className={styles.cardWrapper}>
           <Tile
             classes={{ root: styles.root }}

@@ -38,13 +38,13 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
         return 'Population : Haute | Ménages : Accélération'
     }
   }
-
-  const epciTxRs = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_rs
-  const shortTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_courte
-  const longTermVacancyRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_vacance_longue
+  const epciScenario = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)
+  const secondaryResidenceRate = epciScenario?.b2_tx_rs
+  const shortTermVacancyRate = epciScenario?.b2_tx_vacance_courte
+  const longTermVacancyRate = epciScenario?.b2_tx_vacance_longue
   const vacancyRate = (shortTermVacancyRate ?? 0) + (longTermVacancyRate ?? 0)
-  const restructuringRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_restructuration
-  const disappearanceRate = scenario.epciScenarios.find((epciScenario) => epciScenario.epciCode === selectedEpci)?.b2_tx_disparition
+  const restructuringRate = epciScenario?.b2_tx_restructuration
+  const disappearanceRate = epciScenario?.b2_tx_disparition
 
   const settings = [
     {
@@ -65,13 +65,14 @@ export const SimulationScenarioSummary: FC<SimulationScenarioSummaryProps> = ({ 
       label: "Scénario de l'évolution démographique",
       tags: [<Tag key="omphale">{getOmphaleScenarioLabel(scenario.b2_scenario)}</Tag>],
     },
-    ...(epciTxRs
+
+    ...(secondaryResidenceRate !== undefined && secondaryResidenceRate >= 0
       ? [
           {
             iconId: 'ri-percent-line',
             key: 'tauxRS',
             label: 'Taux cible de résidences secondaires',
-            tags: [<Tag key="tauxRS">Taux cible de résidences secondaires : {Number(epciTxRs * 100).toFixed(2)} %</Tag>],
+            tags: [<Tag key="tauxRS">Taux cible de résidences secondaires : {Number(secondaryResidenceRate * 100).toFixed(2)} %</Tag>],
           },
         ]
       : []),

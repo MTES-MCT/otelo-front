@@ -28,6 +28,7 @@ export const ZEpciScenario = z.object({
   epciCode: z.string(),
   baseEpci: z.boolean(),
 })
+export type TEpciScenario = z.infer<typeof ZEpciScenario>
 
 export const ZScenario = ZCommonDateFields.extend({
   b11_etablissement: z.array(z.string()),

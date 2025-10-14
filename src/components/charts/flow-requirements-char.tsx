@@ -48,6 +48,9 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(longTermVacantAccomodation < 0 && {
       longTermVacantAccomodation: Math.abs(longTermVacantAccomodation),
     }),
+    ...(secondaryResidenceAccomodationEvolution < 0 && {
+      secondaryResidenceAccomodationEvolution: Math.abs(secondaryResidenceAccomodationEvolution),
+    }),
     ...(renewalNeeds < 0 && { renewalNeeds: Math.abs(renewalNeeds) }),
   }
 

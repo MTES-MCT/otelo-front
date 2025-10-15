@@ -33,10 +33,10 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
       <h5 className="fr-mb-0">
         {epci ? (
           <span className="fr-mb-0 fr-text--underline">
-            Synthèse : {epci.name} - 2021-{projection}
+            Synthèse des besoins en logements : {epci.name} - 2021-{projection}
           </span>
         ) : (
-          <span className="fr-mb-0 fr-text--underline">Synthèse : 2021-{projection}</span>
+          <span className="fr-mb-0 fr-text--underline">Synthèse des besoins en logements : 2021-{projection}</span>
         )}
       </h5>
 

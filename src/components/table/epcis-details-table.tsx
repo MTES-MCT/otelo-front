@@ -22,6 +22,9 @@ export const EpcisDetailsTable = ({ simulation }: EpcisDetailsTableProps) => {
       formatNumber(totalStock), // Mal-logement - needs to be calculated
       formatNumber(total),
       flowResults.longTermVacantAccomodation < 0 ? formatNumber(Math.abs(flowResults.longTermVacantAccomodation)) : 0, // Logements vacants à remobiliser
+      flowResults.secondaryResidenceAccomodationEvolution < 0
+        ? formatNumber(Math.abs(flowResults.secondaryResidenceAccomodationEvolution))
+        : 0, // résidences secondaires à remobiliser
       flowRequirementsEpci.data.peakYear !== 2050 ? flowRequirementsEpci.data.peakYear : 'après 2050', // Année à partir de laquelle le territoire n'a plus de besoin - needs to be calculated
     ]
   })
@@ -36,6 +39,7 @@ export const EpcisDetailsTable = ({ simulation }: EpcisDetailsTableProps) => {
           'Besoins liés aux situations de mal logement',
           'Besoins en constructions neuves',
           'Remobilisation de logements vacants',
+          'Remobilisation de résidences secondaires',
           "Année à partir de laquelle le territoire n'a plus de besoin en logements",
         ]}
         data={tableData}

@@ -1,6 +1,7 @@
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Tile from '@codegouvfr/react-dsfr/Tile'
+import classNames from 'classnames'
 import { formatNumber } from '~/utils/format-numbers'
 import styles from './simulation-needs-summary.module.css'
 
@@ -12,7 +13,7 @@ type SimulationNeedsSummaryProps = {
     total: number
     totalFlux: number
     totalStock: number
-
+    secondaryAccommodation: number
     vacancy: number
   }
   epci?: {
@@ -24,7 +25,7 @@ type SimulationNeedsSummaryProps = {
 }
 
 export const SimulationNeedsSummary = ({ projection, id, results, epci }: SimulationNeedsSummaryProps) => {
-  const { total, totalFlux, totalStock, vacancy } = results
+  const { total, totalFlux, totalStock, vacancy, secondaryAccommodation } = results
   const { prepeakTotalStock, postpeakTotalStock } = epci ?? {}
 
   return (
@@ -39,7 +40,7 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
         )}
       </h5>
 
-      <span className="fr-h5 fr-mb-0">Besoins en logements supplémentaires</span>
+      <span className="fr-h5 fr-mb-0">Les besoins en constructions neuves :</span>
       {!!epci && epci.peakYear < projection && postpeakTotalStock && (
         <Alert
           description={
@@ -60,6 +61,18 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
       <div className={styles.cardContainer}>
         <div className={styles.cardWrapper}>
           <Tile
+            classes={{ root: styles.root, content: styles.contentCenter }}
+            start={<h4>Besoin en constructions neuves</h4>}
+            title={
+              <span className="fr-h2" style={{ cursor: 'default' }}>
+                {formatNumber(total)}
+              </span>
+            }
+          />
+        </div>
+        <span className={classNames(styles.symbol, 'fr-h2')}>=</span>
+        <div className={styles.cardWrapper}>
+          <Tile
             classes={{ root: styles.root, content: styles.contentSpaceBetween }}
             start={<h4>Besoins liés à la démographie et à l'évolution du parc</h4>}
             title={
@@ -74,6 +87,7 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
             }
           />
         </div>
+        <span className={classNames(styles.symbol, 'fr-h2')}>+</span>
         <div className={styles.cardWrapper}>
           <Tile
             classes={{ root: styles.root, content: styles.contentSpaceBetween }}
@@ -91,16 +105,16 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
           />
         </div>
       </div>
-      <span className="fr-h5 fr-mb-0">Comment y répondre ?</span>
+      <span className="fr-h5 fr-mb-0">La mobilisation du parc existant :</span>
       {!!epci && (
         <Alert
           description={
             <>
               <p>
-                Les besoins en logements supplémentaires peuvent être couverts à la fois par la construction neuve et par une meilleure
-                utilisation du parc existant, en particulier grâce à la remise sur le marché de logements vacants.
+                Au-delà de la construction neuve, le territoire peut répondre à une partie de ses besoins en mobilisant le parc existant :
+                remise sur le marché de logements vacants ou de résidences secondaires. Le volume mobilisable dépend directement des taux
+                cibles de vacance de longue durée et de résidences secondaires que vous avez définis dans le scénario :
               </p>
-              <p>Ci-dessous la décomposition représentant le paramétrage choisi dans le scénario :</p>
             </>
           }
           small
@@ -108,17 +122,6 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
         />
       )}
       <div className={styles.vacancyContainer}>
-        <div className={styles.cardWrapper}>
-          <Tile
-            classes={{ root: styles.root, content: styles.contentCenter }}
-            start={<h4>Besoin en constructions neuves</h4>}
-            title={
-              <span className="fr-h2" style={{ cursor: 'default' }}>
-                {formatNumber(total)}
-              </span>
-            }
-          />
-        </div>
         <div className={styles.cardWrapper}>
           <Tile
             classes={{ root: styles.root }}
@@ -131,6 +134,22 @@ export const SimulationNeedsSummary = ({ projection, id, results, epci }: Simula
             title={
               <span className="fr-h2" style={{ cursor: 'default' }}>
                 {vacancy < 0 ? formatNumber(Math.abs(vacancy)) : 0}
+              </span>
+            }
+          />
+        </div>
+        <div className={styles.cardWrapper}>
+          <Tile
+            classes={{ root: styles.root }}
+            desc={
+              secondaryAccommodation < 0
+                ? `Il y a une résorption de ${Math.abs(secondaryAccommodation)} résidence secondaires d'ici ${epci ? epci.peakYear : projection}.`
+                : `Il y a ${secondaryAccommodation < 0 ? formatNumber(Math.abs(secondaryAccommodation)) : 0} résidences secondaires à remobiliser d'ici ${epci ? epci.peakYear : projection}.`
+            }
+            start={<h4>Résidences secondaires {secondaryAccommodation < 0 ? 'résorbés' : `à remobiliser`}</h4>}
+            title={
+              <span className="fr-h2" style={{ cursor: 'default' }}>
+                {secondaryAccommodation < 0 ? formatNumber(Math.abs(secondaryAccommodation)) : 0}
               </span>
             }
           />

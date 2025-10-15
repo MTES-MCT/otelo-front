@@ -24,6 +24,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     total: simulation.results.total,
     totalFlux: simulation.results.totalFlux,
     totalStock: simulation.results.totalStock,
+    secondaryAccommodation: simulation.results.secondaryAccommodation,
     vacancy: simulation.results.vacantAccomodation,
   }
 

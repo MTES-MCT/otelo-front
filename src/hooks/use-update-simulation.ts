@@ -26,11 +26,13 @@ export const useUpdateBadHousingSimulation = () => {
     mutationFn: (updateSimulationDto: TUpdateBadHousingSimulationDto) => putSimulation(updateSimulationDto),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['simulations'] })
+      queryClient.invalidateQueries({ queryKey: ['simulation-scenario', data.id] })
       toast.success('Simulation mise à jour avec succès.', {
         description: 'Redirection en cours vers votre simulation.',
       })
 
       router.push(`/simulation/${data.id}/resultats`)
+      router.refresh()
     },
   })
 

@@ -12,15 +12,20 @@ type NextStepLinkProps = {
   label?: string
   query: string
   isDisabled?: boolean
+  priority?: 'secondary' | 'primary' | 'tertiary' | 'tertiary no outline' | undefined
 }
 
-export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 'label'>> = ({ href, label = 'Étape suivante' }) => {
+export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 'label' | 'priority'>> = ({
+  href,
+  priority = 'secondary',
+  label = 'Étape suivante',
+}) => {
   const searchParams = useSearchParams()
   const searchParamsString = new URLSearchParams(searchParams).toString()
   const hrefWithParams = `${href}${searchParamsString ? `?${searchParamsString}` : ''}`
   return (
-    <Link href={hrefWithParams}>
-      <Button>{label}</Button>
+    <Link href={hrefWithParams} className="fr-link--no-underline">
+      <Button priority={priority}>{label}</Button>
     </Link>
   )
 }

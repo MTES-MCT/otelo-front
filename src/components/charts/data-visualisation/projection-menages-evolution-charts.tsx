@@ -8,7 +8,7 @@ import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContai
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
-import { barChartColors } from '~/components/charts/data-visualisation/colors'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TDemographicProjectionEvolution } from '~/schemas/population-evolution'
 import { formatNumber } from '~/utils/format-numbers'
@@ -25,55 +25,55 @@ const SCENARIOS = [
     dataKey: 'phH',
     id: 'haute',
     name: 'Ménages - Accélération',
-    stroke: '#E4794A',
+    stroke: getChartColor('phH'),
   },
   {
     dataKey: 'centralH',
     id: 'central',
     name: 'Ménages - Accélération',
-    stroke: '#161616',
+    stroke: getChartColor('centralH'),
   },
   {
     dataKey: 'pbH',
     id: 'basse',
     name: 'Ménages - Accélération',
-    stroke: '#FF9940',
+    stroke: getChartColor('pbH'),
   },
   {
     dataKey: 'centralC',
     id: 'central',
     name: 'Ménages - Tendanciel',
-    stroke: '#666666',
+    stroke: getChartColor('centralC'),
   },
   {
     dataKey: 'pbC',
     id: 'basse',
     name: 'Ménages - Tendanciel',
-    stroke: '#A558A0',
+    stroke: getChartColor('pbC'),
   },
   {
     dataKey: 'pbB',
     id: 'basse',
     name: 'Ménages - Décélération',
-    stroke: '#CE614A',
+    stroke: getChartColor('pbB'),
   },
   {
     dataKey: 'centralB',
     id: 'central',
     name: 'Ménages - Décélération',
-    stroke: '#000091',
+    stroke: getChartColor('centralB'),
   },
   {
     dataKey: 'phB',
     id: 'haute',
     name: 'Ménages - Décélération',
-    stroke: '#91A7D0',
+    stroke: getChartColor('phB'),
   },
   {
     dataKey: 'phC',
     id: 'haute',
     name: 'Ménages - Tendanciel',
-    stroke: '#169B62',
+    stroke: getChartColor('phC'),
   },
 ]
 
@@ -169,7 +169,7 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
   const title = type && DATA_TYPE_OPTIONS.find((option) => option.value === type)?.label
   const displayedScenarios = SCENARIOS.map((scenario) => ({
     ...scenario,
-    stroke: `${scenario.stroke}33`,
+    stroke: scenario.stroke,
     strokeWidth: 2,
   }))
 
@@ -254,15 +254,15 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
                 content={() => (
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[0] }} />
+                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('haute') }} />
                       <span>Décohabitation haute</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[1] }} />
+                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('central') }} />
                       <span>Décohabitation tendanciel</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: barChartColors[2] }} />
+                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('basse') }} />
                       <span>Décohabitation basse</span>
                     </div>
                   </div>
@@ -283,9 +283,9 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
                   return label
                 }}
               />
-              <Bar dataKey="haute" name="Décohabitation haute" fill={barChartColors[0]} />
-              <Bar dataKey="central" name="Décohabitation tendanciel" fill={barChartColors[1]} />
-              <Bar dataKey="basse" name="Décohabitation basse" fill={barChartColors[2]} />
+              <Bar dataKey="haute" name="Décohabitation haute" fill={getChartColor('haute')} />
+              <Bar dataKey="central" name="Décohabitation tendanciel" fill={getChartColor('central')} />
+              <Bar dataKey="basse" name="Décohabitation basse" fill={getChartColor('basse')} />
             </BarChart>
           </ResponsiveContainer>
           <span className={classes.title}>Évolution décennal du nombre de ménages, par scénario de décohabitation</span>

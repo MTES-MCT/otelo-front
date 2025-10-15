@@ -8,6 +8,7 @@ import { FC } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { PopulationScenariosCustomTooltip } from '~/components/charts/population-scenarios-custom-tooltip'
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { roundPopulation } from '~/utils/round-chart-axis'
@@ -21,19 +22,19 @@ const SCENARIOS = [
     dataKey: 'haute',
     name: 'Haute',
     queryValue: 'haute',
-    stroke: '#666666',
+    stroke: getChartColor('haute'),
   },
   {
     dataKey: 'central',
     name: 'Central',
     queryValue: 'central',
-    stroke: '#000091',
+    stroke: getChartColor('central'),
   },
   {
     dataKey: 'basse',
     name: 'Basse',
     queryValue: 'basse',
-    stroke: '#161616',
+    stroke: getChartColor('basse'),
   },
 ]
 

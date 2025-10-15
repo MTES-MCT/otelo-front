@@ -1,5 +1,5 @@
-import AccesCollectivitesImg from '@assets/img/Acces_collectivites_juin_2025_trimmed.png'
-import OteloDdtImg from '@assets/img/Otelo_ddt_Juin_2025_trimmed.png'
+import AccesCollectivitesImg from '@assets/img/acces_collectivite.png'
+import OteloDdtImg from '@assets/img/acces_ddt.png'
 import { fr } from '@codegouvfr/react-dsfr'
 import classNames from 'classnames'
 import type { Metadata } from 'next'

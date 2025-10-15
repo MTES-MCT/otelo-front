@@ -9,6 +9,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { UploadDemographicEvolutionCustom } from '~/components/charts/upload-demographic-evolution-custom'
 import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
 import { useDemographicEvolutionCustom } from '~/hooks/use-demographic-evolution-custom'
@@ -29,63 +30,63 @@ const SCENARIOS = [
     id: 'haute',
     name: 'Ménages - Accélération',
     queryValue: 'PH_H',
-    stroke: '#E4794A',
+    stroke: getChartColor('phH'),
   },
   {
     dataKey: 'centralH',
     id: 'central',
     name: 'Ménages - Accélération',
     queryValue: 'Central_H',
-    stroke: '#161616',
+    stroke: getChartColor('centralH'),
   },
   {
     dataKey: 'pbH',
     id: 'basse',
     name: 'Ménages - Accélération',
     queryValue: 'PB_H',
-    stroke: '#FF9940',
+    stroke: getChartColor('pbH'),
   },
   {
     dataKey: 'centralC',
     id: 'central',
     name: 'Ménages - Tendanciel',
     queryValue: 'Central_C',
-    stroke: '#666666',
+    stroke: getChartColor('centralC'),
   },
   {
     dataKey: 'pbC',
     id: 'basse',
     name: 'Ménages - Tendanciel',
     queryValue: 'PB_C',
-    stroke: '#A558A0',
+    stroke: getChartColor('pbC'),
   },
   {
     dataKey: 'pbB',
     id: 'basse',
     name: 'Ménages - Décélération',
     queryValue: 'PB_B',
-    stroke: '#CE614A',
+    stroke: getChartColor('pbB'),
   },
   {
     dataKey: 'centralB',
     id: 'central',
     name: 'Ménages - Décélération',
     queryValue: 'Central_B',
-    stroke: '#000091',
+    stroke: getChartColor('centralB'),
   },
   {
     dataKey: 'phB',
     id: 'haute',
     name: 'Ménages - Décélération',
     queryValue: 'PH_B',
-    stroke: '#91A7D0',
+    stroke: getChartColor('phB'),
   },
   {
     dataKey: 'phC',
     id: 'haute',
     name: 'Ménages - Tendanciel',
     queryValue: 'PH_C',
-    stroke: '#169B62',
+    stroke: getChartColor('phC'),
   },
   {
     dataKey: 'custom',

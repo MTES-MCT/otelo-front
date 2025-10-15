@@ -4,7 +4,7 @@ import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
-import { barChartColors } from '~/components/charts/data-visualisation/colors'
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TAccommodationEvolution } from '~/schemas/accommodation-evolution'
 import styles from './accommodation-evolution-charts.module.css'
@@ -77,7 +77,7 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={500} margin={{ left: 20, right: 20, bottom: 30 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" allowDuplicatedCategory={false}>
+            <XAxis dataKey="year" type="number" scale="linear" domain={['dataMin', 'dataMax']} allowDuplicatedCategory={false}>
               <Label value={lineChartTitle} offset={10} position="bottom" />
             </XAxis>
 
@@ -97,12 +97,12 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
               />
             )}
             <Tooltip />
-            {epcisLinearChart.map((epci, index) => {
+            {epcisLinearChart.map((epci) => {
               const data = chartData.linearChart[epci].data
               return (
                 <Line
                   dataKey={linearDataKey}
-                  stroke={barChartColors[index]}
+                  stroke={getChartColor(linearDataKey)}
                   data={data}
                   name={chartData.linearChart[epci].epci.name}
                   key={epci}
@@ -120,8 +120,8 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
             </XAxis>
             <YAxis />
             <Tooltip />
-            <Bar dataKey="2010-2015" name="2010-2015" fill={barChartColors[0]} key="2010-2015" />
-            <Bar dataKey="2015-2021" name="2015-2021" fill={barChartColors[1]} key="2015-2021" />
+            <Bar dataKey="2010-2015" name="2010-2015" fill={getChartColor('2010-2015')} key="2010-2015" />
+            <Bar dataKey="2015-2021" name="2015-2021" fill={getChartColor('2015-2021')} key="2015-2021" />
           </BarChart>
         </ResponsiveContainer>
       </div>

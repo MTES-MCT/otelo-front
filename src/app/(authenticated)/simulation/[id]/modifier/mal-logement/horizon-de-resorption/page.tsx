@@ -1,6 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
 import { SelectResorptionHorizonPeriod } from '~/components/simulations/settings/modification/mal-logement/horizon/select-horizon-resorption-period'
+import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import classes from './horizon-de-resorption.module.css'
 
@@ -28,9 +29,11 @@ export default async function ResorptionHorizonPage({ params }: { params: { id: 
       />
 
       <SelectResorptionHorizonPeriod />
-
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLinkWithoutValidation href={href} />
+      <div className="fr-flex fr-flex-gap-2v fr-my-1w">
+        <div className={fr.cx('fr-ml-auto')}>
+          <NextStepLinkWithoutValidation href={href} />
+        </div>
+        <UpdateBadHousingSimulationForm />
       </div>
     </div>
   )

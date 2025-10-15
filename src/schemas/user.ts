@@ -1,6 +1,15 @@
 import { z } from 'zod'
 import { ZCommonDateFields } from '~/schemas/common-date-fields'
 
+export enum UserType {
+  DDT = 'DDT',
+  AgenceUrbanisme = 'AgenceUrbanisme',
+  Collectivite = 'Collectivite',
+  DREAL = 'DREAL',
+  BureauEtudes = 'BureauEtudes',
+  Autre = 'Autre',
+}
+
 export const ZUser = ZCommonDateFields.extend({
   email: z.string().email(),
   firstname: z.string(),
@@ -8,6 +17,7 @@ export const ZUser = ZCommonDateFields.extend({
   lastLoginAt: z.date(),
   lastname: z.string(),
   role: z.enum(['ADMIN', 'USER']),
+  type: z.nativeEnum(UserType).optional(),
   sub: z.string(),
   hasAccess: z.boolean(),
   engaged: z.boolean(),
@@ -29,3 +39,10 @@ export const ZSignUp = z
   })
 
 export type TSignUp = z.infer<typeof ZSignUp>
+
+export const ZUpdateUserType = z.object({
+  type: z.nativeEnum(UserType),
+  userId: z.string(),
+})
+
+export type TUpdateUserType = z.infer<typeof ZUpdateUserType>

@@ -4,6 +4,7 @@ import { SelectBadQualityPart } from '~/components/simulations/settings/modifica
 import { SelectBadQualitySource } from '~/components/simulations/settings/modification/mal-logement/bad-quality/select-bad-quality-source'
 import { SelectConfortSource } from '~/components/simulations/settings/modification/mal-logement/bad-quality/select-confort-source'
 import { SelectOccupationSource } from '~/components/simulations/settings/modification/mal-logement/bad-quality/select-occupation-source'
+import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import styles from './mauvaise-qualite.module.css'
 export default async function BadQualityPage({ params }: { params: { id: string } }) {
@@ -29,8 +30,11 @@ export default async function BadQualityPage({ params }: { params: { id: string 
         small
       />
       <SelectBadQualityPart />
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLinkWithoutValidation href={href} />
+      <div className="fr-flex fr-flex-gap-2v fr-my-1w">
+        <div className={fr.cx('fr-ml-auto')}>
+          <NextStepLinkWithoutValidation href={href} />
+        </div>
+        <UpdateBadHousingSimulationForm />
       </div>
     </div>
   )

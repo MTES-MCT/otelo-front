@@ -3,11 +3,13 @@ import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/clas
 import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
 import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
 import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
-import { ExportSimulationSettings } from '~/components/simulations/results/export/export-simulation-settings'
+import { ExportExcelSimulation } from '~/components/simulations/results/export/export-simulation-settings'
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
+import { EpcisDetailsTable } from '~/components/table/epcis-details-table'
 import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData } from '~/schemas/results'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import { calculateFlowResultsForEpci } from '~/utils/calculation-helpers'
 import styles from './resultats.module.css'
 
 export const dynamic = 'force-dynamic'
@@ -22,20 +24,25 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     total: simulation.results.total,
     totalFlux: simulation.results.totalFlux,
     totalStock: simulation.results.totalStock,
+    secondaryAccommodation: simulation.results.secondaryAccommodation,
     vacancy: simulation.results.vacantAccomodation,
   }
 
   const epciTabs = simulation.epcis.map((epci) => {
+    const epciTotals = simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult
     const badQuality = (simulation.results.badQuality.epcis.find((e) => e.epciCode === epci.code) as TEpciCalculationResult).value
-    const totalStock = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalStock
-    const totalFlux = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalFlux
+    const prepeakTotalStock = epciTotals.prepeakTotalStock
+    const postpeakTotalStock = epciTotals.postpeakTotalStock
+    const totalStock = epciTotals.totalStock
+    const totalFlux = epciTotals.totalFlux
+    const epciFlowRequirementData = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
     const epciResults = {
       badQuality,
-      total: (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).total,
+      total: epciTotals.total,
       totalFlux,
       totalStock,
-      vacancy: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
-        .longTermVacantAccomodation,
+      secondaryAccommodation: epciFlowRequirementData.totals.secondaryResidenceAccomodationEvolution,
+      vacancy: epciFlowRequirementData.totals.longTermVacantAccomodation,
     }
 
     const stockResults = {
@@ -51,33 +58,26 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       totalStock,
     }
 
-    const flowResults = {
-      demographicEvolution: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
-        .demographicEvolution,
-      renewalNeeds: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData).totals
-        .renewalNeeds,
-      secondaryResidenceAccomodationEvolution: (
-        simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
-      ).totals.secondaryResidenceAccomodationEvolution,
+    const flowResults = calculateFlowResultsForEpci(
+      simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData,
       totalFlux,
-      vacantAccomodationEvolution: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
-        .totals.vacantAccomodation,
-      shortTermVacantAccomodation: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
-        .totals.shortTermVacantAccomodation,
-      longTermVacantAccomodation: (simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData)
-        .totals.longTermVacantAccomodation,
-    }
+    )
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
-    const newConstructionsResults = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
-    const hasSurplusHousing = Object.values(newConstructionsResults.data.surplusHousing).some((value) => value !== 0)
+    const hasSurplusHousing = Object.values(epciFlowRequirementData.data.surplusHousing).some((value) => value !== 0)
+    const epciData = {
+      name: epci.name,
+      peakYear: epciFlowRequirementData.data.peakYear,
+      prepeakTotalStock,
+      postpeakTotalStock,
+    }
     return {
       content: (
         <>
-          <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={epciResults} />
+          <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={epciResults} epci={epciData} />
           <AccommodationContructionEvolutionChart
             sitadelResults={sitadelResults}
-            newConstructionsResults={newConstructionsResults}
+            newConstructionsResults={epciFlowRequirementData}
             horizon={simulation.scenario.projection}
           />
           <div>
@@ -124,6 +124,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     content: (
       <div>
         <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={results} />
+        <EpcisDetailsTable simulation={simulation} />
       </div>
     ),
     iconId: 'ri-home-line' as RiIconClassName,
@@ -135,7 +136,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   return (
     <>
       <div className={styles.headerContainer}>
-        <ExportSimulationSettings id={params.id} />
+        <ExportExcelSimulation id={params.id} />
       </div>
       <SimulationResultsTabs tabs={tabs} />
     </>

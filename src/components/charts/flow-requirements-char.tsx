@@ -7,6 +7,45 @@ import { CartesianGrid } from 'recharts'
 import { BarChart } from 'recharts'
 import { ResponsiveContainer } from 'recharts'
 import { tss } from 'tss-react'
+
+interface CustomXAxisTickProps {
+  x?: number
+  y?: number
+  payload?: {
+    value: string
+  }
+}
+
+const CustomXAxisTick = (props: CustomXAxisTickProps) => {
+  const { x, y, payload } = props
+
+  if (!payload) return null
+
+  const { value } = payload
+
+  if (value.includes('démographique')) {
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={0} dy={16} textAnchor="middle" fill="#666" fontSize="12">
+          <tspan x={0} dy="16">
+            Besoin en logements liés à l'évolution
+          </tspan>
+          <tspan x={0} dy="16">
+            démographique et évolution du parc
+          </tspan>
+        </text>
+      </g>
+    )
+  }
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={16} textAnchor="middle" fill="#666" fontSize="12">
+        {value}
+      </text>
+    </g>
+  )
+}
 import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DemographicEvolutionResultsTable } from '~/components/simulations/results/demographic-evolution-results-table'
 import { formatNumber } from '~/utils/format-numbers'
@@ -42,6 +81,7 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation: 0 }),
     ...(shortTermVacantAccomodation > 0 && { shortTermVacantAccomodation }),
   }
+  console.log('positiveData', positiveData)
 
   const negativeData = {
     name: 'Mobilisation du parc existant',
@@ -61,7 +101,7 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(hasNegativeValues ? [negativeData] : []),
     {
       name: 'Construction neuves supplémentaires',
-      totalFlux: Math.abs(totalFlux),
+      totalFlux,
     },
   ]
 
@@ -76,14 +116,14 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
             height={300}
             data={chartData}
             margin={{
-              bottom: 5,
+              bottom: 60,
               left: 20,
               right: 30,
               top: 5,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" tick={<CustomXAxisTick />} interval={0} height={60} />
             <YAxis />
             <Tooltip />
             <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill={getChartColor('demographicEvolution')} />

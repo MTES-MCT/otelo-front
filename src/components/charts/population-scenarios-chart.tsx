@@ -143,7 +143,7 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
       </div>
       {queryStates.population && (
         <Alert
-          description={`Votre scénario anticipe une évolution de la population de ${evol > 0 ? `+${evol}` : evol} ménages sur la période 2021 - ${period}.`}
+          description={`Votre scénario anticipe une évolution de la population de ${evol > 0 ? `+${evol}` : evol} habitant${evol > 0 ? 's' : ''} sur la période 2021 - ${period}.`}
           severity="info"
           small
         />

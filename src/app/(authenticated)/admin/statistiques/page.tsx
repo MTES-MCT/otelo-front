@@ -67,8 +67,18 @@ export default function StatistiquesPage() {
         <StatCard title="EPCI actifs" value={statistics?.activeEpcisCount || 0} description="EPCI avec scénarios (6 derniers mois)" />
         <StatCard
           title="Utilisateurs actifs"
-          value={statistics?.usersWithExportedScenarios || 0}
+          value={statistics?.usersWithExportedScenarios.total || 0}
           description="Utilisateurs ayant exporté au moins un scénario"
+        />
+        <StatCard
+          title="Export Excel"
+          value={statistics?.usersWithExportedScenarios.excel || 0}
+          description="Utilisateurs ayant exporté le paramétrage"
+        />
+        <StatCard
+          title="Export Powerpoint"
+          value={statistics?.usersWithExportedScenarios.powerpoint || 0}
+          description="Utilisateurs ayant fait une demande d'export powerpoint"
         />
       </div>
 

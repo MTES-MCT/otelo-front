@@ -68,7 +68,7 @@ export default function StatistiquesPage() {
         <StatCard
           title="Utilisateurs actifs"
           value={statistics?.usersWithExportedScenarios.total || 0}
-          description="Utilisateurs ayant exporté au moins un scénario"
+          description="Utilisateurs ayant créé une simulation dans les 3 derniers mois ou ayant exporté au moins un scénario"
         />
         <StatCard
           title="Export Excel"

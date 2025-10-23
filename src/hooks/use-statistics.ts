@@ -7,7 +7,11 @@ interface Statistics {
   totalHousingNeedsSum: number
   totalStockSum: number
   totalVacantSum: number
-  usersWithExportedScenarios: number
+  usersWithExportedScenarios: {
+    total: number
+    excel: number
+    powerpoint: number
+  }
 }
 
 export function useStatistics() {

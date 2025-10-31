@@ -62,7 +62,7 @@ export const ProConnectProvider = () =>
     userinfo: {
       request: async ({ tokens }) => {
         const response = await fetch(`${issuer}/api/v2/userinfo`, {
-          method: 'POST',
+          method: 'GET',
           headers: {
             Authorization: tokens.access_token ? `Bearer ${tokens.access_token}` : '',
           },

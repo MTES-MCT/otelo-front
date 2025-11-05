@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { TRequestPowerpoint } from '~/schemas/simulation'
+import { TRequestPowerpoint } from '~/schemas/export'
 
 export const useRequestPowerpoint = () => {
   const postSimulation = async (params: TRequestPowerpoint) => {

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/simulations/request-powerpoint`, {
+  const res = await fetch(`${process.env.NEXT_OTELO_API_URL}/export-powerpoint`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to request powerpoint' }, { status: res.status })
   }
 
-  const data = await res.json()
-  return NextResponse.json(data)
+  return new NextResponse(res.body, {
+    headers: Object.fromEntries(res.headers.entries()),
+  })
 }

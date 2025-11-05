@@ -19,7 +19,8 @@ import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
 import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
-import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
+import { TRequestPowerpoint, ZRequestPowerpoint } from '~/schemas/export'
+import { TSimulationWithRelations } from '~/schemas/simulation'
 import styles from './tableau-de-bord.module.css'
 
 type TableauDeBordProps = {
@@ -55,6 +56,13 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
       resultDate: '',
       selectedSimulations: [],
       privilegedSimulation: '',
+      documentType: '',
+      periodStart: '',
+      periodEnd: '',
+      epci: {
+        code: '',
+        name: '',
+      },
     },
     mode: 'onChange',
   })
@@ -117,7 +125,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
           <form>
             <div className={fr.cx('fr-mb-6w')}>
               <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>
-                Sélectionnez des scénarios à inclure : <span className={fr.cx('fr-text--sm')}>({selectedSimulations.length}/4)</span>
+                Sélectionnez des scénarios à inclure : <span className={fr.cx('fr-text--sm')}>({selectedSimulations.length}/3)</span>
               </p>
               {selectedSimulations.length > 0 && (
                 <p className={fr.cx('fr-text--sm', 'fr-mb-2w')} style={{ color: '#666' }}>
@@ -204,6 +212,100 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             <div className={fr.cx('fr-mb-6w')}>
               <Controller
                 control={control}
+                name="documentType"
+                render={({ field }) => (
+                  <Select
+                    label={<strong>Type de document de travail</strong>}
+                    placeholder="Choisir"
+                    options={['PLH', 'SCoT', "Document d'Urbanisme"].map((value) => ({
+                      value,
+                      label: value,
+                    }))}
+                    state={errors.documentType ? 'error' : undefined}
+                    stateRelatedMessage={errors.documentType?.message}
+                    nativeSelectProps={{
+                      value: field.value,
+                      onChange: field.onChange,
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="fr-flex fr-justify-content-space-between fr-flex-gap-4v fr-mb-4w">
+              <Controller
+                control={control}
+                name="periodStart"
+                render={({ field }) => (
+                  <Input
+                    style={{ flex: 1 }}
+                    label={<strong>Année de la période de début</strong>}
+                    state={errors.periodStart ? 'error' : undefined}
+                    stateRelatedMessage={errors.periodStart?.message}
+                    nativeInputProps={{
+                      type: 'text',
+                      value: field.value,
+                      onChange: field.onChange,
+                      placeholder: 'YYYY',
+                      maxLength: 4,
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="periodEnd"
+                render={({ field }) => (
+                  <Input
+                    style={{ flex: 1 }}
+                    label={<strong>Année de la période de fin</strong>}
+                    state={errors.periodEnd ? 'error' : undefined}
+                    stateRelatedMessage={errors.periodEnd?.message}
+                    nativeInputProps={{
+                      type: 'text',
+                      value: field.value,
+                      onChange: field.onChange,
+                      placeholder: 'YYYY',
+                      maxLength: 4,
+                    }}
+                  />
+                )}
+              />
+            </div>
+
+            <div className={fr.cx('fr-mb-6w')}>
+              <Controller
+                control={control}
+                name="epci"
+                render={({ field }) => (
+                  <Select
+                    label={<strong>EPCI choisi pour la Présentation</strong>}
+                    placeholder="Choisir un EPCI"
+                    options={uniqueEpcis.map((epci) => ({
+                      value: epci.code,
+                      label: epci.name,
+                    }))}
+                    state={errors.epci ? 'error' : undefined}
+                    stateRelatedMessage={errors.epci?.message}
+                    nativeSelectProps={{
+                      value: field.value.code,
+                      onChange: (e) => {
+                        const selectedEpci = uniqueEpcis.find((epci) => epci.code === e.target.value)
+                        if (selectedEpci) {
+                          field.onChange({
+                            code: selectedEpci.code,
+                            name: selectedEpci.name,
+                          })
+                        }
+                      },
+                    }}
+                  />
+                )}
+              />
+            </div>
+
+            <div className={fr.cx('fr-mb-6w')}>
+              <Controller
+                control={control}
                 name="nextStep"
                 render={({ field }) => (
                   <Select
@@ -275,7 +377,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             </div>
 
             {!notEnoughSimulations && (
-              <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 24h ouvrées.</p>
+              <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 3 jours ouvrés.</p>
             )}
           </form>
         </div>

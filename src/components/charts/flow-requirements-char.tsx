@@ -81,7 +81,6 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation: 0 }),
     ...(shortTermVacantAccomodation > 0 && { shortTermVacantAccomodation }),
   }
-  console.log('positiveData', positiveData)
 
   const negativeData = {
     name: 'Mobilisation du parc existant',

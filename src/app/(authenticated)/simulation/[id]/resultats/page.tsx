@@ -7,7 +7,7 @@ import { ExportExcelSimulation } from '~/components/simulations/results/export/e
 import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
 import { EpcisDetailsTable } from '~/components/table/epcis-details-table'
-import { TChartData, TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData } from '~/schemas/results'
+import { TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData, TSitadelData } from '~/schemas/results'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
 import { calculateFlowResultsForEpci } from '~/utils/calculation-helpers'
 import styles from './resultats.module.css'
@@ -63,7 +63,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
       totalFlux,
     )
 
-    const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TChartData
+    const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TSitadelData
     const hasSurplusHousing = Object.values(epciFlowRequirementData.data.surplusHousing).some((value) => value !== 0)
     const epciData = {
       name: epci.name,

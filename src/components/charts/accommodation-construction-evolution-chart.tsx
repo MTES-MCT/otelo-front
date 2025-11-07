@@ -5,11 +5,11 @@ import { FC } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { dsfrRealColors, getChartColor } from '~/components/charts/data-visualisation/colors'
-import { TChartData, TFlowRequirementChartData } from '~/schemas/results'
+import { TFlowRequirementChartData, TSitadelData } from '~/schemas/results'
 
 interface AccommodationContructionEvolutionChartProps {
   newConstructionsResults: TFlowRequirementChartData
-  sitadelResults: TChartData
+  sitadelResults: TSitadelData
   horizon: number
 }
 
@@ -30,15 +30,20 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
     ]),
   ).sort((a, b) => a - b)
 
-  const mergedData = allYears.map((year) => ({
-    housingNeeds: newConstructionsData.housingNeeds[year] ?? null,
-    surplusHousing: newConstructionsData.surplusHousing[year] ?? null,
-    sitadelValue: sitadelData.find((d) => d.year === year)?.value ?? null,
-    year,
-  }))
+  const mergedData = allYears.map((year) => {
+    const sitadelEntry = sitadelData.find((d) => d.year === year)
+    return {
+      housingNeeds: newConstructionsData.housingNeeds[year] ?? null,
+      surplusHousing: newConstructionsData.surplusHousing[year] ?? null,
+      authorizedHousing: sitadelEntry?.authorizedHousingCount ?? null,
+      startedHousing: sitadelEntry?.startedHousingCount ?? null,
+      year,
+    }
+  })
 
   const maxValue = Math.max(
-    Math.max(...sitadelData.map((d) => d.value)),
+    Math.max(...sitadelData.map((d) => d.authorizedHousingCount)),
+    Math.max(...sitadelData.map((d) => d.startedHousingCount)),
     Math.max(...Object.values(newConstructionsData.housingNeeds)),
     Math.max(...Object.values(newConstructionsData.surplusHousing)),
   )
@@ -71,12 +76,18 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
                 offset: 10,
               }}
             />
-            <Bar name="Permis de construire autorisés (Sit@del)" dataKey="sitadelValue" fill={getChartColor('sitadelValue')} />
+            <Bar name="Permis de construire autorisés (Sit@del)" dataKey="authorizedHousing" fill={getChartColor('authorizedHousing')} />
+            <Bar name="Logements commencés (Sit@del)" dataKey="startedHousing" fill={getChartColor('startedHousing')} />
             <Bar name="Besoins en logements" dataKey="housingNeeds" fill={getChartColor('housingNeeds')} />
             <Bar name="Logements excédentaires" dataKey="surplusHousing" fill={getChartColor('surplusHousing')} />
             <XAxis dataKey="year" angle={-45} textAnchor="end" height={60} />
             <Tooltip />
-            <Legend />
+            <Legend
+              itemSorter={(item) => {
+                const order = ['authorizedHousing', 'startedHousing', 'housingNeeds', 'surplusHousing']
+                return order.indexOf(item.dataKey as string)
+              }}
+            />
             <YAxis domain={[0, maxValue]} allowDecimals={false} includeHidden={true} />
           </ComposedChart>
         </ResponsiveContainer>

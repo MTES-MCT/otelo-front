@@ -83,7 +83,8 @@ export const chartKeyColors = {
   central: dsfrRealColors.blueFrance,
   haute: dsfrRealColors.blueCumulus,
 
-  sitadelValue: dsfrRealColors.blueEcume,
+  authorizedHousing: dsfrRealColors.blueEcume,
+  startedHousing: dsfrRealColors.greenBourgeon,
   housingNeeds: dsfrRealColors.pinkTuile,
   surplusHousing: dsfrRealColors.brownCafeCreme,
 } as const

@@ -12,6 +12,7 @@ export const DATA_TYPE_OPTIONS = [
   { label: 'Résidences secondaires', value: 'residences-secondaires' },
   { label: 'Logements vacants', value: 'logements-vacants' },
   { label: 'Mal Logement', value: 'mal-logement' },
+  { label: 'Données Sit@del', value: 'sitadel' },
 ]
 
 export const SelectDataType: FC = () => {

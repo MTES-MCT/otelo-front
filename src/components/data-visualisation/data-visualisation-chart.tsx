@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { BadHousingChart } from '~/components/charts/data-visualisation/bad-housing-charts'
+import { HouseholdSizesChart } from '~/components/charts/data-visualisation/household-sizes-chart'
 import { LovacAccommodationEvolutionChart } from '~/components/charts/data-visualisation/lovac-evolution-charts'
 import { PopulationEvolutionChart } from '~/components/charts/data-visualisation/population-evolution-charts'
 import { ProjectionMenagesEvolutionChart } from '~/components/charts/data-visualisation/projection-menages-evolution-charts'
@@ -7,6 +8,7 @@ import { ProjectionPopulationEvolutionChart } from '~/components/charts/data-vis
 import { RPAccommodationEvolutionChart } from '~/components/charts/data-visualisation/rp-accommodation-evolution-charts'
 import { SitadelChart } from '~/components/charts/data-visualisation/sitadel-chart'
 import { TAccommodationEvolution, TAccommodationLovacEvolution } from '~/schemas/accommodation-evolution'
+import { THouseholdSizesChart } from '~/schemas/household-sizes'
 import { TDemographicProjectionEvolution, TInadequateHousing, TRPPopulationEvolution } from '~/schemas/population-evolution'
 import { TSitadel } from '~/schemas/sitadel'
 
@@ -18,6 +20,7 @@ export const DataVisualisationChart: FC<{
     | TAccommodationLovacEvolution
     | TInadequateHousing
     | TSitadel
+    | THouseholdSizesChart
   type: string | null
   source: string | null
 }> = ({ data, type, source }) => {
@@ -27,7 +30,7 @@ export const DataVisualisationChart: FC<{
   const isAccommodationEvolution = ['residences-secondaires', 'logements-vacants'].includes(type ?? '')
   const isMalLogement = ['mal-logement'].includes(type ?? '')
   const isSitadel = ['sitadel'].includes(type ?? '')
-  console.log('data', data)
+  const isTailleMenages = ['taille-menages'].includes(type ?? '')
 
   if (isPopulationEvolution) {
     return <PopulationEvolutionChart data={data as TRPPopulationEvolution} type={type} />
@@ -55,5 +58,8 @@ export const DataVisualisationChart: FC<{
   }
   if (isSitadel) {
     return <SitadelChart data={data as TSitadel} />
+  }
+  if (isTailleMenages) {
+    return <HouseholdSizesChart data={data as THouseholdSizesChart} />
   }
 }

@@ -215,7 +215,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                 name="documentType"
                 render={({ field }) => (
                   <Select
-                    label={<strong>Type de document de travail</strong>}
+                    label={<strong>Type de document</strong>}
                     placeholder="Choisir"
                     options={['PLH', 'SCoT', "Document d'Urbanisme"].map((value) => ({
                       value,
@@ -231,45 +231,54 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                 )}
               />
             </div>
-            <div className="fr-flex fr-justify-content-space-between fr-flex-gap-4v fr-mb-4w">
-              <Controller
-                control={control}
-                name="periodStart"
-                render={({ field }) => (
-                  <Input
-                    style={{ flex: 1 }}
-                    label={<strong>Année de la période de début</strong>}
-                    state={errors.periodStart ? 'error' : undefined}
-                    stateRelatedMessage={errors.periodStart?.message}
-                    nativeInputProps={{
-                      type: 'text',
-                      value: field.value,
-                      onChange: field.onChange,
-                      placeholder: 'YYYY',
-                      maxLength: 4,
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="periodEnd"
-                render={({ field }) => (
-                  <Input
-                    style={{ flex: 1 }}
-                    label={<strong>Année de la période de fin</strong>}
-                    state={errors.periodEnd ? 'error' : undefined}
-                    stateRelatedMessage={errors.periodEnd?.message}
-                    nativeInputProps={{
-                      type: 'text',
-                      value: field.value,
-                      onChange: field.onChange,
-                      placeholder: 'YYYY',
-                      maxLength: 4,
-                    }}
-                  />
-                )}
-              />
+            <div className="fr-flex fr-direction-column fr-mb-4w">
+              <div className="fr-flex fr-justify-content-space-between fr-flex-gap-4v">
+                <Controller
+                  control={control}
+                  name="periodStart"
+                  render={({ field }) => (
+                    <Input
+                      style={{ flex: 1 }}
+                      label={<strong>Année de début du Document</strong>}
+                      state={errors.periodStart ? 'error' : undefined}
+                      stateRelatedMessage={errors.periodStart?.message}
+                      nativeInputProps={{
+                        type: 'text',
+                        value: field.value,
+                        onChange: field.onChange,
+                        placeholder: 'ex: 2026',
+                        maxLength: 4,
+                      }}
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="periodEnd"
+                  render={({ field }) => (
+                    <Input
+                      style={{ flex: 1 }}
+                      label={<strong>Année de fin du Document</strong>}
+                      state={errors.periodEnd ? 'error' : undefined}
+                      stateRelatedMessage={errors.periodEnd?.message}
+                      nativeInputProps={{
+                        type: 'text',
+                        value: field.value,
+                        onChange: field.onChange,
+                        placeholder: 'ex: 2032',
+                        maxLength: 4,
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <div className="fr-mt-2w">
+                <Alert
+                  severity="info"
+                  description="Un focus sur le besoin en logements de la période sélectionnée sera ajouté dans le powerpoint éditable."
+                  small
+                />
+              </div>
             </div>
 
             <div className={fr.cx('fr-mb-6w')}>
@@ -278,7 +287,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
                 name="epci"
                 render={({ field }) => (
                   <Select
-                    label={<strong>EPCI choisi pour la Présentation</strong>}
+                    label={<strong>Votre territoire (Epci(s) pour lequel vous souhaitez obtenir votre résultat)</strong>}
                     placeholder="Choisir un EPCI"
                     options={uniqueEpcis.map((epci) => ({
                       value: epci.code,

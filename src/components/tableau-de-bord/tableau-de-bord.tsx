@@ -21,6 +21,7 @@ import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
 import { TRequestPowerpoint, ZRequestPowerpoint } from '~/schemas/export'
 import { TSimulationWithRelations } from '~/schemas/simulation'
+import { MultipleEpciSelect } from './multiple-epci-select'
 import styles from './tableau-de-bord.module.css'
 
 type TableauDeBordProps = {
@@ -59,21 +60,19 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
       documentType: '',
       periodStart: '',
       periodEnd: '',
-      epci: {
-        code: '',
-        name: '',
-      },
+      epci: undefined,
+      epcis: [],
     },
     mode: 'onChange',
   })
   const { nextStep, resultDate } = getValues()
   const selectedSimulations = watch('selectedSimulations')
   const privilegedSimulation = watch('privilegedSimulation')
+  const documentType = watch('documentType')
 
   const onRequestPowerpoint = async (data: TRequestPowerpoint) => {
     try {
       await mutateAsync(data)
-
       modalActions.close()
       reset()
     } catch (_) {
@@ -281,36 +280,51 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
               </div>
             </div>
 
-            <div className={fr.cx('fr-mb-6w')}>
+            {documentType === 'SCoT' ? (
               <Controller
                 control={control}
-                name="epci"
+                name="epcis"
                 render={({ field }) => (
-                  <Select
-                    label={<strong>Votre territoire (Epci(s) pour lequel vous souhaitez obtenir votre résultat)</strong>}
-                    placeholder="Choisir un EPCI"
-                    options={uniqueEpcis.map((epci) => ({
-                      value: epci.code,
-                      label: epci.name,
-                    }))}
-                    state={errors.epci ? 'error' : undefined}
-                    stateRelatedMessage={errors.epci?.message}
-                    nativeSelectProps={{
-                      value: field.value.code,
-                      onChange: (e) => {
-                        const selectedEpci = uniqueEpcis.find((epci) => epci.code === e.target.value)
-                        if (selectedEpci) {
-                          field.onChange({
-                            code: selectedEpci.code,
-                            name: selectedEpci.name,
-                          })
-                        }
-                      },
-                    }}
+                  <MultipleEpciSelect
+                    epcis={uniqueEpcis}
+                    selectedEpcis={field.value || []}
+                    onChange={field.onChange}
+                    error={errors.epcis?.message}
                   />
                 )}
               />
-            </div>
+            ) : (
+              <div className={fr.cx('fr-mb-6w')}>
+                <Controller
+                  control={control}
+                  name="epci"
+                  render={({ field }) => (
+                    <Select
+                      label={<strong>Votre territoire (EPCI pour lequel vous souhaitez obtenir votre résultat)</strong>}
+                      placeholder="Choisir un EPCI"
+                      options={uniqueEpcis.map((epci) => ({
+                        value: epci.code,
+                        label: epci.name,
+                      }))}
+                      state={errors.epci ? 'error' : undefined}
+                      stateRelatedMessage={errors.epci?.message}
+                      nativeSelectProps={{
+                        value: field.value?.code,
+                        onChange: (e) => {
+                          const selectedEpci = uniqueEpcis.find((epci) => epci.code === e.target.value)
+                          if (selectedEpci) {
+                            field.onChange({
+                              code: selectedEpci.code,
+                              name: selectedEpci.name,
+                            })
+                          }
+                        },
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            )}
 
             <div className={fr.cx('fr-mb-6w')}>
               <Controller

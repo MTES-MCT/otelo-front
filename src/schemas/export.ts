@@ -1,4 +1,5 @@
 import z from 'zod'
+import { ZEpci } from './epci'
 
 export const ZRequestPowerpoint = z
   .object({
@@ -29,10 +30,13 @@ export const ZRequestPowerpoint = z
       .string()
       .regex(/^\d{4}$/, { message: 'Veuillez entrer une année valide (YYYY)' })
       .refine((val) => parseInt(val) <= 2050, { message: "L'année de fin ne peut pas être supérieure à 2050" }),
-    epci: z.object({
-      code: z.string(),
-      name: z.string().min(1, { message: 'Veuillez sélectionner un EPCI' }),
-    }),
+    epci: z
+      .object({
+        code: z.string(),
+        name: z.string().min(1, { message: 'Veuillez sélectionner un EPCI' }),
+      })
+      .optional(),
+    epcis: z.array(ZEpci).optional(),
   })
   .superRefine((data, ctx) => {
     const startYear = parseInt(data.periodStart)
@@ -60,6 +64,26 @@ export const ZRequestPowerpoint = z
         message: 'Les années de début et de fin doivent être différentes',
         path: ['periodEnd'],
       })
+    }
+
+    // For SCoT documents, require multiple EPCIs selection
+    if (data.documentType === 'SCoT') {
+      if (!data.epcis || data.epcis.length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Veuillez sélectionner au moins un EPCI pour un document SCoT',
+          path: ['epcis'],
+        })
+      }
+    } else {
+      // For other document types, use single EPCI selection
+      if (!!data.epci && !data.epci?.name) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Veuillez sélectionner un EPCI',
+          path: ['epci'],
+        })
+      }
     }
   })
 

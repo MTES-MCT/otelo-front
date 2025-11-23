@@ -205,8 +205,8 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
           </li>
           <li>
             Le renouvellement du parc contribue à hauteur de {formatNumber(Math.abs(renewalNeeds))} aux besoins en logements, les&nbsp;
-            {renewalNeeds > 0 ? 'créations' : 'démolitions'} de logements au sein du parc excédant les&nbsp;
-            {renewalNeeds > 0 ? 'démolitions' : 'créations'}.
+            {renewalNeeds > 0 ? 'disparitions de logements' : 'restructurations de logements'} au sein du parc excédant les&nbsp;
+            {renewalNeeds > 0 ? 'restructurations de logements' : 'disparitions de logements'}.
           </li>
         </ul>
       </div>

@@ -23,7 +23,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to request powerpoint' }, { status: res.status })
   }
 
-  return new NextResponse(res.body, {
-    headers: Object.fromEntries(res.headers.entries()),
-  })
+  const data = await res.json()
+  return NextResponse.json(data)
 }

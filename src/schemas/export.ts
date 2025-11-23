@@ -66,6 +66,23 @@ export const ZRequestPowerpoint = z
       })
     }
 
+    // Ensure only one of epci or epcis is provided
+    const hasEpci = data.epci && data.epci.name
+    const hasEpcis = data.epcis && data.epcis.length > 0
+
+    if (hasEpci && hasEpcis) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Vous ne pouvez pas sélectionner à la fois un EPCI unique et plusieurs EPCIs',
+        path: ['epci'],
+      })
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Vous ne pouvez pas sélectionner à la fois un EPCI unique et plusieurs EPCIs',
+        path: ['epcis'],
+      })
+    }
+
     // For SCoT documents, require multiple EPCIs selection
     if (data.documentType === 'SCoT') {
       if (!data.epcis || data.epcis.length === 0) {

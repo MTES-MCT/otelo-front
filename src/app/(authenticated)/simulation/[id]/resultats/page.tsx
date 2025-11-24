@@ -102,8 +102,8 @@ export default async function Resultats({ params }: { params: { id: string } }) 
                     </li>
                   )}
                   <li>
-                    <span className={fr.cx('fr-text--bold')}>Permis de construire autorisés (barres bleues)</span> : nombre d’autorisation
-                    de construction d’après Sit@del2.
+                    <span className={fr.cx('fr-text--bold')}>Permis de construire autorisés (barres bleues)</span> : nombre d’autorisations
+                    de constructions d’après Sit@del2.
                   </li>
                   <li>
                     <span className={fr.cx('fr-text--bold')}>Logements commencés (barres vertes)</span> : Nombre de logements commencés

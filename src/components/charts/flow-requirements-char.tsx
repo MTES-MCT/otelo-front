@@ -73,12 +73,13 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     longTermVacantAccomodation,
   } = results
 
+  console.log(longTermVacantAccomodation)
   const positiveData = {
     name: "Besoin en logements liés à l'évolution démographique et à l'évolution du parc",
     ...(demographicEvolution > 0 && { demographicEvolution }),
     ...(renewalNeeds > 0 && { renewalNeeds }),
     ...(secondaryResidenceAccomodationEvolution > 0 && { secondaryResidenceAccomodationEvolution }),
-    ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation: 0 }),
+    ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation }),
     ...(shortTermVacantAccomodation > 0 && { shortTermVacantAccomodation }),
   }
 

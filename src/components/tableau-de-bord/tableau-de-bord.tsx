@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
@@ -62,6 +63,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
       periodEnd: '',
       epci: undefined,
       epcis: undefined,
+      privilegedSimulationProjection: undefined,
     },
     mode: 'onChange',
   })
@@ -69,6 +71,14 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
   const selectedSimulations = watch('selectedSimulations')
   const privilegedSimulation = watch('privilegedSimulation')
   const documentType = watch('documentType')
+
+  // Update privileged simulation projection when privileged simulation changes
+  const privilegedSimulationData = simulations.find((sim) => sim.id === privilegedSimulation)
+  React.useEffect(() => {
+    if (privilegedSimulationData?.scenario.projection) {
+      setValue('privilegedSimulationProjection', privilegedSimulationData.scenario.projection, { shouldValidate: true })
+    }
+  }, [privilegedSimulation, privilegedSimulationData, setValue])
 
   const onRequestPowerpoint = async (data: TRequestPowerpoint) => {
     try {

@@ -37,6 +37,7 @@ export const ZRequestPowerpoint = z
       })
       .optional(),
     epcis: z.array(ZEpci).optional(),
+    privilegedSimulationProjection: z.number().optional(),
   })
   .superRefine((data, ctx) => {
     const startYear = parseInt(data.periodStart)
@@ -62,6 +63,15 @@ export const ZRequestPowerpoint = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'Les années de début et de fin doivent être différentes',
+        path: ['periodEnd'],
+      })
+    }
+
+    // Check if endYear is not greater than privileged simulation projection
+    if (data.privilegedSimulationProjection && endYear > data.privilegedSimulationProjection) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `L'année de fin ne peut pas être supérieure à la projection du scénario privilégié (${data.privilegedSimulationProjection})`,
         path: ['periodEnd'],
       })
     }

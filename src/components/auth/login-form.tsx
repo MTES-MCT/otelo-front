@@ -129,6 +129,7 @@ export const LoginForm: FC = () => {
                   <RedAsterisk />
                 </div>
               }
+              className="fr-mb-0"
               state={errors.password ? 'error' : 'default'}
               stateRelatedMessage={errors.password?.message}
               nativeInputProps={{
@@ -137,6 +138,11 @@ export const LoginForm: FC = () => {
                 autoComplete: 'current-password',
               }}
             />
+            <div className="fr-flex fr-justify-content-end fr-mb-2w">
+              <Link className="fr-link" href="/mot-de-passe-oublie">
+                Mot de passe oublié ?
+              </Link>
+            </div>
 
             {!!authError && (
               <div className="fr-alert fr-alert--error fr-mb-3w" role="alert">

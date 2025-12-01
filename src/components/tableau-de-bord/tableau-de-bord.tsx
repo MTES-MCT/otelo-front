@@ -16,10 +16,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
-import { TRequestPowerpoint, TSimulationWithRelations, ZRequestPowerpoint } from '~/schemas/simulation'
+import { TRequestPowerpoint, ZRequestPowerpoint } from '~/schemas/export'
+import { TSimulationWithRelations } from '~/schemas/simulation'
+import { MultipleEpciSelect } from './multiple-epci-select'
 import styles from './tableau-de-bord.module.css'
 
 type TableauDeBordProps = {
@@ -35,7 +38,7 @@ const modalActions = createModal({
 
 export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBordProps) {
   const notEnoughSimulations = simulations.length < 3
-  const { mutateAsync, isError, isSuccess, isPending } = useRequestPowerpoint()
+  const { mutateAsync, isError, isSuccess, isPending, error, progressMessage } = useRequestPowerpoint()
 
   // Extract unique EPCIs from all simulations
   const uniqueEpcis = Array.from(new Map(simulations.flatMap((sim) => sim.epcis).map((epci) => [epci.code, epci])).values())
@@ -55,21 +58,36 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
       resultDate: '',
       selectedSimulations: [],
       privilegedSimulation: '',
+      documentType: '',
+      periodStart: '',
+      periodEnd: '',
+      epci: undefined,
+      epcis: undefined,
+      privilegedSimulationProjection: undefined,
     },
     mode: 'onChange',
   })
   const { nextStep, resultDate } = getValues()
   const selectedSimulations = watch('selectedSimulations')
   const privilegedSimulation = watch('privilegedSimulation')
+  const documentType = watch('documentType')
+
+  // Update privileged simulation projection when privileged simulation changes
+  const privilegedSimulationData = simulations.find((sim) => sim.id === privilegedSimulation)
+  React.useEffect(() => {
+    if (privilegedSimulationData?.scenario.projection) {
+      setValue('privilegedSimulationProjection', privilegedSimulationData.scenario.projection, { shouldValidate: true })
+    }
+  }, [privilegedSimulation, privilegedSimulationData, setValue])
 
   const onRequestPowerpoint = async (data: TRequestPowerpoint) => {
     try {
       await mutateAsync(data)
-
       modalActions.close()
       reset()
-    } catch (_) {
-      modalActions.close()
+    } catch (error) {
+      // Keep modal open to show error, don't reset form
+      console.error('PowerPoint request failed:', error)
     }
   }
 
@@ -117,7 +135,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
           <form>
             <div className={fr.cx('fr-mb-6w')}>
               <p className={classNames(fr.cx('fr-label', 'fr-mb-1w'), styles.labelCards)}>
-                Sélectionnez des scénarios à inclure : <span className={fr.cx('fr-text--sm')}>({selectedSimulations.length}/4)</span>
+                Sélectionnez des scénarios à inclure : <span className={fr.cx('fr-text--sm')}>({selectedSimulations.length}/3)</span>
               </p>
               {selectedSimulations.length > 0 && (
                 <p className={fr.cx('fr-text--sm', 'fr-mb-2w')} style={{ color: '#666' }}>
@@ -204,6 +222,124 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             <div className={fr.cx('fr-mb-6w')}>
               <Controller
                 control={control}
+                name="documentType"
+                render={({ field }) => (
+                  <Select
+                    label={<strong>Type de document</strong>}
+                    placeholder="Choisir"
+                    options={['PLH', 'SCoT', "Document d'Urbanisme"].map((value) => ({
+                      value,
+                      label: value,
+                    }))}
+                    state={errors.documentType ? 'error' : undefined}
+                    stateRelatedMessage={errors.documentType?.message}
+                    nativeSelectProps={{
+                      value: field.value,
+                      onChange: field.onChange,
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="fr-flex fr-direction-column fr-mb-4w">
+              <div className="fr-flex fr-justify-content-space-between fr-flex-gap-4v">
+                <Controller
+                  control={control}
+                  name="periodStart"
+                  render={({ field }) => (
+                    <Input
+                      style={{ flex: 1 }}
+                      label={<strong>Année de début du Document</strong>}
+                      state={errors.periodStart ? 'error' : undefined}
+                      stateRelatedMessage={errors.periodStart?.message}
+                      nativeInputProps={{
+                        type: 'text',
+                        value: field.value,
+                        onChange: field.onChange,
+                        placeholder: 'ex: 2026',
+                        maxLength: 4,
+                      }}
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="periodEnd"
+                  render={({ field }) => (
+                    <Input
+                      style={{ flex: 1 }}
+                      label={<strong>Année de fin du Document</strong>}
+                      state={errors.periodEnd ? 'error' : undefined}
+                      stateRelatedMessage={errors.periodEnd?.message}
+                      nativeInputProps={{
+                        type: 'text',
+                        value: field.value,
+                        onChange: field.onChange,
+                        placeholder: 'ex: 2032',
+                        maxLength: 4,
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <div className="fr-mt-2w">
+                <Alert
+                  severity="info"
+                  description="Un focus sur le besoin en logements de la période sélectionnée sera ajouté dans le powerpoint éditable."
+                  small
+                />
+              </div>
+            </div>
+
+            {documentType === 'SCoT' ? (
+              <Controller
+                control={control}
+                name="epcis"
+                render={({ field }) => (
+                  <MultipleEpciSelect
+                    epcis={uniqueEpcis}
+                    selectedEpcis={field.value || []}
+                    onChange={field.onChange}
+                    error={errors.epcis?.message}
+                  />
+                )}
+              />
+            ) : (
+              <div className={fr.cx('fr-mb-6w')}>
+                <Controller
+                  control={control}
+                  name="epci"
+                  render={({ field }) => (
+                    <Select
+                      label={<strong>Votre territoire (EPCI pour lequel vous souhaitez obtenir votre résultat)</strong>}
+                      placeholder="Choisir un EPCI"
+                      options={uniqueEpcis.map((epci) => ({
+                        value: epci.code,
+                        label: epci.name,
+                      }))}
+                      state={errors.epci ? 'error' : undefined}
+                      stateRelatedMessage={errors.epci?.message}
+                      nativeSelectProps={{
+                        value: field.value?.code,
+                        onChange: (e) => {
+                          const selectedEpci = uniqueEpcis.find((epci) => epci.code === e.target.value)
+                          if (selectedEpci) {
+                            field.onChange({
+                              code: selectedEpci.code,
+                              name: selectedEpci.name,
+                            })
+                          }
+                        },
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            )}
+
+            <div className={fr.cx('fr-mb-6w')}>
+              <Controller
+                control={control}
                 name="nextStep"
                 render={({ field }) => (
                   <Select
@@ -250,6 +386,34 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
               </p>
             )}
 
+            {isPending && (
+              <Alert
+                description={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div
+                      style={{
+                        width: '1rem',
+                        height: '1rem',
+                        border: '2px solid #f3f3f3',
+                        borderTop: '2px solid #3498db',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite',
+                      }}
+                    />
+                    <span>{progressMessage || 'Traitement en cours...'}</span>
+                    <style jsx>{`
+                      @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                      }
+                    `}</style>
+                  </div>
+                }
+                severity="info"
+                title="Génération en cours"
+              />
+            )}
+
             {isSuccess && (
               <Alert
                 closable
@@ -265,7 +429,12 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             )}
 
             {isError && (
-              <Alert closable description="Veuillez réessayer ultérieurement." severity="error" title="Une erreur est survenue" />
+              <Alert
+                closable
+                description={error?.message || 'Veuillez réessayer ultérieurement.'}
+                severity="error"
+                title="Une erreur est survenue"
+              />
             )}
 
             <div className={styles.actions}>
@@ -275,7 +444,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             </div>
 
             {!notEnoughSimulations && (
-              <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 24h ouvrées.</p>
+              <p className={fr.cx('fr-info-text', 'fr-grid-row--center')}>Le powerpoint vous sera envoyé par e-mail sous 3 jours ouvrés.</p>
             )}
           </form>
         </div>
@@ -291,7 +460,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
           },
           {
             doClosesModal: false,
-            children: "Confirmer l'envoi",
+            children: isPending ? progressMessage || 'Génération en cours...' : "Confirmer l'envoi",
             onClick: onConfirmAction,
             disabled: isPending,
           },
@@ -329,6 +498,43 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             ]}
             headers={['Paramétrage', '']}
           />
+          {isError && (
+            <Alert
+              description={error?.message || 'Une erreur est survenue lors de la génération. Veuillez réessayer.'}
+              severity="error"
+              title="Erreur"
+              className={fr.cx('fr-mb-4w')}
+            />
+          )}
+
+          {isPending && (
+            <Alert
+              description={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div
+                    style={{
+                      width: '1rem',
+                      height: '1rem',
+                      border: '2px solid #f3f3f3',
+                      borderTop: '2px solid #3498db',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite',
+                    }}
+                  />
+                  <span>{progressMessage || 'Traitement en cours...'}</span>
+                  <style jsx>{`
+                    @keyframes spin {
+                      0% { transform: rotate(0deg); }
+                      100% { transform: rotate(360deg); }
+                    }
+                  `}</style>
+                </div>
+              }
+              severity="info"
+              title="Génération en cours"
+              className={fr.cx('fr-mb-4w')}
+            />
+          )}
         </div>
       </modalActions.Component>
     </div>

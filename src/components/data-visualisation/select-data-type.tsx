@@ -9,9 +9,11 @@ export const DATA_TYPE_OPTIONS = [
   { label: 'Evolution passée du nombre de ménages', value: 'menage-evolution' },
   { label: 'Projection en population', value: 'projection-population-evolution' },
   { label: 'Projection en ménages', value: 'projection-menages-evolution' },
+  { label: 'Taille des ménages', value: 'taille-menages' },
   { label: 'Résidences secondaires', value: 'residences-secondaires' },
   { label: 'Logements vacants', value: 'logements-vacants' },
   { label: 'Mal Logement', value: 'mal-logement' },
+  { label: 'Données Sit@del', value: 'sitadel' },
 ]
 
 export const SelectDataType: FC = () => {

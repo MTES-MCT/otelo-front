@@ -25,7 +25,7 @@ export const EpcisDetailsTable = ({ simulation }: EpcisDetailsTableProps) => {
       flowResults.secondaryResidenceAccomodationEvolution < 0
         ? formatNumber(Math.abs(flowResults.secondaryResidenceAccomodationEvolution))
         : 0, // résidences secondaires à remobiliser
-      flowRequirementsEpci.data.peakYear !== 2050 ? flowRequirementsEpci.data.peakYear : 'après 2050', // Année à partir de laquelle le territoire n'a plus de besoin - needs to be calculated
+      `2021 - ${flowRequirementsEpci.data.peakYear === 2021 ? simulation.scenario.b1_horizon_resorption : flowRequirementsEpci.data.peakYear !== 2050 ? flowRequirementsEpci.data.peakYear : simulation.scenario.projection}`,
     ]
   })
 
@@ -40,7 +40,7 @@ export const EpcisDetailsTable = ({ simulation }: EpcisDetailsTableProps) => {
           'Besoins en constructions neuves',
           'Remobilisation de logements vacants',
           'Remobilisation de résidences secondaires',
-          "Année à partir de laquelle le territoire n'a plus de besoin en logements",
+          'Période considérée',
         ]}
         data={tableData}
         fixed

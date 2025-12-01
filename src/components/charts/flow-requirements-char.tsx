@@ -78,10 +78,9 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     ...(demographicEvolution > 0 && { demographicEvolution }),
     ...(renewalNeeds > 0 && { renewalNeeds }),
     ...(secondaryResidenceAccomodationEvolution > 0 && { secondaryResidenceAccomodationEvolution }),
-    ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation: 0 }),
+    ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation }),
     ...(shortTermVacantAccomodation > 0 && { shortTermVacantAccomodation }),
   }
-  console.log('positiveData', positiveData)
 
   const negativeData = {
     name: 'Mobilisation du parc existant',
@@ -206,8 +205,8 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
           </li>
           <li>
             Le renouvellement du parc contribue à hauteur de {formatNumber(Math.abs(renewalNeeds))} aux besoins en logements, les&nbsp;
-            {renewalNeeds > 0 ? 'créations' : 'démolitions'} de logements au sein du parc excédant les&nbsp;
-            {renewalNeeds > 0 ? 'démolitions' : 'créations'}.
+            {renewalNeeds > 0 ? 'disparitions de logements' : 'restructurations de logements'} au sein du parc excédant les&nbsp;
+            {renewalNeeds > 0 ? 'restructurations de logements' : 'disparitions de logements'}.
           </li>
         </ul>
       </div>

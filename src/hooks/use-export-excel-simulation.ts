@@ -15,7 +15,7 @@ export const useExportExcelSimulation = () => {
       const contentDisposition = response.headers.get('content-disposition')
       const filename = contentDisposition
         ? contentDisposition.split('filename=')[1].replace(/"/g, '')
-        : `scenario-${new Date().toISOString()}.csv`
+        : `scenario-${new Date().toISOString()}.xlsx`
 
       const blob = await response.blob()
 

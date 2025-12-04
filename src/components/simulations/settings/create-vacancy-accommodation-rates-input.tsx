@@ -14,8 +14,8 @@ export const CreateVacancyAccommodationRatesInput: FC<CreateVacancyAccommodation
   const { rates } = useEpcisRates()
   const { classes } = useStyles()
   const ratesByEpci = rates[epci]
-  const shortTermVacancyRate = ratesByEpci.shortTermVacancyRate
-  const longTermVacancyRate = ratesByEpci.longTermVacancyRate
+  const shortTermVacancyRate = ratesByEpci?.shortTermVacancyRate
+  const longTermVacancyRate = ratesByEpci?.longTermVacancyRate
 
   return (
     <div className={classes.container}>

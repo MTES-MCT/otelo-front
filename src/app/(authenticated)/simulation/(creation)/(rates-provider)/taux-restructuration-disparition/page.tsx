@@ -19,7 +19,7 @@ export default async function RestructurationDisparitionRatesPage({ searchParams
   const href = `/simulation/validation-parametrage`
 
   return (
-    <div className="fr-flex fr-direction-column">
+    <div className="fr-flex fr-direction-column fr-mt-2w">
       <CreateRestructurationDisparitionRates epcis={simulationsEpcis} />
       <div className="fr-ml-auto fr-my-1w fr-my-auto">
         <NextStepLink href={href} query="omphale" />

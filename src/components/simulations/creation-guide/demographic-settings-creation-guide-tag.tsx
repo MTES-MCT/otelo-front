@@ -1,77 +1,160 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
+import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useQueryState } from 'nuqs'
+import { useSearchParams } from 'next/navigation'
+import { parseAsString, useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
-import { getOmphaleLabel } from '~/utils/omphale-label'
+import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 
 interface CreationGuideTagProps {
   step: {
     data?: string | Array<string>
     disabled?: boolean
-    label: string
+    iconId?: string
     path: string
     queryKeys: Array<string>
   }
 }
 
-export const DemographicSettingsCreationGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
-  const { data, disabled = false, label, path, queryKeys } = step
+export const DemographicSettingsGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
+  const { data, disabled = false, path, queryKeys, iconId = 'fr-icon-checkbox-circle-line' } = step
   const [value] = useQueryState(queryKeys[0])
-  const pathname = usePathname()
-
-  // Simulate value for steps with empty queryKeys based on path conditions
-  const shouldSimulateValue =
-    (queryKeys.length === 0 && pathname === path) ||
-    (label === 'Taux de résidences secondaires / logements vacants' &&
-      ['/simulation/taux-restructuration-disparition', '/simulation/validation-parametrage'].includes(pathname)) ||
-    (label === 'Taux de restructuration et taux de disparition' && pathname === '/simulation/validation-parametrage')
-
-  const effectiveValue = shouldSimulateValue ? step.label : value
-
-  const { classes } = useStyles({ disabled, value: effectiveValue, queryKeys })
+  const [baseEpci] = useQueryState('baseEpci', parseAsString)
+  const { rates } = useEpcisRates()
+  const { classes } = useStyles({ disabled, value, queryKeys })
   const searchParams = useSearchParams()
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
 
-  let formattedValue = effectiveValue && Number(effectiveValue) < 1 ? (Number(effectiveValue) * 100).toFixed(2) : effectiveValue
+  // Handle horizon de temps display
+  if (path === '/simulation/cadrage-temporel' && value) {
+    return (
+      <Tag className={classes.tag} iconId="ri-time-line" linkProps={{ href }}>
+        2021 - {value}
+      </Tag>
+    )
+  }
 
+  if (queryKeys.includes('omphale')) {
+    if (value) {
+      const scenario = value.split('_')[0]
+      const decohabitation = value.split('_')[1]
+
+      let formattedScenario = ''
+      let formattedDecohabitation = ''
+
+      if (scenario === 'Central') {
+        formattedScenario = 'centrale'
+      }
+      if (scenario === 'PB') {
+        formattedScenario = 'basse'
+      }
+      if (scenario === 'PH') {
+        formattedScenario = 'haute'
+      }
+      if (decohabitation === 'H') {
+        formattedDecohabitation = 'haute'
+      }
+      if (decohabitation === 'B') {
+        formattedDecohabitation = 'basse'
+      }
+      if (decohabitation === 'C') {
+        formattedDecohabitation = 'tendanciel'
+      }
+
+      return (
+        <>
+          <Tag className={classes.tag} iconId="ri-group-line" linkProps={{ href }}>
+            Population: {formattedScenario}
+          </Tag>
+          <Tag className={classes.tag} iconId="ri-home-4-line" linkProps={{ href }}>
+            Ménages: {formattedDecohabitation}
+          </Tag>
+        </>
+      )
+    }
+  }
+
+  // Handle rates display for taux-cibles-logements step
+  if (path === '/simulation/taux-cibles-logements') {
+    if (baseEpci) {
+      const epciRates = rates[baseEpci]
+
+      if (epciRates) {
+        const longTermVacancyPercent = (epciRates.longTermVacancyRate * 100).toFixed(2)
+        const secondaryResidencePercent = (epciRates.txRS * 100).toFixed(2)
+
+        return (
+          <>
+            <Tag className={classes.tag} iconId="ri-home-4-line" linkProps={{ href }}>
+              Taux cible logements vacants: {longTermVacancyPercent}%
+            </Tag>
+            <Tag className={classes.tag} iconId="ri-home-line" linkProps={{ href }}>
+              Taux cible résidences secondaires: {secondaryResidencePercent}%
+            </Tag>
+          </>
+        )
+      }
+    }
+  }
+
+  // Handle rates display for taux-restructuration-disparition step
+  if (path === '/simulation/taux-restructuration-disparition') {
+    if (baseEpci) {
+      const epciRates = rates[baseEpci]
+
+      if (epciRates) {
+        const restructuringPercent = (epciRates.restructuringRate * 100).toFixed(2)
+        const disappearancePercent = (epciRates.disappearanceRate * 100).toFixed(2)
+
+        return (
+          <>
+            <Tag className={classes.tag} iconId="ri-link" linkProps={{ href }}>
+              Restructuration: {restructuringPercent}%
+            </Tag>
+            <Tag className={classes.tag} iconId="ri-link-unlink" linkProps={{ href }}>
+              Disparition: {disappearancePercent}%
+            </Tag>
+          </>
+        )
+      }
+    }
+  }
+
+  let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
   if (data && typeof data === 'string') {
     formattedValue = data
   }
 
-  if (queryKeys.includes('omphale')) {
-    formattedValue = getOmphaleLabel(effectiveValue)
-  }
   const defaultTagProps = {
     value: formattedValue,
   }
 
-  const tagProps = effectiveValue
-    ? {
-        iconId: 'fr-icon-checkbox-circle-line' as const,
-        ...defaultTagProps,
-        linkProps: {
-          href,
-        },
-      }
-    : defaultTagProps
+  const tagProps = {
+    iconId: iconId as RiIconClassName,
+    ...defaultTagProps,
+    linkProps: {
+      href,
+    },
+  }
 
+  // EPCIS
   if (data && Array.isArray(data)) {
     return data.map((item) => (
-      <Tag key={item} iconId="fr-icon-checkbox-circle-line" className={classes.tag} linkProps={{ href }}>
+      <Tag key={item} iconId="ri-map-pin-2-line" className={classes.tag} linkProps={{ href }}>
         {item}
       </Tag>
     ))
   }
-  return (
-    <Tag iconId="fr-icon-question-line" className={classes.tag} {...tagProps}>
-      {formattedValue ?? label}
-    </Tag>
-  )
+  if (!data && !!formattedValue) {
+    return (
+      <Tag className={classes.tag} {...tagProps}>
+        {formattedValue}
+      </Tag>
+    )
+  }
 }
 
 const useStyles = tss

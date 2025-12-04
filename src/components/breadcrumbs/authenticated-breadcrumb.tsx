@@ -1,6 +1,5 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
 import { usePathname } from 'next/navigation'
 import { AdminBreadcrumb } from '~/components/admin/admin-breadcrumb'
 import { FaqBreadcrumb } from '~/components/faq/faq-breadcrumb'
@@ -29,5 +28,5 @@ export const AuthenticatedBreadcrumb = () => {
   const matchingPath = Object.keys(breadcrumbComponents).filter((path) => pathname?.includes(path)) as BreadcrumbPaths[]
   const lastPath = matchingPath[matchingPath.length - 1]
 
-  return matchingPath ? <div className={fr.cx('fr-container')}>{breadcrumbComponents[lastPath]}</div> : null
+  return matchingPath ? <>{breadcrumbComponents[lastPath]}</> : null
 }

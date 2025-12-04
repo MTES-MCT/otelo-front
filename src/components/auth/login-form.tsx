@@ -46,6 +46,7 @@ export const LoginForm: FC = () => {
         redirect: false,
         callbackUrl: '/accueil',
       })
+      console.log('result', result)
       if (result?.error) {
         if (result.error === 'user_has_no_access') {
           router.push('/unauthorized')

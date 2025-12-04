@@ -30,7 +30,7 @@ export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 
   )
 }
 
-export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Étape suivante', query, isDisabled }) => {
+export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Suivant', query, isDisabled }) => {
   const [value] = useQueryState(query, {
     defaultValue: defaultValue ?? '',
   })
@@ -42,7 +42,9 @@ export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label 
 
   return (
     <Link href={hrefWithParams}>
-      <Button disabled={disabled}>{label}</Button>
+      <Button disabled={disabled} size="large" iconId="ri-arrow-right-line" iconPosition="right">
+        {label}
+      </Button>
     </Link>
   )
 }

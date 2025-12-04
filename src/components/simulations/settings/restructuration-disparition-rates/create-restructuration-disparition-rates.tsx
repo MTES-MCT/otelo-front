@@ -4,7 +4,6 @@ import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import { Alert } from '@codegouvfr/react-dsfr/Alert'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { FC } from 'react'
-import { tss } from 'tss-react'
 import { CreateRestructurationDisparitionRatesInput } from '~/components/simulations/settings/restructuration-disparition-rates/create-restructuration-disparition-rates.input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
@@ -47,7 +46,6 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 }
 
 export const CreateRestructurationDisparitionRates: FC<CreateRestructurationDisparitionRatesProps> = ({ epcis }) => {
-  const { classes } = useStyles()
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
   if (!rates) return null
@@ -58,11 +56,5 @@ export const CreateRestructurationDisparitionRates: FC<CreateRestructurationDisp
     label: epci.name,
   }))
 
-  return <Tabs classes={{ panel: classes.backgroundWhite }} tabs={tabs} />
+  return <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />
 }
-
-const useStyles = tss.create({
-  backgroundWhite: {
-    backgroundColor: 'white',
-  },
-})

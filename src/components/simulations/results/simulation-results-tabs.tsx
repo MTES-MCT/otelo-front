@@ -20,7 +20,7 @@ export const SimulationResultsTabs = ({
   const tabsProps = tabs.map(({ content, ...tabProps }) => tabProps)
 
   return (
-    <Tabs tabs={tabsProps} onTabChange={setEpci} selectedTabId={selectedTabId}>
+    <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabsProps} onTabChange={setEpci} selectedTabId={selectedTabId}>
       {tabs.find((tab) => tab.tabId === selectedTabId)?.content || tabs[0].content}
     </Tabs>
   )

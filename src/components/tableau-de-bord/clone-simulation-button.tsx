@@ -68,7 +68,13 @@ export function CloneSimulationButton({ simulation }: CloneSimulationButtonProps
   return (
     <>
       <Tooltip title="Cloner ce scénario">
-        <i className={`ri-file-copy-line ${styles.cloneIcon}`} onClick={handleModalOpen} />
+        <Button
+          iconId="ri-file-copy-line"
+          onClick={handleModalOpen}
+          priority="tertiary no outline"
+          title="Cloner ce scénario"
+          size="small"
+        />
       </Tooltip>
 
       <modalActions.Component title="Cloner le scénario" concealingBackdrop>

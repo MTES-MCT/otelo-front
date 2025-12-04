@@ -109,7 +109,7 @@ export const DemographicSettingsSimulationStepper: FC = () => {
 
   return (
     <div
-      className={fr.cx('fr-my-2w', 'fr-px-2w', 'fr-py-0-5v', 'fr-p-md-4w')}
+      className="fr-px-2w fr-py-0-5v fr-px-md-4w fr-pt-md-4w"
       style={{ background: fr.colors.decisions.background.default.grey.default }}
     >
       <Stepper {...stepperProps} />

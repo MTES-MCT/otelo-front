@@ -8,7 +8,6 @@ import { DemographicSettingsHeader } from '~/components/simulations/settings/dem
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
-import classes from './parametrages-demographique.module.css'
 
 export const metadata: Metadata = {
   title: 'Elaborer scenario - étape 3 sur 6 - Otelo',
@@ -25,7 +24,7 @@ export default async function DemographicSettingsPage({ searchParams }: PageProp
   const href = `/simulation/taux-cibles-logements`
 
   return (
-    <div className={classes.container}>
+    <div className="fr-flex fr-direction-column fr-mt-2w">
       <DemographicSettingsHeader>
         <PopulationScenariosChart demographicEvolution={populationEvolution} />
         <OmphaleScenariosChart demographicEvolution={omphaleEvolution} />

@@ -1,7 +1,3 @@
-.layoutContainer {
-  display: flex;
-}
-
 .headerContainer {
   display: flex;
   gap: 1rem;

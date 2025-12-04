@@ -58,7 +58,7 @@ export const DemographicSettingsHeader = ({ children, epcis }: DemographicSettin
   return (
     <Tabs
       label="Scénario de projection démographique"
-      classes={{ tab: classes.tab }}
+      classes={{ tab: classes.tab, panel: 'fr-background-default--grey' }}
       selectedTabId={selectedTabId}
       onTabChange={(tabId: string) => setQueryState({ scenario: tabId === 'population' ? 'population' : 'menages' })}
       tabs={[
@@ -74,7 +74,7 @@ export const DemographicSettingsHeader = ({ children, epcis }: DemographicSettin
         },
       ]}
     >
-      <div className={classes.container}>
+      <div className={classNames(classes.container, 'fr-background-default--grey')}>
         <div className={classes.titleContainer}>
           <h5 className={classNames(classes.title, 'fr-mb-0')}>{title}</h5>
           <DemographicSettingsSelectEpci epcis={epcis} />

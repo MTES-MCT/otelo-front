@@ -10,8 +10,8 @@ export const CreateLongTermAccomodationRange: FC<CreateLongTermAccomodationRange
   const currentRates = rates[epci]
   const defaultEpciRates = defaultRates[epci]
   useEffect(() => {
-    const reductionAmount = (15 / 100) * defaultEpciRates.longTermVacancyRate
-    const longTermRate = defaultEpciRates.longTermVacancyRate - reductionAmount
+    const reductionAmount = (15 / 100) * defaultEpciRates?.longTermVacancyRate
+    const longTermRate = defaultEpciRates?.longTermVacancyRate - reductionAmount
 
     updateRates(epci, {
       longTermVacancyRate: longTermRate,
@@ -20,15 +20,15 @@ export const CreateLongTermAccomodationRange: FC<CreateLongTermAccomodationRange
 
   const getCurrentRangeValue = (): number => {
     if (currentRates?.longTermVacancyRate === undefined || !defaultEpciRates?.longTermVacancyRate) return 0
-    const reduction = defaultEpciRates.longTermVacancyRate - currentRates.longTermVacancyRate
-    const percentage = (reduction / defaultEpciRates.longTermVacancyRate) * 100
+    const reduction = defaultEpciRates?.longTermVacancyRate - currentRates.longTermVacancyRate
+    const percentage = (reduction / defaultEpciRates?.longTermVacancyRate) * 100
     return Math.round(percentage * 100) / 100
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rangeValue = Number(e.target.value)
-    const reductionAmount = (rangeValue / 100) * defaultEpciRates.longTermVacancyRate
-    const longTermRate = defaultEpciRates.longTermVacancyRate - reductionAmount
+    const reductionAmount = (rangeValue / 100) * defaultEpciRates?.longTermVacancyRate
+    const longTermRate = defaultEpciRates?.longTermVacancyRate - reductionAmount
 
     updateRates(epci, {
       longTermVacancyRate: longTermRate,

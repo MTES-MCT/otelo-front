@@ -23,7 +23,7 @@ export default async function TableauDeBordPage() {
         {dashboardGroups.map((group) => {
           return (
             <div key={group.id} className={fr.cx('fr-col-12', 'fr-col-md-6', 'fr-mb-3w')}>
-              <div className="fr-border fr-border-radius--8 fr-p-2w">
+              <div className="fr-border fr-border-radius--8 fr-p-2w fr-background-default--grey">
                 <div className="fr-flex fr-justify-content-space-between">
                   <h2 className="fr-mb-0 fr-h4">{group.name}</h2>
                   <Button linkProps={{ href: `/tableau-de-bord/${group.id}` }} size="small">

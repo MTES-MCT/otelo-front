@@ -44,7 +44,7 @@ export const LoginForm: FC = () => {
         email: data.email,
         password: data.password,
         redirect: false,
-        callbackUrl: '/accueil',
+        callbackUrl: '/tableaux-de-bord',
       })
       if (result?.error) {
         if (result.error === 'user_has_no_access') {
@@ -59,7 +59,7 @@ export const LoginForm: FC = () => {
         return
       }
       // Fallback: navigate to home if URL is missing but no error
-      router.push('/accueil')
+      router.push('/tableaux-de-bord')
     } catch (error) {
       console.error('Error signing in', error)
       setAuthError('unknown')

@@ -1,14 +1,21 @@
 import { Range } from '@codegouvfr/react-dsfr/Range'
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 
 interface ModifyLongTermAccomodationRangeProps {
   epci: string
+  onRangeValueChange?: (value: number) => void
 }
-export const ModifyLongTermAccomodationRange: FC<ModifyLongTermAccomodationRangeProps> = ({ epci }) => {
+
+export const ModifyLongTermAccomodationRange: FC<ModifyLongTermAccomodationRangeProps> = ({ epci, onRangeValueChange }) => {
   const { simulationSettings, updateRates } = useSimulationSettings()
   const { data: originalRatesData } = useAccommodationRatesByEpci([epci])
+  const onRangeValueChangeRef = useRef(onRangeValueChange)
+
+  useEffect(() => {
+    onRangeValueChangeRef.current = onRangeValueChange
+  }, [onRangeValueChange])
 
   const currentRates = simulationSettings.epciScenarios[epci]
   const originalLongTermVacancyRate = originalRatesData?.[epci]?.longTermVacancyRate || 0
@@ -30,9 +37,14 @@ export const ModifyLongTermAccomodationRange: FC<ModifyLongTermAccomodationRange
     })
   }
 
+  useEffect(() => {
+    const value = getCurrentRangeValue()
+    onRangeValueChangeRef.current?.(value)
+  }, [currentRates?.longTermVacancyRate])
+
   return (
     <Range
-      label="Réduction du taux  de logements vacants longue durée"
+      label="Réduction du taux de logements vacants longue durée"
       max={100}
       min={0}
       nativeInputProps={{

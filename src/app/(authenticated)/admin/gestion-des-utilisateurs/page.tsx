@@ -10,7 +10,7 @@ export default async function AdminPage() {
   const session = (await getServerSession(authOptions)) as TSession
 
   if (session.user.role !== 'ADMIN') {
-    redirect('/accueil')
+    redirect('/tableaux-de-bord')
   }
 
   return (

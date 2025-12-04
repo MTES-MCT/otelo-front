@@ -52,7 +52,7 @@ export const WrapperSimulationTypePage = ({ bassinEpcis = [] }: WrapperSimulatio
   return (
     <>
       <div
-        className={fr.cx('fr-p-2w', 'fr-p-md-5w', 'fr-mb-2w')}
+        className="fr-p-2w fr-px-md-5w fr-pb-md-5w fr-mb-2w"
         style={{
           background: fr.colors.decisions.background.default.grey.default,
         }}

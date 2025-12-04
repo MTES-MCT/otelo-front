@@ -1,11 +1,10 @@
-import { fr } from '@codegouvfr/react-dsfr'
+import Button from '@codegouvfr/react-dsfr/Button'
 import { redirect } from 'next/navigation'
 import { DemographicSettingsFormWrapper } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/parametrages-demographique/demographic-settings-form-wrapper'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
-import classes from './parametrages-demographique.module.css'
 
 type PageProps = {
   params: {
@@ -49,21 +48,27 @@ export default async function ParametragesDemographiquePage({ params, searchPara
     redirect(`/simulation/${params.id}/modifier/parametrages-demographique?${searchParamsObj.toString()}`)
   }
 
-  const href = `/simulation/${params.id}/modifier/taux-cibles-logements`
+  const href = `/simulation/${params.id}/modifier/taux-cibles-logements-vacants`
   const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epcisCodes)
   const populationEvolution = await getPopulationDemographicEvolutionByEpci(epcisCodes)
 
   return (
-    <div className={classes.container}>
-      <DemographicSettingsFormWrapper
-        epcis={epcisCodes}
-        omphaleEvolution={omphaleEvolution}
-        populationEvolution={populationEvolution}
-        scenarioId={simulation.scenario.id}
-      />
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
+    <>
+      <div className="fr-flex fr-direction-column fr-background-default--grey">
+        <DemographicSettingsFormWrapper
+          epcis={epcisCodes}
+          omphaleEvolution={omphaleEvolution}
+          populationEvolution={populationEvolution}
+          scenarioId={simulation.scenario.id}
+        />
+      </div>
+      <div className="fr-flex fr-flex-gap-6v fr-justify-content-end fr-py-4w fr-px-2w">
+        {/* todo: extract to a component and set preivous url href*/}
+        <Button priority="secondary" size="large">
+          Précédent
+        </Button>
         <NextStepLinkWithoutValidation href={href} />
       </div>
-    </div>
+    </>
   )
 }

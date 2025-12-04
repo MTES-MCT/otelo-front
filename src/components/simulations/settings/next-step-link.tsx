@@ -15,22 +15,18 @@ type NextStepLinkProps = {
   priority?: 'secondary' | 'primary' | 'tertiary' | 'tertiary no outline' | undefined
 }
 
-export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 'label' | 'priority'>> = ({
-  href,
-  priority = 'secondary',
-  label = 'Étape suivante',
-}) => {
+export const NextStepLinkWithoutValidation: FC<Pick<NextStepLinkProps, 'href' | 'label' | 'priority'>> = ({ href, label = 'Suivant' }) => {
   const searchParams = useSearchParams()
   const searchParamsString = new URLSearchParams(searchParams).toString()
   const hrefWithParams = `${href}${searchParamsString ? `?${searchParamsString}` : ''}`
   return (
-    <Link href={hrefWithParams} className="fr-link--no-underline">
-      <Button priority={priority}>{label}</Button>
-    </Link>
+    <Button linkProps={{ href: hrefWithParams }} size="large" iconId="ri-arrow-right-line" iconPosition="right">
+      {label}
+    </Button>
   )
 }
 
-export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Étape suivante', query, isDisabled }) => {
+export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label = 'Suivant', query, isDisabled }) => {
   const [value] = useQueryState(query, {
     defaultValue: defaultValue ?? '',
   })
@@ -42,7 +38,9 @@ export const NextStepLink: FC<NextStepLinkProps> = ({ defaultValue, href, label 
 
   return (
     <Link href={hrefWithParams}>
-      <Button disabled={disabled}>{label}</Button>
+      <Button disabled={disabled} size="large" iconId="ri-arrow-right-line" iconPosition="right">
+        {label}
+      </Button>
     </Link>
   )
 }

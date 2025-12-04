@@ -11,71 +11,64 @@ const STEPPER_CONFIG = {
   modifier: {
     'cadrage-temporel': {
       currentStep: 1,
-      nextTitle: 'Affinage du paramétrage',
+      description: "Les futurs paramétrages seront appliqués à l'horizon temporel choisi",
       stepCount: modifierStepCount,
       title: "Déterminer l'horizon de temps",
     },
     'parametrages-demographique': {
       currentStep: 2,
-      nextTitle: 'Cibler les taux de résidences secondaires et logements vacants',
+      description: "Les choix de projection démographique s'appliquent à l'ensemble des EPCI inclus dans le territoire d'étude.",
       stepCount: modifierStepCount,
-      title: 'Affinage du paramétrage démographique',
+      title: 'Affiner la projection démographique',
     },
-    'taux-cibles-logements': {
+    'taux-cibles-logements-vacants': {
       currentStep: 3,
-      nextTitle: 'Validation de votre paramétrage',
       stepCount: modifierStepCount,
-      title: 'Cibler les taux de résidences secondaires et logements vacants',
+      title: 'Cibler le taux de logements vacants de longue durée',
+    },
+    'taux-cibles-residences-secondaires': {
+      currentStep: 5,
+      stepCount: creationStepCount,
+      title: 'Cibler le taux de résidences secondaires',
     },
     'taux-restructuration-disparition': {
       currentStep: 4,
-      nextTitle: 'Validation de votre paramétrage',
       stepCount: modifierStepCount,
-      title: 'Paramétrage des dynamiques de renouvellement du parc de logements',
-    },
-    'validation-parametrage': {
-      currentStep: 4,
-      nextTitle: 'Résultat de la simulation',
-      stepCount: modifierStepCount,
-      title: 'Validation de votre paramétrage',
+      title: 'Paramétrer les dynamiques de renouvellement urbain',
     },
   },
   creation: {
     'choix-du-territoire': {
       currentStep: 1,
-      nextTitle: "Déterminer l'horizon de temps",
       stepCount: creationStepCount,
       title: 'Choix du territoire',
     },
     'cadrage-temporel': {
       currentStep: 2,
-      nextTitle: 'Affinage du paramétrage',
+      description: "Les futurs paramétrages seront appliqués à l'horizon temporel choisi",
       stepCount: creationStepCount,
       title: "Déterminer l'horizon de temps",
     },
     'parametrages-demographique': {
       currentStep: 3,
-      nextTitle: 'Cibler les taux de résidences secondaires et logements vacants',
+      description: "Les choix de projection démographique s'appliquent à l'ensemble des EPCI inclus dans le territoire d'étude.",
       stepCount: creationStepCount,
-      title: 'Affinage du paramétrage démographique',
+      title: 'Affiner la projection démographique',
     },
-    'taux-cibles-logements': {
+    'taux-cibles-logements-vacants': {
       currentStep: 4,
-      nextTitle: 'Validation de votre paramétrage',
       stepCount: creationStepCount,
-      title: 'Cibler les taux de résidences secondaires et logements vacants',
+      title: 'Cibler le taux de logements vacants de longue durée',
+    },
+    'taux-cibles-residences-secondaires': {
+      currentStep: 5,
+      stepCount: creationStepCount,
+      title: 'Cibler le taux de résidences secondaires',
     },
     'taux-restructuration-disparition': {
-      currentStep: 5,
-      nextTitle: 'Validation de votre paramétrage',
-      stepCount: creationStepCount,
-      title: 'Paramétrage des dynamiques de renouvellement du parc de logements',
-    },
-    'validation-parametrage': {
       currentStep: 6,
-      nextTitle: 'Résultat de la simulation',
       stepCount: creationStepCount,
-      title: 'Validation de votre paramétrage',
+      title: 'Paramétrer les dynamiques de renouvellement urbain',
     },
   },
 }
@@ -83,14 +76,14 @@ const STEPPER_CONFIG = {
 const DEFAULT_CONFIG = {
   modifier: {
     currentStep: 1,
-    nextTitle: 'Affinage du paramétrage',
     stepCount: 4,
+    description: null,
     title: "Déterminer l'horizon de temps",
   },
   creation: {
     currentStep: 1,
-    nextTitle: "Déterminer l'horizon de temps",
     stepCount: 4,
+    description: null,
     title: 'Choix du territoire',
   },
 }
@@ -99,20 +92,22 @@ export const DemographicSettingsSimulationStepper: FC = () => {
   const pathname = usePathname()
   const isModifierPath = pathname.includes('modifier')
 
-  const stepperProps = useMemo(() => {
+  const config = useMemo(() => {
     const dynamicPathname = pathname.split('/').pop()
     const configKey = isModifierPath ? 'modifier' : 'creation'
 
-    const config = STEPPER_CONFIG[configKey][dynamicPathname as keyof (typeof STEPPER_CONFIG)[typeof configKey]]
-    return config || DEFAULT_CONFIG[configKey]
+    return STEPPER_CONFIG[configKey][dynamicPathname as keyof (typeof STEPPER_CONFIG)[typeof configKey]] || DEFAULT_CONFIG[configKey]
   }, [pathname, isModifierPath])
 
   return (
     <div
-      className={fr.cx('fr-my-2w', 'fr-px-2w', 'fr-py-0-5v', 'fr-p-md-4w')}
+      className="fr-px-2w fr-py-0-5v fr-px-md-4w fr-pt-md-4w fr-pb-5w"
       style={{ background: fr.colors.decisions.background.default.grey.default }}
     >
-      <Stepper {...stepperProps} />
+      <Stepper {...config} />
+      {'description' in config && config.description && (
+        <div className="fr-text--sm fr-text-mention--grey fr-mb-0">{config.description}</div>
+      )}
     </div>
   )
 }

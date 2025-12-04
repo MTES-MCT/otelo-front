@@ -2,6 +2,7 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
+import Input from '@codegouvfr/react-dsfr/Input'
 import Link from 'next/link'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { useRef, useState } from 'react'
@@ -15,6 +16,7 @@ interface UploadDemographicEvolutionProps {
 export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: UploadDemographicEvolutionProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [selectedFileName, setSelectedFileName] = useState<string>('Aucun fichier choisi...')
 
   const [queryStates, setQueryStates] = useQueryStates({
     demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
@@ -23,6 +25,8 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
+
+    setSelectedFileName(file.name)
 
     // Validate file extension, support xls and xlsx in the future
     const validExtensions = ['.csv']
@@ -68,6 +72,7 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
+      setSelectedFileName('Aucun fichier choisi...')
     } catch (error) {
       console.error('Error processing file:', error)
       toast.error('Erreur lors de la création des données démographiques personnalisées', {
@@ -85,26 +90,36 @@ export const UploadDemographicEvolutionCustom = ({ epciCode, scenarioId }: Uploa
         type="file"
         accept=".csv"
         onChange={handleFileUpload}
-        style={{ display: 'none' }}
+        className="fr-hidden"
         disabled={isProcessing}
         aria-label="Importer des données démographiques personnalisées"
         id="demographic-upload-input"
       />
-      <Button
-        iconId="fr-icon-upload-line"
-        onClick={() => fileInputRef.current?.click()}
-        disabled={isProcessing}
-        priority="secondary"
-        size="small"
-        aria-describedby="upload-format-hint"
-        title="Importer des données démographiques personnalisées au format CSV, Excel"
-      >
-        {isProcessing ? 'Traitement en cours...' : 'Importer des données personnalisées'}
-      </Button>
-      <p id="upload-format-hint" className={fr.cx('fr-text--xs', 'fr-mt-1w', 'fr-mb-0')}>
-        Formats acceptés : Excel (.xlsx, .xls) ou CSV.
-      </p>
-      <p className="fr-text--xs">
+
+      <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
+        <Input
+          hintText="Déposez un fichier Excel (.xlsx, .xls) ou CSV."
+          label="Ou ajoutez vos données personnalisées"
+          nativeInputProps={{
+            value: selectedFileName,
+            readOnly: true,
+          }}
+        />
+        <div>
+          <Button
+            iconId="fr-icon-upload-line"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isProcessing}
+            className="fr-mt-4w"
+            priority="secondary"
+            aria-describedby="upload-format-hint"
+            title="Importer des données démographiques personnalisées au format CSV, Excel"
+          >
+            {isProcessing ? 'Traitement en cours...' : 'Parcourir'}
+          </Button>
+        </div>
+      </div>
+      <p className="fr-text--xs fr-mb-0">
         <Link className="fr-link fr-text--xs" href="/assets/pdf/guide_projection_facon.pdf" target="_blank">
           Guide explicatif de la fonctionnalité
         </Link>

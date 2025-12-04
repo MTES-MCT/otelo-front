@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import type { Metadata } from 'next'
 import { TEpci } from '~/schemas/epci'
 import { getBassinEpcis } from '~/server-only/epcis/get-bassin-epcis'
@@ -21,7 +22,7 @@ export default async function TerritorialChoicePage({ searchParams }: Territoria
   }
 
   return (
-    <div className={classes.container}>
+    <div className={classNames(classes.container, 'fr-border-top')}>
       <WrapperSimulationTypePage bassinEpcis={bassinEpcis} />
     </div>
   )

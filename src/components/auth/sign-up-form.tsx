@@ -35,7 +35,7 @@ export const SignUpForm: FC = () => {
   const onProConnectSignIn = async () => {
     try {
       await signIn(proConnectProviderId, {
-        callbackUrl: '/accueil',
+        callbackUrl: '/tableaux-de-bord',
       })
     } catch (error) {
       console.error('Error signing in with ProConnect', error)

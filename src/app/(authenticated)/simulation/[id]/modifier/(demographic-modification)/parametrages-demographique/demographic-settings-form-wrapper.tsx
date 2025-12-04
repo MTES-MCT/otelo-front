@@ -38,9 +38,9 @@ export const DemographicSettingsFormWrapper = ({
   if (!epciChart) return null
 
   return (
-    <DemographicSettingsHeader epcis={epcis}>
-      <PopulationScenariosChart demographicEvolution={populationEvolution} />
-      <OmphaleScenariosChart demographicEvolution={omphaleEvolution} scenarioId={scenarioId} onChange={handleChange} />
+    <DemographicSettingsHeader>
+      <PopulationScenariosChart demographicEvolution={populationEvolution} epcis={epcis} />
+      <OmphaleScenariosChart demographicEvolution={omphaleEvolution} scenarioId={scenarioId} onChange={handleChange} epcis={epcis} />
     </DemographicSettingsHeader>
   )
 }

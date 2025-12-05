@@ -156,8 +156,9 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
   const currentEpci = queryStates.epciChart || queryStates.epcis[0]
-  const { data, metadata } = demographicEvolution[currentEpci]
-  const [chartData, setChartData] = useState<TOmphaleEvolutionWithCustom[]>(data)
+
+  const evolution = demographicEvolution[currentEpci]
+  const [chartData, setChartData] = useState<TOmphaleEvolutionWithCustom[]>(evolution?.data ?? [])
   const [isUsingCustomData, setIsUsingCustomData] = useState(false)
 
   // Fetch all custom demographic data with a single query
@@ -171,14 +172,14 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     if (customDataEpci && customDataEpci.data) {
       // Only use custom data if it matches the current EPCI and scenario
       setChartData(
-        data.map((item) => {
+        evolution?.data.map((item) => {
           const yearCustomData = customDataEpci.data.find((d) => d.year === item.year)
           return { ...item, custom: yearCustomData?.value || 0 }
         }),
       )
       setIsUsingCustomData(true)
     } else {
-      setChartData(data)
+      setChartData(evolution?.data)
       setIsUsingCustomData(false)
     }
   }, [customDataEpci, currentEpci])
@@ -197,6 +198,17 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
       strokeWidth: isActive ? 2 : 1,
     }
   })
+
+  if (!chartData) {
+    return (
+      <div className="fr-flex fr-justify-content-center fr-align-items-center fr-my-4w">
+        <div>
+          Aucune donnée disponible pour cet EPCI. Pour pouvoir choisir un scénario de projection, veuillez sélectionner un autre EPCI dans
+          la liste.
+        </div>
+      </div>
+    )
+  }
 
   const basePopulation = chartData.find((item) => item.year === 2021)
   const popEvolution = chartData.find((item) => item.year === Number(period))
@@ -287,7 +299,10 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
             <XAxis dataKey="year" />
             <Tooltip content={<OmphaleScenariosTooltip basePopulation={basePopulation as TOmphaleEvolutionWithCustom} />} />
 
-            <YAxis domain={[metadata.min, metadata.max]} tickFormatter={(value) => roundPopulation(value).toString()} />
+            <YAxis
+              domain={[evolution?.metadata.min, evolution?.metadata.max]}
+              tickFormatter={(value) => roundPopulation(value).toString()}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>

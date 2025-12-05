@@ -88,12 +88,24 @@ export const ProjectionPopulationEvolutionTable: FC<ProjectionPopulationEvolutio
                   <td className={styles.dataCell}>{formatNumber(territoryData['2030'][scenario.key])}</td>
                   <td className={styles.dataCell}>{formatNumber(territoryData['2040'][scenario.key])}</td>
                   <td className={styles.dataCell}>{formatNumber(territoryData['2050'][scenario.key])}</td>
-                  <td className={styles.dataCell}>{formatNumber(territoryData.annualEvolution['2021-2030'][scenario.key].value) || '-'}</td>
-                  <td className={styles.dataCell}>{formatNumber(territoryData.annualEvolution['2030-2040'][scenario.key].value) || '-'}</td>
-                  <td className={styles.dataCell}>{formatNumber(territoryData.annualEvolution['2040-2050'][scenario.key].value) || '-'}</td>
-                  <td className={styles.dataCell}>{territoryData.annualEvolution['2021-2030'][scenario.key].percent || '-'}</td>
-                  <td className={styles.dataCell}>{territoryData.annualEvolution['2030-2040'][scenario.key].percent || '-'}</td>
-                  <td className={styles.dataCell}>{territoryData.annualEvolution['2040-2050'][scenario.key].percent || '-'}</td>
+                  <td className={styles.dataCell}>
+                    {territoryData.annualEvolution['2021-2030']?.[scenario.key]?.value
+                      ? formatNumber(territoryData.annualEvolution['2021-2030'][scenario.key].value)
+                      : '-'}
+                  </td>
+                  <td className={styles.dataCell}>
+                    {territoryData.annualEvolution['2030-2040']?.[scenario.key]?.value
+                      ? formatNumber(territoryData.annualEvolution['2030-2040'][scenario.key].value)
+                      : '-'}
+                  </td>
+                  <td className={styles.dataCell}>
+                    {territoryData.annualEvolution['2040-2050']?.[scenario.key]?.value
+                      ? formatNumber(territoryData.annualEvolution['2040-2050'][scenario.key].value)
+                      : '-'}
+                  </td>
+                  <td className={styles.dataCell}>{territoryData.annualEvolution['2021-2030']?.[scenario.key]?.percent || '-'}</td>
+                  <td className={styles.dataCell}>{territoryData.annualEvolution['2030-2040']?.[scenario.key]?.percent || '-'}</td>
+                  <td className={styles.dataCell}>{territoryData.annualEvolution['2040-2050']?.[scenario.key]?.percent || '-'}</td>
                   <td className={styles.dataCell}>{territoryData.maxYears[scenario.key].year || '-'}</td>
                 </tr>
               ))

@@ -203,8 +203,8 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     return (
       <div className="fr-flex fr-justify-content-center fr-align-items-center fr-my-4w">
         <div>
-          Aucune donnée disponible pour cet EPCI. Pour pouvoir choisir un scénario de projection, veuillez sélectionner un autre EPCI dans
-          la liste.
+          Aucune donnée disponible pour cet EPCI. Pour pouvoir choisir un scénario de décohabitation, veuillez sélectionner un autre EPCI
+          dans la liste.
         </div>
       </div>
     )

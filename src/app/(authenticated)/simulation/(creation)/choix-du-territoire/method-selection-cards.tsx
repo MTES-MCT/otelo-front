@@ -33,7 +33,7 @@ export const MethodSelectionCards: FC<MethodSelectionCardsProps> = ({ selectedMe
               <i className={fr.cx('fr-icon-folder-2-line', 'fr-icon--lg')} />
             </div>
             <div className={classes.cardContent}>
-              <h4 className={classes.cardTitle}>Utiliser un groupe sauvegardé</h4>
+              <h4 className={classes.cardTitle}>Utiliser des territoires étudiés</h4>
               <p className={classes.cardDescription}>
                 Sélectionnez parmi vos {existingGroupsCount} groupe{existingGroupsCount > 1 ? 's' : ''} d'EPCI existant
                 {existingGroupsCount > 1 ? 's' : ''}

@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation'
 import { authOptions } from '~/lib/auth/auth.config'
+import { TEpci } from '~/schemas/epci'
 import { TSimulationWithRelations } from '~/schemas/simulation'
 
 export const getDashboardList = async () => {
@@ -26,6 +27,7 @@ export const getDashboardList = async () => {
       id: string
       name: string
       simulations: TSimulationWithRelations[]
+      epcis: Omit<TEpci, 'region'>[]
     }>
   >
 }

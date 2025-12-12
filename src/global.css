@@ -1,5 +1,7 @@
 @import url("./helpers/display.css");
 @import url("./helpers/flex.css");
+@import url("./helpers/background.css");
+@import url("./helpers/color.css");
 @import url("./helpers/text.css");
 @import url("./helpers/size.css");
 @import url("./helpers/border.css");

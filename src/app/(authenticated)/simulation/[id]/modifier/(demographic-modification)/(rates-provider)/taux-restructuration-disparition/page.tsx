@@ -12,7 +12,7 @@ export default async function RestructurationDisparitionRatesPage({ params }: Pa
   const simulation = await getSimulationWithResults(params.id)
   const href = `/simulation/${params.id}/modifier/validation-parametrage`
   return (
-    <div className="fr-flex fr-direction-column">
+    <div className="fr-flex fr-direction-column fr-mt-2w">
       <ModifyRestructurationDisparitionRates epcis={simulation.epcis} />
       <div className="fr-ml-auto fr-my-1w fr-my-auto">
         <NextStepLinkWithoutValidation href={href} />

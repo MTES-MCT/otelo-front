@@ -5,7 +5,6 @@ import { NextStepLinkWithoutValidation } from '~/components/simulations/settings
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
 import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
-import classes from './parametrages-demographique.module.css'
 
 type PageProps = {
   params: {
@@ -54,7 +53,7 @@ export default async function ParametragesDemographiquePage({ params, searchPara
   const populationEvolution = await getPopulationDemographicEvolutionByEpci(epcisCodes)
 
   return (
-    <div className={classes.container}>
+    <div className="fr-flex fr-direction-column fr-mt-2w">
       <DemographicSettingsFormWrapper
         epcis={epcisCodes}
         omphaleEvolution={omphaleEvolution}

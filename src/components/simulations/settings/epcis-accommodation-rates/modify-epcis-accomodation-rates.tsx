@@ -54,7 +54,6 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 }
 
 export const ModifyEpcisAccommodationRates: FC<ModifyEpcisAccomodationRatesProps> = ({ epcis }) => {
-  const { classes } = useStyles()
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
 
@@ -66,13 +65,10 @@ export const ModifyEpcisAccommodationRates: FC<ModifyEpcisAccomodationRatesProps
     label: epci.name,
   }))
 
-  return <Tabs classes={{ panel: classes.backgroundWhite }} tabs={tabs} />
+  return <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />
 }
 
 const useStyles = tss.create({
-  backgroundWhite: {
-    backgroundColor: 'white',
-  },
   inputsContainer: {
     display: 'flex',
     flexDirection: 'column',

@@ -1,4 +1,4 @@
-import { fr } from '@codegouvfr/react-dsfr'
+import Button from '@codegouvfr/react-dsfr/Button'
 import type { Metadata } from 'next'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
@@ -8,7 +8,6 @@ import { DemographicSettingsHeader } from '~/components/simulations/settings/dem
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
-import classes from './parametrages-demographique.module.css'
 
 export const metadata: Metadata = {
   title: 'Elaborer scenario - étape 3 sur 6 - Otelo',
@@ -25,14 +24,20 @@ export default async function DemographicSettingsPage({ searchParams }: PageProp
   const href = `/simulation/taux-cibles-logements`
 
   return (
-    <div className={classes.container}>
-      <DemographicSettingsHeader>
-        <PopulationScenariosChart demographicEvolution={populationEvolution} />
-        <OmphaleScenariosChart demographicEvolution={omphaleEvolution} />
-      </DemographicSettingsHeader>
-      <div className={fr.cx('fr-ml-auto', 'fr-my-1w')}>
-        <NextStepLink href={href} query="omphale" />
+    <>
+      <div className="fr-flex fr-direction-column fr-background-default--grey">
+        <DemographicSettingsHeader>
+          <PopulationScenariosChart demographicEvolution={populationEvolution} />
+          <OmphaleScenariosChart demographicEvolution={omphaleEvolution} />
+        </DemographicSettingsHeader>
       </div>
-    </div>
+      <div className="fr-flex fr-flex-gap-6v fr-justify-content-end fr-py-4w fr-px-2w">
+        {/* todo: extract to a component and set preivous url href*/}
+        <Button priority="secondary" size="large">
+          Précédent
+        </Button>
+        <NextStepLink href={href} query="projection" defaultValue="2030" />
+      </div>
+    </>
   )
 }

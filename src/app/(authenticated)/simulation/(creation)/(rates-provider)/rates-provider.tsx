@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import { TAccommodationRates } from '~/schemas/accommodations-rates'
 
 export interface RateSettings {
@@ -24,23 +24,38 @@ interface RatesProviderProps {
 }
 
 export const RatesProvider = ({ children, initialRates }: RatesProviderProps) => {
-  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates).reduce((acc, [epciId, rates]) => {
-    return {
-      ...acc,
-      [epciId]: {
-        vacancyRate: rates.vacancyRate,
-        longTermVacancyRate: rates.longTermVacancyRate,
-        shortTermVacancyRate: rates.shortTermVacancyRate,
-        txRS: rates.txRs,
-        initialRates: rates,
-        restructuringRate: rates.restructuringRate,
-        disappearanceRate: rates.disappearanceRate,
-      },
-    }
-  }, {})
+  const transformInitialRates = (initialRates: Record<string, TAccommodationRates>) => {
+    return Object.entries(initialRates).reduce((acc, [epciId, rates]) => {
+      return {
+        ...acc,
+        [epciId]: {
+          vacancyRate: rates.vacancyRate,
+          longTermVacancyRate: rates.longTermVacancyRate,
+          shortTermVacancyRate: rates.shortTermVacancyRate,
+          txRS: rates.txRs,
+          initialRates: rates,
+          restructuringRate: rates.restructuringRate,
+          disappearanceRate: rates.disappearanceRate,
+        },
+      }
+    }, {})
+  }
 
-  const [rates, setRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
-  const [defaultRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
+  const [rates, setRates] = useState<Record<string, RateSettings>>({})
+  const [defaultRates, setDefaultRates] = useState<Record<string, RateSettings>>({})
+  const [hasInitialized, setHasInitialized] = useState(false)
+
+  useEffect(() => {
+    const newTransformedRates = transformInitialRates(initialRates)
+    setRates(newTransformedRates)
+
+    // Only set defaultRates once when we first get real data
+    if (Object.keys(initialRates).length > 0 && !hasInitialized) {
+      setDefaultRates(newTransformedRates)
+      setHasInitialized(true)
+    }
+  }, [initialRates, hasInitialized])
+
   const updateRates = (epciId: string, newRates: Partial<RateSettings>) => {
     setRates((prevRates) => ({
       ...prevRates,

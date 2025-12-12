@@ -5,7 +5,6 @@ import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/s
 import { CreateEpcisAccommodationRates } from '~/components/simulations/settings/epcis-accommodation-rates/create-epcis-accomodation-rates'
 import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { getEpcis } from '~/server-only/epcis/get-epcis'
-import styles from './taux-cibles-logements.module.css'
 
 export const metadata: Metadata = {
   title: 'Elaborer scenario - étape 4 sur 6 - Otelo',
@@ -21,7 +20,7 @@ export default async function TargetRatesHousing({ searchParams }: PageProps) {
   const href = `/simulation/taux-restructuration-disparition`
 
   return (
-    <div className={styles.container}>
+    <div className="fr-flex fr-direction-column fr-mt-2w">
       <CreateEpcisAccommodationRates epcis={simulationsEpcis} />
 
       <div className={fr.cx('fr-ml-auto', 'fr-my-1w', 'fr-my-auto')}>

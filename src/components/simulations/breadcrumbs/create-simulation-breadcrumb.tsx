@@ -1,13 +1,12 @@
-'use client'
-
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
 
 export const CreateSimulationBreadcrumb = () => (
   <Breadcrumb
-    currentPageLabel="Initialisation de votre simulation"
+    currentPageLabel="Paramétrage d'un scénario"
     homeLinkProps={{
       href: '/',
     }}
     segments={[]}
+    className="fr-mb-4w"
   />
 )

@@ -16,7 +16,7 @@ export const CreateAccommodationRateInput: FC<CreateAccommodationRateInputProps>
   const { rates, updateRates } = useEpcisRates()
   const { classes } = useStyles()
   const ratesByEpci = rates[epci]
-  const value = ratesByEpci[txKey as keyof typeof ratesByEpci]
+  const value = !!ratesByEpci && ratesByEpci[txKey as keyof typeof ratesByEpci]
   const [valueInput, setValueInput] = useState(`${Number(value * 100).toFixed(2)}`)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -47,7 +47,13 @@ export function DeleteSimulationButton({ simulation }: DeleteSimulationButtonPro
   return (
     <>
       <Tooltip title="Supprimer ce scénario">
-        <i className={`ri-delete-bin-6-line ${styles.deleteIcon}`} onClick={modalActions.open} />
+        <Button
+          iconId="ri-delete-bin-6-line"
+          onClick={modalActions.open}
+          priority="tertiary no outline"
+          title="Cloner ce scénario"
+          size="small"
+        />
       </Tooltip>
 
       <modalActions.Component title="Êtes vous sûr de vouloir supprimer ce scénario ?" concealingBackdrop>

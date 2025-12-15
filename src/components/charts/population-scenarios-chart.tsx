@@ -68,8 +68,11 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
 
   if (!selectedData) {
     return (
-      <div className={classes.chartContainer}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Chargement...</div>
+      <div className="fr-flex fr-justify-content-center fr-align-items-center fr-my-4w">
+        <div>
+          Aucune donnée disponible pour cet EPCI. Pour pouvoir choisir un scénario de projection, veuillez sélectionner un autre EPCI dans
+          la liste.
+        </div>
       </div>
     )
   }

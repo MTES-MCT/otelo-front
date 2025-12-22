@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import { TAccommodationRates } from '~/schemas/accommodations-rates'
 
 export interface RateSettings {
@@ -20,11 +20,11 @@ export const RatesSettingsContext = createContext<RatesState | undefined>(undefi
 
 interface RatesProviderProps {
   children: React.ReactNode
-  initialRates: Record<string, TAccommodationRates>
+  initialRates?: Record<string, TAccommodationRates>
 }
 
 export const RatesProvider = ({ children, initialRates }: RatesProviderProps) => {
-  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates).reduce((acc, [epciId, rates]) => {
+  const transformedInitialRates: Record<string, RateSettings> = Object.entries(initialRates || {}).reduce((acc, [epciId, rates]) => {
     return {
       ...acc,
       [epciId]: {
@@ -40,7 +40,28 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
   }, {})
 
   const [rates, setRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
-  const [defaultRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
+  const [defaultRates, setDefaultRates] = useState<Record<string, RateSettings>>(transformedInitialRates)
+
+  useEffect(() => {
+    const newTransformedRates = Object.entries(initialRates || {}).reduce((acc, [epciId, rateData]) => {
+      return {
+        ...acc,
+        [epciId]: {
+          vacancyRate: rateData.vacancyRate,
+          longTermVacancyRate: rateData.longTermVacancyRate,
+          shortTermVacancyRate: rateData.shortTermVacancyRate,
+          txRS: rateData.txRs,
+          initialRates: rateData,
+          restructuringRate: rateData.restructuringRate,
+          disappearanceRate: rateData.disappearanceRate,
+        },
+      }
+    }, {})
+
+    setRates(newTransformedRates)
+    setDefaultRates(newTransformedRates)
+  }, [initialRates])
+
   const updateRates = (epciId: string, newRates: Partial<RateSettings>) => {
     setRates((prevRates) => ({
       ...prevRates,

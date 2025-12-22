@@ -1,10 +1,11 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
 import React from 'react'
-import { DemographicSettingsCreationGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
+import { DemographicSettingsGuideTag } from '~/components/simulations/creation-guide/demographic-settings-creation-guide-tag'
 import { useEpcis } from '~/hooks/use-epcis'
+import { DemographicSettingsSimulationSideMenuStepNumber } from './demographic-settings-simulation-side-menu-step-number'
+import { DemographicSettingsSimulationSideMenuTitle } from './demographic-settings-simulation-side-menu-title'
 import styles from './simulation-side-menu.module.css'
 
 export default function DemographicSettingsSimulationSideMenu() {
@@ -17,60 +18,60 @@ export default function DemographicSettingsSimulationSideMenu() {
   const demographicSteps = [
     {
       data: epciNames,
-      label: 'Territoire à étudier',
       path: '/simulation/choix-du-territoire',
       queryKeys: ['epci', 'epcis'],
-      title: <span>Choix du territoire</span>,
+      titleText: 'Choix du territoire',
     },
     {
-      label: 'Cadrage temporel de la simulation',
       path: '/simulation/cadrage-temporel',
       queryKeys: ['projection'],
-      title: <span>Déterminer l&apos;horizon de temps</span>,
+      titleText: 'Horizon de temps',
+      iconId: 'ri-time-line',
     },
     {
-      label: "Scénario de l'évolution démographique",
       path: '/simulation/parametrages-demographique',
       queryKeys: ['omphale'],
-      title: <span>Paramétrage évolution démographique</span>,
+      titleText: 'Projection démographique',
     },
     {
-      label: 'Taux de résidences secondaires / logements vacants',
-      path: '/simulation/taux-cibles-logements',
+      path: '/simulation/taux-cibles-logements-vacants',
       queryKeys: [],
-      title: <span>Paramétrage résidences secondaires et logements vacants</span>,
+      titleText: 'Logements vacants longue durée',
     },
     {
-      label: 'Taux de restructuration et taux de disparition',
+      path: '/simulation/taux-cibles-residences-secondaires',
+      queryKeys: [],
+      titleText: 'Résidences secondaires',
+    },
+    {
       path: '/simulation/taux-restructuration-disparition',
       queryKeys: [],
-      title: <span>Paramétrage des dynamiques de renouvellement du parc de logements</span>,
+      titleText: 'Renouvellement urbain',
     },
   ]
 
   return (
-    <nav className={fr.cx('fr-col-md-3')}>
-      <div className={styles.container}>
-        {demographicSteps.map((step, index) => (
-          <React.Fragment key={index}>
-            <div className={styles.stepContainer}>
-              <div className={styles.stepNumber}>
-                <span className={styles.stepNumberText}>{index + 1}</span>
-              </div>
-              <span>{step.title}</span>
-            </div>
+    <div className={styles.container}>
+      {demographicSteps.map((step, index) => (
+        <React.Fragment key={index}>
+          <div className={styles.stepContainer}>
+            <DemographicSettingsSimulationSideMenuStepNumber stepNumber={index + 1} path={step.path} allSteps={demographicSteps} />
+            <DemographicSettingsSimulationSideMenuTitle
+              title={step.titleText}
+              path={step.path}
+              stepNumber={index + 1}
+              allSteps={demographicSteps}
+            />
+          </div>
+          {index !== demographicSteps.length && (
             <div className={styles.stepDelimitor}>
               <div className={styles.badgeContainer}>
-                <DemographicSettingsCreationGuideTag step={step} />
+                <DemographicSettingsGuideTag step={step} />
               </div>
             </div>
-          </React.Fragment>
-        ))}
-        <div className={styles.stepContainer}>
-          <div className={styles.stepNumber}>{demographicSteps.length + 1}</div>
-          <span>Validation de votre paramétrage</span>
-        </div>
-      </div>
-    </nav>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
   )
 }

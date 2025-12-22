@@ -2,7 +2,6 @@
 
 import Input from '@codegouvfr/react-dsfr/Input'
 import { FC, useState } from 'react'
-import { tss } from 'tss-react'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 
 type ModifyAccommodationRateInputProps = {
@@ -12,9 +11,8 @@ type ModifyAccommodationRateInputProps = {
   txKey: string
 }
 
-export const ModifyAccommodationRateInput: FC<ModifyAccommodationRateInputProps> = ({ disabled = false, epci, label, txKey }) => {
+export const ModifySecondaryAccommodationRateInput: FC<ModifyAccommodationRateInputProps> = ({ disabled = false, epci, label, txKey }) => {
   const { simulationSettings, updateRates } = useSimulationSettings()
-  const { classes } = useStyles()
   const ratesByEpci = simulationSettings.epciScenarios[epci]
   const value = ratesByEpci[txKey as keyof typeof ratesByEpci]
   const [valueInput, setValueInput] = useState(`${Number((value as number) * 100).toFixed(2)}`)
@@ -33,9 +31,11 @@ export const ModifyAccommodationRateInput: FC<ModifyAccommodationRateInputProps>
   }
 
   return (
-    <div className={classes.container}>
+    <div className="fr-flex fr-align-items-end fr-flex-gap-2v">
+      <span>En {simulationSettings.projection}, vous ciblez le taux suivant :</span>
       <Input
         disabled={disabled}
+        hideLabel
         iconId="ri-percent-line"
         label={label}
         nativeInputProps={{
@@ -47,9 +47,3 @@ export const ModifyAccommodationRateInput: FC<ModifyAccommodationRateInputProps>
     </div>
   )
 }
-
-const useStyles = tss.create({
-  container: {
-    width: '100%',
-  },
-})

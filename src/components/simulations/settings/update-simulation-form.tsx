@@ -4,13 +4,11 @@ import Button from '@codegouvfr/react-dsfr/Button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { tss } from 'tss-react'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import { useUpdateDemographicSimulation } from '~/hooks/use-update-simulation'
 import { TUpdateDemographicSimulationDto, ZUpdateDemographicSimulationDto } from '~/schemas/simulation'
 
 export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
-  const { classes } = useStyles()
   const updateSimulationForResults = useUpdateDemographicSimulation()
 
   const { simulationSettings } = useSimulationSettings()
@@ -49,18 +47,10 @@ export const UpdateSimulationForm: FC<{ id: string }> = ({ id }) => {
   const onSubmitForResults = async () => updateSimulationForResults.mutateAsync(getValues())
 
   return (
-    <div className={classes.container}>
-      <Button onClick={handleSubmit(onSubmitForResults)} disabled={!isValid || updateSimulationForResults.isPending}>
+    <div className="fr-flex fr-flex-gap-2v fr-justify-content-end fr-py-4w ">
+      <Button onClick={handleSubmit(onSubmitForResults)} disabled={!isValid || updateSimulationForResults.isPending} size="large">
         Accéder au résultat
       </Button>
     </div>
   )
 }
-
-const useStyles = tss.create({
-  container: {
-    display: 'flex',
-    gap: '1rem',
-    justifyContent: 'flex-end',
-  },
-})

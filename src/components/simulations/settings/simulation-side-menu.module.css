@@ -5,27 +5,47 @@
   gap: 0.5rem;
 }
 
-.stepNumber {
+.stepNumberBase {
   align-items: center;
-  border: 1px solid var(--background-action-high-blue-france);
-  border-radius: 50%;
-  color: var(--background-action-high-blue-france);
   border-radius: 50%;
   display: flex;
   height: 2.5rem;
   justify-content: center;
-  width: 2.5rem;
+  min-width: 2.5rem;
+}
+
+.stepNumber {
+  composes: stepNumberBase;
+  border: 1px solid #ddd;
+  color: #161616;
+}
+
+.stepNumberActive {
+  composes: stepNumberBase;
+  background-color: var(--background-flat-blue-france);
+  border: none;
+  color: white;
+}
+
+.stepNumberInactive {
+  composes: stepNumberBase;
+  border: 1px solid #ddd;
+  background-color: transparent;
+  color: #161616;
+}
+
+.stepNumberCompleted {
+  composes: stepNumberBase;
+  border: 1px solid var(--background-flat-blue-france);
+  background-color: white;
+  color: var(--background-flat-blue-france);
 }
 
 .stepNumber span {
-  width: 2.5rem;
+  min-width: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.stepNumberText {
-  width: "40px";
 }
 
 .stepDelimitor {
@@ -47,9 +67,4 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-}
-
-.optional {
-  font-style: italic;
-  font-size: 0.8rem;
 }

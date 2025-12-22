@@ -17,7 +17,6 @@ export const SimulationFormRatesProviderContextWrapper = ({ children, epcis }: S
   const epcisCodes = epcis ?? queryStates.epcis
 
   const { data: accommodationRates } = useAccommodationRatesByEpci(epcisCodes)
-  if (!accommodationRates) return null
 
-  return <RatesProvider initialRates={accommodationRates}>{children}</RatesProvider>
+  return <RatesProvider initialRates={accommodationRates || {}}>{children}</RatesProvider>
 }

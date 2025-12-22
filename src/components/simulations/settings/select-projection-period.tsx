@@ -15,8 +15,7 @@ export const SelectProjectionPeriod: FC = () => {
 
   return (
     <Range
-      hintText="Faites glisser le curseur pour définir l'horizon de temps de la simulation."
-      label="Horizon de temps"
+      label="Faites glisser le curseur pour établir l'horizon de temps du scénario."
       max={2050}
       min={2021}
       nativeInputProps={{ onChange: (e) => setProjection(e.target.value), value: projection ?? '2030' }}

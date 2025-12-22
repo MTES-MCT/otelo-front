@@ -1,8 +1,9 @@
 'use client'
 
-import { Alert } from '@codegouvfr/react-dsfr/Alert'
+import Badge from '@codegouvfr/react-dsfr/Badge'
 import Button from '@codegouvfr/react-dsfr/Button'
-import Select from '@codegouvfr/react-dsfr/SelectNext'
+import CallOut from '@codegouvfr/react-dsfr/CallOut'
+import classNames from 'classnames'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -10,11 +11,14 @@ import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
 import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { PopulationScenariosCustomTooltip } from '~/components/charts/population-scenarios-custom-tooltip'
+import { PopulationScenariosSelection } from '~/components/charts/population-scenarios-selection'
+import { DemographicSettingsSelectEpci } from '~/components/simulations/settings/demographic-settings-header'
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { roundPopulation } from '~/utils/round-chart-axis'
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
   modification?: boolean
+  epcis?: string[]
 }
 
 const SCENARIOS = [
@@ -38,22 +42,7 @@ const SCENARIOS = [
   },
 ]
 
-const selectOptions = [
-  {
-    label: 'Population: Haute',
-    value: 'haute',
-  },
-  {
-    label: 'Population: Central',
-    value: 'central',
-  },
-  {
-    label: 'Population: Basse',
-    value: 'basse',
-  },
-]
-
-export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ demographicEvolution }) => {
+export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ demographicEvolution, epcis }) => {
   const { classes } = useStyles()
   const [queryStates, setQueryStates] = useQueryStates({
     population: parseAsString,
@@ -99,6 +88,9 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
 
   return (
     <>
+      <PopulationScenariosSelection />
+      <DemographicSettingsSelectEpci epcis={epcis ?? queryStates.epcis} />
+
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={300} data={data}>
@@ -131,29 +123,29 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div>
-        <Select
-          label="Scénario de projection de population"
-          hint="Le choix de scénario s'applique au global dans votre simulation, à l'échelle du bassin d'habitat ou des EPCI."
-          placeholder="Choix du scénario"
-          nativeSelectProps={{
-            onChange: (event) => setQueryStates({ population: event.target.value }),
-            value: queryStates.population ?? undefined,
-          }}
-          options={selectOptions}
-          style={{ marginTop: '1rem' }}
-        />
-      </div>
       {queryStates.population && (
-        <Alert
-          description={`Votre scénario anticipe une évolution de la population de ${evol > 0 ? `+${evol}` : evol} habitant${evol > 0 ? 's' : ''} sur la période 2021 - ${period}.`}
-          severity="info"
-          small
-        />
+        <CallOut
+          title={
+            <Badge severity="new" noIcon small>
+              <span className={classNames(classes.badgeIcon, 'ri-lightbulb-line fr-mr-1v')} />
+              <span className="fr-text--uppercase">Clé de lecture</span>
+            </Badge>
+          }
+        >
+          <>
+            <span>
+              Ce scénario anticipe une évolution de la population de <strong>{evol > 0 ? `+${evol}` : evol}</strong> habitant
+              {evol > 0 ? 's' : ''} sur la période 2021 - {period}.
+            </span>
+            <br />
+            <span className="fr-text--sm fr-text-mention--grey fr-mb-0">Source des données : INSEE</span>
+          </>
+        </CallOut>
       )}
+
       <div className={classes.buttonContainer}>
         <Button disabled={!queryStates.population} onClick={() => setQueryStates({ scenario: 'menages' })}>
-          Traduire en nombre de ménages
+          Choisir une projection de ménages
         </Button>
       </div>
     </>
@@ -161,6 +153,11 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
 }
 
 const useStyles = tss.create({
+  badgeIcon: {
+    '&::before': {
+      '--icon-size': '12px',
+    },
+  },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',

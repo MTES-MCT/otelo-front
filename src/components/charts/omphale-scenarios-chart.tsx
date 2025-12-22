@@ -2,7 +2,10 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Alert from '@codegouvfr/react-dsfr/Alert'
+import Badge from '@codegouvfr/react-dsfr/Badge'
 import Button from '@codegouvfr/react-dsfr/Button'
+import CallOut from '@codegouvfr/react-dsfr/CallOut'
+import classNames from 'classnames'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import React, { FC, useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -10,8 +13,9 @@ import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/c
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
 import { getChartColor } from '~/components/charts/data-visualisation/colors'
+import { OmphaleScenariosSelection } from '~/components/charts/omphale-scenarios-selection'
 import { UploadDemographicEvolutionCustom } from '~/components/charts/upload-demographic-evolution-custom'
-import { SelectOmphale } from '~/components/simulations/settings/select-omphale'
+import { DemographicSettingsSelectEpci } from '~/components/simulations/settings/demographic-settings-header'
 import { useDemographicEvolutionCustom } from '~/hooks/use-demographic-evolution-custom'
 import { useEpcis } from '~/hooks/use-epcis'
 import { TOmphaleDemographicEvolution, TOmphaleEvolution } from '~/schemas/demographic-evolution'
@@ -22,6 +26,7 @@ interface DemographicEvolutionChartProps {
   demographicEvolution: TOmphaleDemographicEvolution
   onChange?: (e: string) => void
   scenarioId?: string
+  epcis?: string[]
 }
 
 const SCENARIOS = [
@@ -123,8 +128,8 @@ const OmphaleScenariosTooltip = ({
             <div className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
             <span>{item.name}:</span>
             <span>
-              <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> ménages par rapport à{' '}
-              <span className={classes.bold}>2021</span>
+              <span className="fr-text--bold">{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> ménages par rapport à{' '}
+              <span className="fr-text--bold">2021</span>
             </span>
             <span className={classes.smallText}>({formatNumber(item.value)} ménages)</span>
           </div>
@@ -144,7 +149,7 @@ const findMaxValueYear = (data: TOmphaleEvolution[], scenarioKey?: string) => {
   }, data[0]).year
 }
 
-export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution, onChange, scenarioId }) => {
+export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demographicEvolution, epcis: epcisProps, scenarioId }) => {
   const { classes } = useStyles()
 
   const [queryStates, setQueryStates] = useQueryStates({
@@ -242,30 +247,22 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
 
   return (
     <>
-      {isUsingCustomData ? (
+      <OmphaleScenariosSelection />
+      <UploadDemographicEvolutionCustom epciCode={currentEpci} scenarioId={scenarioId} />
+      {isUsingCustomData && (
+        <Button iconId="fr-icon-delete-line" onClick={onDeleteCustomData} priority="tertiary" size="small" className={fr.cx('fr-mt-1w')}>
+          Supprimer les données personnalisées
+        </Button>
+      )}
+      {isUsingCustomData && (
         <Alert
           description={`Vous utilisez actuellement des données démographiques personnalisées importées pour ${currentEpciName}. Les scénarios affichés utilisent ces données personnalisées.`}
           severity="warning"
           small
           className={fr.cx('fr-mb-2w')}
         />
-      ) : (
-        <Alert
-          description="Les scénarios d'évolution proposés sont basés sur votre choix de projection par population à l'étape précédente.
-          Vous avez la possibilité de revenir à l'étape précèdente pour modifier votre choix de projection par population."
-          severity="info"
-          small
-          className={fr.cx('fr-mb-2w')}
-        />
       )}
-      <div className={fr.cx('fr-mb-2w')}>
-        <UploadDemographicEvolutionCustom epciCode={currentEpci} scenarioId={scenarioId} />
-        {isUsingCustomData && (
-          <Button iconId="fr-icon-delete-line" onClick={onDeleteCustomData} priority="tertiary" size="small" className={fr.cx('fr-mt-1w')}>
-            Supprimer les données personnalisées
-          </Button>
-        )}
-      </div>
+      <DemographicSettingsSelectEpci epcis={epcisProps ?? queryStates.epcis} />
       <div className={classes.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart width={500} height={300} data={chartData}>
@@ -306,28 +303,37 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className={fr.cx('fr-py-2w')}>
-        <SelectOmphale onChange={onChange} />
-      </div>
       {queryStates.omphale && maxYear && (
-        <Alert
-          description={
-            <>
-              <p>
-                Votre scénario anticipe une évolution du nombre de ménages de {evol > 0 ? `+${evol}` : evol} sur la période 2021 - {period}.
-              </p>
-              <p>Le pic de ménages sera atteint {maxYear < 2050 ? `en ${maxYear}` : `après ${maxYear}`}.</p>
-            </>
+        <CallOut
+          title={
+            <Badge severity="new" noIcon small>
+              <span className={classNames(classes.badgeIcon, 'ri-lightbulb-line fr-mr-1v')} />
+              <span className="fr-text--uppercase">Clé de lecture</span>
+            </Badge>
           }
-          severity="info"
-          small
-        />
+        >
+          <>
+            <span>
+              Ce scénario anticipe une évolution du nombre de ménages de <strong>{evol > 0 ? `+${evol}` : evol}</strong> sur la période 2021
+              - {period}.
+            </span>
+            <br />
+            <span>
+              Le pic de ménages sera atteint <strong>{maxYear < 2050 ? `en ${maxYear}` : `après ${maxYear}`}</strong>.
+            </span>
+          </>
+        </CallOut>
       )}
     </>
   )
 }
 
 const useStyles = tss.create({
+  badgeIcon: {
+    '&::before': {
+      '--icon-size': '12px',
+    },
+  },
   chartContainer: {
     backgroundColor: 'white',
     height: '500px',
@@ -355,9 +361,6 @@ const useStyles = tss.create({
     borderRadius: '50%',
     height: '8px',
     width: '8px',
-  },
-  bold: {
-    fontWeight: 'bold',
   },
   smallText: {
     fontSize: '10px',

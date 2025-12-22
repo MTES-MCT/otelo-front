@@ -1,7 +1,5 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
-import Alert from '@codegouvfr/react-dsfr/Alert'
 import { Select } from '@codegouvfr/react-dsfr/Select'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import classNames from 'classnames'
@@ -15,84 +13,59 @@ type DemographicSettingsHeaderProps = {
 }
 
 export const DemographicSettingsSelectEpci = ({ epcis }: { epcis?: string[] }) => {
-  const [scenarioSelected] = useQueryState('scenario', parseAsString)
   const { data: customEpcis } = useEpcis(epcis)
   const options = customEpcis?.filter((item) => !!item)
 
   const [displayedEpci, setDisplayedEpci] = useQueryState('epciChart', parseAsString)
-  const hint = `Sélectionnez un EPCI dans la liste pour afficher ses projections de ${scenarioSelected === 'population' ? 'population' : 'ménages'}.`
   return (
-    <Select
-      label=""
-      hint={hint}
-      nativeSelectProps={{
-        value: (displayedEpci as string) || epcis?.[0],
-        onChange: (event) => setDisplayedEpci(event.target.value),
-      }}
-    >
-      {(options || []).map((option) => (
-        <option key={option?.code} value={option?.code}>
-          {option?.name}
-        </option>
-      ))}
-    </Select>
+    <div className="fr-flex fr-justify-content-end fr-align-items-end fr-flex-gap-2v">
+      <span className="fr-text--sm fr-mb-0">EPCI affiché :</span>
+      <Select
+        label={undefined}
+        nativeSelectProps={{
+          value: (displayedEpci as string) || epcis?.[0],
+          onChange: (event) => setDisplayedEpci(event.target.value),
+        }}
+      >
+        {(options || []).map((option) => (
+          <option key={option?.code} value={option?.code}>
+            {option?.name}
+          </option>
+        ))}
+      </Select>
+    </div>
   )
 }
 
-export const DemographicSettingsHeader = ({ children, epcis }: DemographicSettingsHeaderProps) => {
+export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeaderProps) => {
   const [queryState, setQueryState] = useQueryStates({
     population: parseAsString,
-    scenario: parseAsString,
+    scenario: parseAsString.withDefault('population'),
   })
 
   const { classes } = useStyles({ population: queryState.population })
   const selectedTabId = queryState.scenario ?? 'population'
-
-  const title =
-    queryState.scenario === 'menages'
-      ? "Évolution du nombre de ménages en fonction des scénarios d'évolution des modes d'habitation"
-      : 'Évolution de la population annuelle par scénario de projection'
 
   const content = selectedTabId === 'population' ? children[0] : children[1]
 
   return (
     <Tabs
       label="Scénario de projection démographique"
-      classes={{ tab: classes.tab }}
+      classes={{ tab: classes.tab, panel: 'fr-background-default--grey' }}
       selectedTabId={selectedTabId}
       onTabChange={(tabId: string) => setQueryState({ scenario: tabId === 'population' ? 'population' : 'menages' })}
       tabs={[
         {
-          iconId: 'ri-group-3-line',
-          label: 'Étape 1 : Projection par population',
+          label: 'Projection de population',
           tabId: 'population',
         },
         {
-          iconId: 'ri-home-2-line',
-          label: 'Étape 2 : Scénarios de décohabitation - Projection par ménages',
+          label: 'Projection de ménages',
           tabId: 'menages',
         },
       ]}
     >
-      <div className={classes.container}>
-        <div className={classes.titleContainer}>
-          <h5 className={classNames(classes.title, 'fr-mb-0')}>{title}</h5>
-          <DemographicSettingsSelectEpci epcis={epcis} />
-        </div>
-        {queryState.scenario === 'population' && (
-          <div className={fr.cx('fr-my-2w')}>
-            <Alert
-              description="Les projections de nombre de ménages proposées par Otelo sont établies à partir du modèle Omphale, produit par l'Insee. Il permet
-            d'obtenir des projections de population sur la période 2018-2050 à partir de scénarios qui reposent sur différentes hypothèses de
-            natalité, de mortalité et de migration. Ces projections de population sont ensuite transformées en projections de nombre de ménages
-            à l'aide d'une méthode conçue en partenariat par la DHUP, l'Insee et le SDES selon plusieurs scénarios de décohabitation."
-              severity="info"
-              small
-            />
-          </div>
-        )}
-        {content}
-      </div>
+      <div className={classNames(classes.container, 'fr-background-default--grey')}>{content}</div>
     </Tabs>
   )
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { SearchParams } from 'nuqs'
 import { searchParamsCache } from '~/app/(authenticated)/simulation/(creation)/searchParams'
-import { NextStepLink } from '~/components/simulations/settings/next-step-link'
 import { CreateRestructurationDisparitionRates } from '~/components/simulations/settings/restructuration-disparition-rates/create-restructuration-disparition-rates'
+import { RestructurationDisparitionFooter } from '~/components/simulations/settings/restructuration-disparition-rates/restructuration-disparition-footer'
 import { getEpcis } from '~/server-only/epcis/get-epcis'
 
 export const metadata: Metadata = {
@@ -16,14 +16,13 @@ type PageProps = {
 export default async function RestructurationDisparitionRatesPage({ searchParams }: PageProps) {
   const { epcis, baseEpci } = await searchParamsCache.parse(searchParams)
   const simulationsEpcis = await getEpcis(epcis, baseEpci)
-  const href = `/simulation/validation-parametrage`
 
   return (
-    <div className="fr-flex fr-direction-column">
-      <CreateRestructurationDisparitionRates epcis={simulationsEpcis} />
-      <div className="fr-ml-auto fr-my-1w fr-my-auto">
-        <NextStepLink href={href} query="omphale" />
+    <>
+      <div className="fr-flex fr-direction-column fr-background-default--grey">
+        <CreateRestructurationDisparitionRates epcis={simulationsEpcis} />
       </div>
-    </div>
+      <RestructurationDisparitionFooter />
+    </>
   )
 }

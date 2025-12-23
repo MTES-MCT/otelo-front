@@ -19,6 +19,8 @@ export const ZSession = z.object({
     role: z.enum(['ADMIN', 'USER']).optional(),
     type: z.enum(['DDT', 'AgenceUrbanisme', 'Collectivite', 'DREAL', 'BureauEtudes']).optional(),
   }),
+  impersonatedUserId: z.string().optional(),
+  impersonatorId: z.string().optional(),
 })
 
 export type TSession = z.infer<typeof ZSession>

@@ -9,6 +9,7 @@ import { useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 import { useDeleteUser } from '~/hooks/use-delete-user'
+import { useStartImpersonation } from '~/hooks/use-impersonation'
 import { useSearchUsers } from '~/hooks/use-search-users'
 import { useUpdateUserAccess } from '~/hooks/use-update-user-access'
 import { useUsers } from '~/hooks/use-users'
@@ -19,6 +20,7 @@ export const UsersTable: FC = () => {
   const { data: usersSearchResponse } = useSearchUsers()
   const { mutate: updateUserAccess, isPending } = useUpdateUserAccess()
   const { mutate: deleteUser } = useDeleteUser()
+  const { mutateAsync: startImpersonation } = useStartImpersonation()
   const [searchQuery] = useQueryState('q')
 
   const headers = [
@@ -29,7 +31,7 @@ export const UsersTable: FC = () => {
     'Date de dernière connexion',
     'Accès',
     'Démarches simplifiées',
-    'Supprimer',
+    'Actions',
   ]
   const data = searchQuery ? usersSearchResponse?.users : usersResponse?.users
 
@@ -43,6 +45,9 @@ export const UsersTable: FC = () => {
       handleDeleteUser: async () => {
         await deleteUser(user.id)
         modalActions.close()
+      },
+      handleImpersonateUser: async () => {
+        await startImpersonation({ userId: user.id })
       },
       modalActions,
       user,
@@ -61,7 +66,7 @@ export const UsersTable: FC = () => {
             </tr>
           </thead>
           <tbody>
-            {userModals.map(({ modalActions, user }) => (
+            {userModals.map(({ modalActions, user, handleImpersonateUser }) => (
               <tr key={user.id}>
                 <td>{`${user.firstname} ${user.lastname}`}</td>
                 <td>{user.email}</td>
@@ -105,6 +110,14 @@ export const UsersTable: FC = () => {
 
                 <td>
                   <div className={classes.actions}>
+                    {user.role === 'USER' && (
+                      <i
+                        style={{ cursor: 'pointer' }}
+                        onClick={handleImpersonateUser}
+                        className="ri-user-follow-line"
+                        title="Usurper cet utilisateur"
+                      />
+                    )}
                     <i style={{ cursor: 'pointer' }} onClick={modalActions.open} className="ri-delete-bin-5-fill" />
                   </div>
                 </td>

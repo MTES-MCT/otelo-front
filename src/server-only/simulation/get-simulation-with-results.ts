@@ -16,6 +16,7 @@ export const getSimulationWithResults = async (id: string) => {
     },
     cache: 'no-store',
   })
+
   if (!res.ok) {
     throw new Error('Failed to get simulation with results')
   }

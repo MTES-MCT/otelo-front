@@ -1,18 +1,15 @@
 'use client'
 
 import Button from '@codegouvfr/react-dsfr/Button'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { FC, useEffect } from 'react'
+import { handleSignOut } from '~/app/(authenticated)/signout'
 import { Dropdown } from '~/components/common/dropdown'
 import ProfileInitials from '~/components/common/profile-image'
 import { CustomUser } from '~/lib/auth/auth.config'
 
 export const QuickAccessItems: FC = () => {
   const { data: session } = useSession()
-
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/accueil', redirect: true })
-  }
 
   useEffect(() => {
     if (session?.error) {

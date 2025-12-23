@@ -13,5 +13,5 @@
 }
 
 .item {
-  height: 136px;
+  min-height: 136px;
 }

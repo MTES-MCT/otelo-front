@@ -2,6 +2,7 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import { Card } from '@codegouvfr/react-dsfr/Card'
+import StatisticsExportButtons from '~/components/admin/statistics-export-buttons'
 import { useStatistics } from '~/hooks/use-statistics'
 
 interface StatCardProps {
@@ -55,7 +56,10 @@ export default function StatistiquesPage() {
 
   return (
     <div className={fr.cx('fr-container', 'fr-py-10v')}>
-      <h1>Statistiques</h1>
+      <div className="fr-flex fr-justify-content-space-between">
+        <h1>Statistiques</h1>
+        <StatisticsExportButtons />
+      </div>
 
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters', 'fr-mt-5v')}>
         <StatCard title="Scénarios créés" value={statistics?.totalScenarios || 0} description="Nombre total de scénarios" />

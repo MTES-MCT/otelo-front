@@ -9,7 +9,6 @@ import { useImpersonationStatus } from '~/hooks/use-impersonation-status'
 
 export const ImpersonationBanner: FC = () => {
   const { data: impersonationStatus } = useImpersonationStatus()
-  console.log('yoyoyo', impersonationStatus)
   const { mutateAsync: stopImpersonation, isPending } = useStopImpersonation()
   const { classes } = useStyles()
 

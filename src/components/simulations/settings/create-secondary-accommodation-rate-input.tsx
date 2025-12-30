@@ -1,7 +1,6 @@
 'use client'
 
 import Input from '@codegouvfr/react-dsfr/Input'
-import { useQueryState } from 'nuqs'
 import { FC, useEffect, useState } from 'react'
 import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 
@@ -9,20 +8,19 @@ type CreateAccommodationRateInputProps = {
   disabled?: boolean
   epci: string
   label: string
-  txKey: string
 }
 
-export const CreateSecondaryAccommodationRateInput: FC<CreateAccommodationRateInputProps> = ({ disabled = false, epci, label, txKey }) => {
-  const [projectionState] = useQueryState('projection')
-
-  const { rates, updateRates } = useEpcisRates()
+export const CreateSecondaryAccommodationRateInput: FC<CreateAccommodationRateInputProps> = ({ disabled = false, epci, label }) => {
+  const { rates, defaultRates, updateRates } = useEpcisRates()
   const ratesByEpci = rates[epci]
+  const defaultRatesByEpci = defaultRates[epci]
   const [valueInput, setValueInput] = useState<string | undefined>(undefined)
+
   useEffect(() => {
-    if (!!ratesByEpci && ratesByEpci[txKey as keyof typeof ratesByEpci]) {
-      setValueInput(`${Number(ratesByEpci[txKey as keyof typeof ratesByEpci] * 100).toFixed(2)}`)
+    if (!!defaultRatesByEpci && defaultRatesByEpci.txRS) {
+      setValueInput(`${Number(defaultRatesByEpci.txRS * 100).toFixed(2)}`)
     }
-  }, [])
+  }, [defaultRatesByEpci])
 
   if (!ratesByEpci) return null
 
@@ -36,16 +34,13 @@ export const CreateSecondaryAccommodationRateInput: FC<CreateAccommodationRateIn
     } else {
       setValueInput(e.target.value)
     }
-    updateRates(epci, { [txKey]: value / 100 })
+    updateRates(epci, { ['txRS']: value / 100 })
   }
 
   return (
     <div className="fr-flex fr-align-items-end fr-flex-gap-2v">
-      <span>En {projectionState}, vous ciblez le taux suivant :</span>
-
       <Input
         disabled={disabled}
-        hideLabel
         iconId="ri-percent-line"
         label={label}
         nativeInputProps={{

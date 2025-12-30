@@ -27,7 +27,7 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
   return (
     <div className="fr-flex fr-direction-column fr-flex-gap-2v fr-justify-content-space-between">
       <span className="fr-text-mention--grey">
-        Le taux observé en {epciRates.vacancy.year} s'élève à {Number(epciRates.txRs * 100).toFixed(2)}%.
+        Le taux observé en {epciRates.vacancy.year} s'élève à <strong>{Number(epciRates.txRs * 100).toFixed(2)} %</strong>.
       </span>
       <div className="fr-flex fr-direction-column fr-flex-gap-6v fr-justify-content-space-between">
         <CreateSecondaryAccommodationRateInput

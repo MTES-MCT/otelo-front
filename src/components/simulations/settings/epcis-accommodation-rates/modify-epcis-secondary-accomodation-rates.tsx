@@ -3,6 +3,8 @@
 import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { FC } from 'react'
+import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
+import ModifyParcsComparisonCharts from '~/components/simulations/settings/epcis-accommodation-rates/modify-parc-comparison-charts'
 import { ModifySecondaryAccommodationRateInput } from '~/components/simulations/settings/modify-accommodation-rate-input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
@@ -17,12 +19,23 @@ interface TabChildrenProps {
 }
 
 const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
+  const { simulationSettings } = useSimulationSettings()
   const epciRates = rates?.[epci]
   if (!epciRates) return null
 
   return (
     <div className="fr-flex fr-direction-column fr-flex-gap-2v fr-justify-content-space-between">
-      <ModifySecondaryAccommodationRateInput txKey="txRs" epci={epci} label="Taux cible de résidences secondaires" />
+      <span className="fr-text-mention--grey">
+        Le taux observé en {epciRates.vacancy.year} s'élève à <strong>{Number(epciRates.txRs * 100).toFixed(2)} %</strong>.
+      </span>
+      <div className="fr-flex fr-direction-column fr-flex-gap-6v fr-justify-content-space-between">
+        <ModifySecondaryAccommodationRateInput
+          txKey="txRs"
+          epci={epci}
+          label={`Quel objectif de taux souhaitez-vous fixer pour l'horizon ${simulationSettings.projection} ?`}
+        />
+        <ModifyParcsComparisonCharts epci={epci} />
+      </div>
     </div>
   )
 }

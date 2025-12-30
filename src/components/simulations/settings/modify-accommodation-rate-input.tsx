@@ -32,10 +32,8 @@ export const ModifySecondaryAccommodationRateInput: FC<ModifyAccommodationRateIn
 
   return (
     <div className="fr-flex fr-align-items-end fr-flex-gap-2v">
-      <span>En {simulationSettings.projection}, vous ciblez le taux suivant :</span>
       <Input
         disabled={disabled}
-        hideLabel
         iconId="ri-percent-line"
         label={label}
         nativeInputProps={{

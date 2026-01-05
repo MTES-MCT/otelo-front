@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { useExportExcelSimulation } from '~/hooks/use-export-excel-simulation'
 import { TSimulationExportDto, ZSimulationExportDto } from '~/schemas/simulation'
 
-export const ExportExcelSimulation: FC<{ id: string }> = ({ id }) => {
+export const ExportExcelSimulationButton: FC<{ id: string }> = ({ id }) => {
   const { isPending, mutateAsync } = useExportExcelSimulation()
 
   const { handleSubmit } = useForm<TSimulationExportDto>({
@@ -20,7 +20,7 @@ export const ExportExcelSimulation: FC<{ id: string }> = ({ id }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Button iconId="ri-download-line" priority="primary" type="submit" disabled={isPending}>
-        {isPending ? 'Export en cours...' : 'Exporter mon scénario'}
+        {isPending ? 'Téléchargement en cours...' : 'Télécharger'}
       </Button>
     </form>
   )

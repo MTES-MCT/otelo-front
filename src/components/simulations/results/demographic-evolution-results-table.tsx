@@ -16,6 +16,7 @@ type DemographicEvolutionResultsTableProps = {
 export const DemographicEvolutionResultsTable = ({ results }: DemographicEvolutionResultsTableProps) => {
   return (
     <Table
+      className="fr-mb-0"
       noCaption
       caption="Résumé des besoins en stock"
       data={[

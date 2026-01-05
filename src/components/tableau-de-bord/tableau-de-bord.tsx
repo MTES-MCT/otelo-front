@@ -22,6 +22,7 @@ import { GenericCard } from '~/components/common/generic-card/generic-card'
 import { useRequestPowerpoint } from '~/hooks/use-request-powerpoint'
 import { TRequestPowerpoint, ZRequestPowerpoint } from '~/schemas/export'
 import { TSimulationWithRelations } from '~/schemas/simulation'
+import { sPluriel } from '~/utils/sPluriel'
 import { MultipleEpciSelect } from './multiple-epci-select'
 import styles from './tableau-de-bord.module.css'
 
@@ -119,7 +120,7 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
             <h3 className={fr.cx('fr-callout__title')}>Territoires concernés</h3>
             <div className={fr.cx('fr-callout__text')}>
               <p className={fr.cx('fr-text--sm', 'fr-mb-2w')}>
-                Les simulations de ce groupe portent sur {uniqueEpcis.length} territoire{uniqueEpcis.length > 1 ? 's' : ''} :
+                Les simulations de ce groupe portent sur {uniqueEpcis.length} territoire{sPluriel(uniqueEpcis.length)} :
               </p>
               <div>
                 {uniqueEpcis.map((epci, index) => (

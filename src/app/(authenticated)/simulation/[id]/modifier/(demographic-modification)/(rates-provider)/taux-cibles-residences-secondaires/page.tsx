@@ -1,7 +1,7 @@
 import Button from '@codegouvfr/react-dsfr/Button'
 import { ModifyEpcisSecondaryAccommodationRates } from '~/components/simulations/settings/epcis-accommodation-rates/modify-epcis-secondary-accomodation-rates'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
-import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
 
 type PageProps = {
   params: {
@@ -10,7 +10,8 @@ type PageProps = {
 }
 
 export default async function TargetSecondaryResidencesRates({ params }: PageProps) {
-  const simulation = await getSimulationWithResults(params.id)
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
+  const simulation = groupedSimulations[params.id]
 
   const href = `/simulation/${params.id}/modifier/taux-restructuration-disparition`
 

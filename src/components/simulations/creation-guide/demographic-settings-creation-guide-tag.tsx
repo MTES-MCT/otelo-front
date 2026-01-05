@@ -8,6 +8,7 @@ import { FC, useState } from 'react'
 import { tss } from 'tss-react'
 import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 import { useEpcis } from '~/hooks/use-epcis'
+import { formatDecohabitation, formatScenario } from '~/utils/omphale-label'
 
 interface CreationGuideTagProps {
   step: {
@@ -79,27 +80,8 @@ export const DemographicSettingsGuideTag: FC<CreationGuideTagProps> = ({ step })
       const scenario = value.split('_')[0]
       const decohabitation = value.split('_')[1]
 
-      let formattedScenario = ''
-      let formattedDecohabitation = ''
-
-      if (scenario === 'Central') {
-        formattedScenario = 'centrale'
-      }
-      if (scenario === 'PB') {
-        formattedScenario = 'basse'
-      }
-      if (scenario === 'PH') {
-        formattedScenario = 'haute'
-      }
-      if (decohabitation === 'H') {
-        formattedDecohabitation = 'haute'
-      }
-      if (decohabitation === 'B') {
-        formattedDecohabitation = 'basse'
-      }
-      if (decohabitation === 'C') {
-        formattedDecohabitation = 'tendanciel'
-      }
+      const formattedScenario = formatScenario(scenario, true)
+      const formattedDecohabitation = formatDecohabitation(decohabitation, true)
 
       return (
         <>

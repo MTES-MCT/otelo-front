@@ -1,13 +1,9 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
-import { Table } from '@codegouvfr/react-dsfr/Table'
-import { FC } from 'react'
-import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
 import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { tss } from 'tss-react'
 import { dsfrRealColors, getChartColor } from '~/components/charts/data-visualisation/colors'
-import { formatNumber } from '~/utils/format-numbers'
 
 const COLORS = [
   getChartColor('hosted'),
@@ -17,42 +13,15 @@ const COLORS = [
   getChartColor('badQuality'),
 ]
 
-interface StockEvolutionChartProps {
-  horizon: number
-  results: {
-    badQuality: number
-    financialInadequation: number
-    hosted: number
-    noAccomodation: number
-    physicalInadequation: number
-    totalStock: number
-  }
-}
-
-export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, horizon }) => {
+export const StockEvolutionChart = ({
+  chartData,
+}: {
+  chartData: {
+    name: string
+    value: number
+  }[]
+}) => {
   const { classes } = useStyles()
-  const { badQuality, financialInadequation, hosted, noAccomodation, physicalInadequation, totalStock } = results
-  const chartData = [
-    { name: 'Hébergés', value: hosted },
-    { name: 'Hors logement', value: noAccomodation },
-    { name: 'Inadéquation financière', value: financialInadequation },
-    { name: 'Inadéquation physique', value: physicalInadequation },
-    { name: 'Mauvaise qualité', value: badQuality },
-  ]
-
-  const maxValue = Math.max(...chartData.map((item) => item.value))
-  const maxValueName = chartData.find((item) => item.value === maxValue)?.name || ''
-
-  const getCategoryLabel = (categoryName: string) => {
-    const categoryLabels = {
-      Hébergés: "personnes hébergées dans un logement qui n'est pas le leur",
-      'Hors logement': "personnes hors-logement (sans abri, logés à l'hôtel, habitat de fortune) ou en hébergement social",
-      'Inadéquation financière': "ménages ayant un taux d'effort trop important",
-      'Inadéquation physique': 'ménages dans un logement trop petit',
-      'Mauvaise qualité': 'ménages habitant un logement précaire',
-    }
-    return categoryLabels[categoryName as keyof typeof categoryLabels] || `de catégorie "${categoryName}"`
-  }
 
   const renderActiveShape = (props: PieSectorDataItem) => {
     const RADIAN = Math.PI / 180
@@ -103,67 +72,28 @@ export const StockEvolutionChart: FC<StockEvolutionChartProps> = ({ results, hor
       </g>
     )
   }
-  const currentYear = new Date().getFullYear()
 
   return (
-    <div className={classes.container}>
-      <h3 className={fr.cx('fr-h5')}>Besoins liés aux situations de mal logement</h3>
-      <div className={classes.rowContainer}>
-        <div className={classes.chartContainer}>
-          <ResponsiveContainer height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                activeShape={renderActiveShape}
-                cx="50%"
-                cy="50%"
-                outerRadius={180}
-                fill={dsfrRealColors.blueFrance}
-                dataKey="value"
-                innerRadius={160}
-              >
-                {chartData.map((_entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        <div>
-          <p>
-            <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : La résorption du besoin en stock sur la période&nbsp;
-            {currentYear} à {horizon} ans (soit {horizon - currentYear} ans) implique&nbsp;
-            {formatNumber(totalStock)} logements à produire. Le graphique ci-dessus précise la ventilation de ce besoin par type de
-            mal-logement. Par exemple, {formatNumber(maxValue)} logements devront être créés pour répondre aux besoins des{' '}
-            {getCategoryLabel(maxValueName)}.
-          </p>
-          <p>Les besoins en logements issues du besoin en stock sont détaillés dans le tableau ci-dessous.</p>
-        </div>
-        <div className={classes.tableContainer}>
-          <Table
-            noCaption
-            caption="Résumé des besoins en stock"
-            data={[
-              ['Hébergés', formatNumber(hosted), `${Number((hosted / totalStock) * 100).toFixed(1)} %`],
-              ['Hors logement', formatNumber(noAccomodation), `${Number((noAccomodation / totalStock) * 100).toFixed(1)} %`],
-              [
-                'Inadéquation financière',
-                formatNumber(financialInadequation),
-                `${Number((financialInadequation / totalStock) * 100).toFixed(1)} %`,
-              ],
-              [
-                'Inadéquation physique',
-                formatNumber(physicalInadequation),
-                `${Number((physicalInadequation / totalStock) * 100).toFixed(1)} %`,
-              ],
-              ['Mauvaise qualité', formatNumber(badQuality), `${Number((badQuality / totalStock) * 100).toFixed(1)} %`],
-              ['Total', formatNumber(totalStock), '-'],
-            ]}
-            fixed
-            headers={['Catégorie', 'Besoin calculé', 'en % du total']}
-          />
-        </div>
-      </div>
+    <div className={classes.chartContainer}>
+      <ResponsiveContainer height="100%">
+        <PieChart>
+          <Pie
+            data={chartData}
+            activeShape={renderActiveShape}
+            cx="50%"
+            cy="50%"
+            outerRadius={180}
+            fill={dsfrRealColors.blueFrance}
+            dataKey="value"
+            innerRadius={160}
+          >
+            {chartData.map((_entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   )
 }
@@ -173,20 +103,5 @@ const useStyles = tss.create({
     display: 'flex',
     height: '500px',
     width: '100%',
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-    paddingTop: '2rem',
-  },
-  rowContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  tableContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
   },
 })

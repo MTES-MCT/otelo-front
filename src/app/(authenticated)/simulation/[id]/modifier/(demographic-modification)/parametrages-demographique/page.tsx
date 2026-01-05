@@ -4,7 +4,7 @@ import { DemographicSettingsFormWrapper } from '~/app/(authenticated)/simulation
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
-import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
 
 type PageProps = {
   params: {
@@ -16,7 +16,8 @@ type PageProps = {
 }
 
 export default async function ParametragesDemographiquePage({ params, searchParams }: PageProps) {
-  const simulation = await getSimulationWithResults(params.id)
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
+  const simulation = groupedSimulations[params.id]
   const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
 
   // Check if demographicEvolutionOmphaleCustomIds is already in search params

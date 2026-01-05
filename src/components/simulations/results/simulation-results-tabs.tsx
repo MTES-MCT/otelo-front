@@ -3,6 +3,7 @@
 import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { useQueryState } from 'nuqs'
+import styles from './simulation-results-tabs.module.css'
 
 export const SimulationResultsTabs = ({
   tabs,
@@ -20,7 +21,13 @@ export const SimulationResultsTabs = ({
   const tabsProps = tabs.map(({ content, ...tabProps }) => tabProps)
 
   return (
-    <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabsProps} onTabChange={setEpci} selectedTabId={selectedTabId}>
+    <Tabs
+      className={styles.itemsList}
+      classes={{ panel: styles.mainContainer }}
+      tabs={tabsProps}
+      onTabChange={setEpci}
+      selectedTabId={selectedTabId}
+    >
       {tabs.find((tab) => tab.tabId === selectedTabId)?.content || tabs[0].content}
     </Tabs>
   )

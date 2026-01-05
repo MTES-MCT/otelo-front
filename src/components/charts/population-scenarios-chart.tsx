@@ -15,6 +15,7 @@ import { PopulationScenariosSelection } from '~/components/charts/population-sce
 import { DemographicSettingsSelectEpci } from '~/components/simulations/settings/demographic-settings-header'
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { roundPopulation } from '~/utils/round-chart-axis'
+import { sPluriel } from '~/utils/sPluriel'
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
   modification?: boolean
@@ -135,7 +136,7 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
           <>
             <span>
               Ce scénario anticipe une évolution de la population de <strong>{evol > 0 ? `+${evol}` : evol}</strong> habitant
-              {evol > 0 ? 's' : ''} sur la période 2021 - {period}.
+              {sPluriel(evol)} sur la période 2021 - {period}.
             </span>
             <br />
             <span className="fr-text--sm fr-text-mention--grey fr-mb-0">Source des données : INSEE</span>

@@ -64,6 +64,11 @@ export const ZSimulationWithResults = ZSimulationWithEpciAndScenario.extend({
 })
 
 export type TSimulationWithResults = z.infer<typeof ZSimulationWithResults>
+export const ZGroupedSimulationWithResults = z.object({
+  name: z.string(),
+  simulations: z.record(z.string(), ZSimulationWithResults),
+})
+export type TGroupedSimulationWithResults = z.infer<typeof ZGroupedSimulationWithResults>
 
 export const ZUpdateBadHousingSimulationDto = z.object({
   id: z.string(),

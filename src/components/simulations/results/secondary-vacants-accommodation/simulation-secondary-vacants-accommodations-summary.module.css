@@ -1,0 +1,3 @@
+.badgeIcon::before {
+  --icon-size: 1rem;
+}

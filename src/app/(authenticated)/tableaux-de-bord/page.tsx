@@ -48,7 +48,7 @@ export default async function TableauDeBordPage() {
               <div>
                 <div className={styles.grid}>
                   {group.simulations.map((simulation) => (
-                    <div className={classNames(styles.shadow, styles.item, 'fr-background-default--grey fr-p-5v')} key={simulation.id}>
+                    <div className={classNames(styles.item, 'fr-background-default--grey fr-p-5v shadow')} key={simulation.id}>
                       <DashboardSimulationItem key={simulation.id} simulation={simulation} />
                     </div>
                   ))}

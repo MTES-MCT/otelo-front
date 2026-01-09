@@ -3,7 +3,6 @@ import { TEpciTotalCalculationResult, TFlowRequirementChartData } from '~/schema
 import { TSimulationWithResults } from '~/schemas/simulation'
 import { calculateFlowResultsForEpci } from '~/utils/calculation-helpers'
 import { formatNumber } from '~/utils/format-numbers'
-import styles from './epcis-details-table.module.css'
 
 type EpcisDetailsTableProps = {
   simulation: TSimulationWithResults
@@ -30,21 +29,19 @@ export const EpcisDetailsTable = ({ simulation }: EpcisDetailsTableProps) => {
   })
 
   return (
-    <div className={styles.container}>
-      <Table
-        caption="Détails des besoins en logements supplémentaires par EPCI"
-        headers={[
-          'EPCI',
-          "Besoins liés à l'évolution démographique et du parc",
-          'Besoins liés aux situations de mal logement',
-          'Besoins en constructions neuves',
-          'Remobilisation de logements vacants',
-          'Remobilisation de résidences secondaires',
-          'Période considérée',
-        ]}
-        data={tableData}
-        fixed
-      />
-    </div>
+    <Table
+      caption="Détails des besoins en logements supplémentaires par EPCI"
+      headers={[
+        'EPCI',
+        'Démographie et évolution du parc',
+        'Situations de mal logement',
+        'Constructions neuves',
+        'Remobilisation de logements vacants',
+        'Remobilisation de résidences secondaires',
+        'Période considérée',
+      ]}
+      data={tableData}
+      fixed
+    />
   )
 }

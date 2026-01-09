@@ -3,12 +3,14 @@ import { ValidationProjection } from '~/app/(authenticated)/simulation/[id]/modi
 import { UpdateSimulationForm } from '~/components/simulations/settings/update-simulation-form'
 import { ModifyValidationAccommodationsSettingsRates } from '~/components/simulations/validation-settings/modify-validation-accommodation-rates'
 import { ModifyValidationRestructurationDisparitionRates } from '~/components/simulations/validation-settings/modify-validation-restructuration-disparition-rates'
-import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
 import styles from './validation-parametrage.module.css'
 
 export default async function ValidationParametrage({ params }: { params: { id: string } }) {
-  const simulation = await getSimulationWithResults(params.id)
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
+  const simulation = groupedSimulations[params.id]
   const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
+
   return (
     <div className={styles.container}>
       <h3>Récapitulatif des paramètres</h3>

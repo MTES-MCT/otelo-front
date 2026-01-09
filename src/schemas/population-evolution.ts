@@ -18,9 +18,11 @@ const ZTerritoryPopulationData = z.object({
 export type TTerritoryPopulationData = z.infer<typeof ZTerritoryPopulationData>
 
 export const ZRPDataTable = z.record(
+  z.string(),
   z
     .object({
       annualEvolution: z.record(
+        z.string(),
         z.object({
           percent: z.string(),
           value: z.number(),
@@ -30,6 +32,7 @@ export const ZRPDataTable = z.record(
     })
     .and(
       z.record(
+        z.string(),
         z.object({
           value: z.number(),
         }),
@@ -73,6 +76,7 @@ const ZDemographicProjectionDataTableRow = z.object({
     haute: z.number(),
   }),
   annualEvolution: z.record(
+    z.string(),
     z.object({
       basse: z.object({
         percent: z.string(),
@@ -93,7 +97,7 @@ const ZDemographicProjectionDataTableRow = z.object({
 
 export type TDemographicProjectionDataTableRow = z.infer<typeof ZDemographicProjectionDataTableRow>
 
-export const ZDemographicProjectionDataTable = z.record(ZDemographicProjectionDataTableRow)
+export const ZDemographicProjectionDataTable = z.record(z.string(), ZDemographicProjectionDataTableRow)
 
 export type TDemographicProjectionDataTable = z.infer<typeof ZDemographicProjectionDataTable>
 
@@ -107,6 +111,7 @@ const ZDemographicProjectionEvolutionData = z.object({
 })
 
 export const ZDemographicPopulationMaxYearsByEpci = z.record(
+  z.string(),
   z.object({
     central: z.object({ value: z.number(), year: z.number() }),
     haute: z.object({ value: z.number(), year: z.number() }),
@@ -140,6 +145,7 @@ export const ZDemographicMenagesByEpci = z.object({
 export type TDemographicMenagesByEpci = z.infer<typeof ZDemographicMenagesByEpci>
 
 export const ZDemographicMenagesMaxYearsByEpci = z.record(
+  z.string(),
   z.object({
     centralB: z.object({ value: z.number(), year: z.number() }),
     centralC: z.object({ value: z.number(), year: z.number() }),
@@ -164,6 +170,7 @@ export const ZDemographicMenagesEvolution = z.object({
 export type TDemographicMenagesEvolution = z.infer<typeof ZDemographicMenagesEvolution>
 
 export const ZInadequateHousing = z.record(
+  z.string(),
   z.object({
     hosted: z.object({
       total: z.number(),

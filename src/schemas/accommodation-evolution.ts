@@ -30,6 +30,7 @@ const ZAccommodationEvolutionDataTableRow = z.object({
     percent: z.string(),
   }),
   annualEvolution: z.record(
+    z.string(),
     z.object({
       percent: z.string(),
       value: z.number(),
@@ -39,7 +40,7 @@ const ZAccommodationEvolutionDataTableRow = z.object({
   name: z.string(),
 })
 
-export const ZAccommodationEvolutionDataTable = z.record(ZAccommodationEvolutionDataTableRow)
+export const ZAccommodationEvolutionDataTable = z.record(z.string(), ZAccommodationEvolutionDataTableRow)
 export type TAccommodationEvolutionDataTable = z.infer<typeof ZAccommodationEvolutionDataTable>
 
 export const ZAccommodationEvolution = z.object({
@@ -80,6 +81,7 @@ const ZAccommodationLovacEvolutionDataTableRow = z.object({
   '2024': ZAccommodationLovacData,
   name: z.string(),
   annualEvolution: z.record(
+    z.string(),
     z.object({
       nbLogVac2Less: z.object({
         value: z.number(),
@@ -94,7 +96,7 @@ const ZAccommodationLovacEvolutionDataTableRow = z.object({
 })
 
 export type TAccommodationLovacEvolutionDataTableRow = z.infer<typeof ZAccommodationLovacEvolutionDataTableRow>
-export const ZAccommodationLovacEvolutionDataTable = z.record(ZAccommodationLovacEvolutionDataTableRow)
+export const ZAccommodationLovacEvolutionDataTable = z.record(z.string(), ZAccommodationLovacEvolutionDataTableRow)
 export type TAccommodationLovacEvolutionDataTable = z.infer<typeof ZAccommodationLovacEvolutionDataTable>
 
 export const ZAccommodationLovacEvolution = z.object({

@@ -1,11 +1,10 @@
 'use client'
 
-import { fr } from '@codegouvfr/react-dsfr'
 import { FC } from 'react'
-import { Bar, CartesianGrid, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { tss } from 'tss-react'
+import { Bar, ComposedChart, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { dsfrRealColors, getChartColor } from '~/components/charts/data-visualisation/colors'
 import { TFlowRequirementChartData, TSitadelData } from '~/schemas/results'
+import styles from './accommodation-construction-evolution-chart.module.css'
 
 interface AccommodationContructionEvolutionChartProps {
   newConstructionsResults: TFlowRequirementChartData
@@ -18,7 +17,6 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
   sitadelResults,
   horizon,
 }) => {
-  const { classes } = useStyles()
   const { data: sitadelData } = sitadelResults
   const { data: newConstructionsData } = newConstructionsResults
 
@@ -41,6 +39,9 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
     }
   })
 
+  const hasHousingNeeds = Object.values(newConstructionsData.housingNeeds).some((value) => value != null && value > 0)
+  const hasSurplusHousing = Object.values(newConstructionsData.surplusHousing).some((value) => value != null && value > 0)
+
   const maxValue = Math.max(
     Math.max(...sitadelData.map((d) => d.authorizedHousingCount)),
     Math.max(...sitadelData.map((d) => d.startedHousingCount)),
@@ -49,25 +50,24 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
   )
 
   return (
-    <div className={classes.container}>
-      <h3 className={fr.cx('fr-h5')}>Besoins en construction neuves annualisés</h3>
-      <div className={classes.chartContainer}>
+    <div id="besoin-annualise">
+      <h3 className="fr-h4">Besoins en construction neuves annualisés</h3>
+      <div className="fr-col-10">
+        <p className="fr-mb-0">
+          Ce graphique présente l’évolution des besoins annuels en construction neuve sur le territoire de CA du Pays Basque, en les
+          comparant avec les permis de construire autorisés sur les années récentes.
+        </p>
+        <p className="fr-mt-2w fr-text--xs fr-text-mention--grey">Source des données : Sit@del2</p>
+      </div>
+      <div className={styles.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            width={500}
-            height={300}
-            data={mergedData}
-            margin={{
-              bottom: 5,
-              right: 50,
-              top: 20,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
+          <ComposedChart data={mergedData}>
+            <XAxis dataKey="year" />
+            <YAxis domain={[0, maxValue]} allowDecimals={false} />
+
             <ReferenceLine
               x={horizon}
               stroke={dsfrRealColors.blueFrance}
-              strokeDasharray="3 3"
               label={{
                 value: 'Horizon de projection',
                 position: 'top',
@@ -76,11 +76,18 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
                 offset: 10,
               }}
             />
-            <Bar name="Permis de construire autorisés (Sit@del)" dataKey="authorizedHousing" fill={getChartColor('authorizedHousing')} />
-            <Bar name="Logements commencés (Sit@del)" dataKey="startedHousing" fill={getChartColor('startedHousing')} />
-            <Bar name="Besoins en logements" dataKey="housingNeeds" fill={getChartColor('housingNeeds')} />
-            <Bar name="Logements excédentaires" dataKey="surplusHousing" fill={getChartColor('surplusHousing')} />
-            <XAxis dataKey="year" angle={-45} textAnchor="end" height={60} />
+            <Bar
+              name="Permis de construire autorisés (Sit@del2)"
+              dataKey="authorizedHousing"
+              fill={getChartColor('authorizedHousing')}
+              barSize={8}
+            />
+            <Bar name="Logements commencés (Sit@del2)" dataKey="startedHousing" fill={getChartColor('startedHousing')} barSize={8} />
+            {hasHousingNeeds && <Bar name="Besoins en logements" dataKey="housingNeeds" fill={getChartColor('housingNeeds')} barSize={8} />}
+            {hasSurplusHousing && (
+              <Bar name="Logements excédentaires" dataKey="surplusHousing" fill={getChartColor('surplusHousing')} barSize={8} />
+            )}
+
             <Tooltip />
             <Legend
               itemSorter={(item) => {
@@ -88,23 +95,9 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
                 return order.indexOf(item.dataKey as string)
               }}
             />
-            <YAxis domain={[0, maxValue]} allowDecimals={false} includeHidden={true} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>
   )
 }
-
-const useStyles = tss.create(() => ({
-  chartContainer: {
-    height: '600px',
-    marginBottom: '2rem',
-    paddingLeft: '2rem',
-    paddingTop: '2rem',
-    width: '100%',
-  },
-  container: {
-    paddingTop: '2rem',
-  },
-}))

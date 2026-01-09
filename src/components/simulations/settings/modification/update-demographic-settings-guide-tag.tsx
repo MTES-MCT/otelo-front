@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
+import { formatDecohabitation, formatScenario } from '~/utils/omphale-label'
 
 interface UpdateGuideTagProps {
   step: {
@@ -31,27 +32,8 @@ export const UpdateDemographicSettingsGuideTag: FC<UpdateGuideTagProps> = ({ ste
     const scenario = simulationSettings.b2_scenario.split('_')[0]
     const decohabitation = simulationSettings.b2_scenario.split('_')[1]
 
-    let formattedScenario = ''
-    let formattedDecohabitation = ''
-
-    if (scenario === 'Central') {
-      formattedScenario = 'centrale'
-    }
-    if (scenario === 'PB') {
-      formattedScenario = 'basse'
-    }
-    if (scenario === 'PH') {
-      formattedScenario = 'haute'
-    }
-    if (decohabitation === 'H') {
-      formattedDecohabitation = 'haute'
-    }
-    if (decohabitation === 'B') {
-      formattedDecohabitation = 'basse'
-    }
-    if (decohabitation === 'C') {
-      formattedDecohabitation = 'tendanciel'
-    }
+    const formattedScenario = formatScenario(scenario, true)
+    const formattedDecohabitation = formatDecohabitation(decohabitation, true)
 
     return (
       <>

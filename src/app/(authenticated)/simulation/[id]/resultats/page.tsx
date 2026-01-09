@@ -1,23 +1,27 @@
-import { fr } from '@codegouvfr/react-dsfr'
+import Button from '@codegouvfr/react-dsfr/Button'
 import { RiIconClassName } from '@codegouvfr/react-dsfr/fr/generatedFromCss/classNames'
-import { AccommodationContructionEvolutionChart } from '~/components/charts/accommodation-construction-evolution-chart'
-import { FlowRequirementsChart } from '~/components/charts/flow-requirements-char'
-import { StockEvolutionChart } from '~/components/charts/stock-evolution-chart'
-import { ExportExcelSimulation } from '~/components/simulations/results/export/export-simulation-settings'
-import { SimulationNeedsSummary } from '~/components/simulations/results/simulation-needs-summary/simulation-needs-summary'
+import { SimulationAnnualsNeedsSummary } from '~/components/simulations/results/annual-needs/simulation-annual-needs'
+import { SimulationBadHousing } from '~/components/simulations/results/bad-housing/simulation-bad-housing'
+import { SimulationDemographicBadHousingSummary } from '~/components/simulations/results/demographic-bad-housing/simulation-demographic-bad-housing-summary'
+import { SimulationDemographicParcEvolution } from '~/components/simulations/results/demographic-parc-evolution/simulation-demographic-parc-evolution'
+import { ExportExcelSimulationButton } from '~/components/simulations/results/export-simulation-settings-button'
+import { SimulationHeaderSegmentedControls } from '~/components/simulations/results/header/simulation-header-segmented-controls'
+import { SimulationHeaderTitle } from '~/components/simulations/results/header/simulation-header-title'
+import { SimulationSettingsDropdown } from '~/components/simulations/results/header/simulation-settings-dropdown'
+import { SimulationSecondaryVacantsAccommodationsSummary } from '~/components/simulations/results/secondary-vacants-accommodation/simulation-secondary-vacants-accommodations-summary'
+import { SimulationEpcisDetails } from '~/components/simulations/results/simulation-epcis-details'
 import { SimulationResultsTabs } from '~/components/simulations/results/simulation-results-tabs'
-import { EpcisDetailsTable } from '~/components/table/epcis-details-table'
+import { SimulationNeedsSummary } from '~/components/simulations/results/summary/simulation-needs-summary'
 import { TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData, TSitadelData } from '~/schemas/results'
-import { getSimulationWithResults } from '~/server-only/simulation/get-simulation-with-results'
+import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
 import { calculateFlowResultsForEpci } from '~/utils/calculation-helpers'
-import styles from './resultats.module.css'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function Resultats({ params }: { params: { id: string } }) {
-  const simulation = await getSimulationWithResults(params.id)
-  const projection = simulation.scenario.projection
+  const { name, simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
+  const simulation = groupedSimulations[params.id]
 
   const results = {
     badQuality: simulation.results.badQuality.total,
@@ -64,66 +68,36 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     )
 
     const sitadelResults = simulation.results.sitadel.epcis.find((e) => e.code === epci.code) as TSitadelData
+    const hasNewHousingNeeds = epciResults.totalFlux > 0
     const hasSurplusHousing = Object.values(epciFlowRequirementData.data.surplusHousing).some((value) => value !== 0)
     const epciData = {
       name: epci.name,
+      code: epci.code,
       peakYear: epciFlowRequirementData.data.peakYear,
       prepeakTotalStock,
       postpeakTotalStock,
     }
     return {
       content: (
-        <>
-          <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={epciResults} epci={epciData} />
-          {epciResults.total > 0 && (
-            <>
-              <AccommodationContructionEvolutionChart
-                sitadelResults={sitadelResults}
-                newConstructionsResults={epciFlowRequirementData}
-                horizon={simulation.scenario.projection}
-              />
-
-              <div>
-                <p className={fr.cx('fr-mb-0')}>
-                  <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : Ce graphique présente l’évolution des besoins annuels en
-                  construction neuve sur le territoire de {epci.name}, en les comparant avec les permis de construire autorisés sur les
-                  années récentes. Il distingue trois courbes différentes :
-                </p>
-                <ul>
-                  <li>
-                    <span className={fr.cx('fr-text--bold')}>Besoins en logements (barres rouges)</span> : volume estimé de logements à
-                    construire chaque année pour répondre aux dynamiques démographiques, aux situations de mal-logement (partiellement
-                    traduites en besoins neufs). Ces besoins sont projetés jusqu’en {projection}.
-                  </li>
-                  {hasSurplusHousing && (
-                    <li>
-                      <span className={fr.cx('fr-text--bold')}>Logements excédentaires (barres jaunes)</span> : représentent les résidences
-                      principales devenant vacants ou résidences secondaires, à partir des années où le besoin en construction est nul.
-                    </li>
-                  )}
-                  <li>
-                    <span className={fr.cx('fr-text--bold')}>Permis de construire autorisés (barres bleues)</span> : nombre d’autorisations
-                    de constructions d’après Sit@del2.
-                  </li>
-                  <li>
-                    <span className={fr.cx('fr-text--bold')}>Logements commencés (barres vertes)</span> : Nombre de logements commencés
-                    d'après Sit@del2
-                  </li>
-                </ul>
-              </div>
-
-              <div className={styles.flowContainer}>
-                <h5 className={styles.flowTitle}>
-                  Besoins liés à la démographie et à l'évolution du parc - Evolution du besoin démographique en logements
-                </h5>
-                <div className={styles.flowChartContainer}>
-                  <FlowRequirementsChart results={flowResults} />
-                </div>
-              </div>
-            </>
-          )}
-          <StockEvolutionChart results={stockResults} horizon={simulation.scenario.b1_horizon_resorption} />
-        </>
+        <div className="fr-container fr-flex fr-direction-column fr-flex-gap-8v">
+          <SimulationSettingsDropdown simulation={simulation} epci={epci} />
+          <SimulationNeedsSummary projection={simulation.scenario.projection} results={epciResults} epci={epciData} />
+          <SimulationDemographicBadHousingSummary
+            simulationId={simulation.id}
+            totalFlux={epciResults.totalFlux}
+            totalStock={epciResults.totalStock}
+            epci={epciData}
+          />
+          {hasNewHousingNeeds && <SimulationSecondaryVacantsAccommodationsSummary results={epciResults} epci={epciData} />}
+          <SimulationAnnualsNeedsSummary
+            sitadelResults={sitadelResults}
+            newConstructionsResults={epciFlowRequirementData}
+            horizon={simulation.scenario.projection}
+            hasSurplusHousing={hasSurplusHousing}
+          />
+          {hasNewHousingNeeds && <SimulationDemographicParcEvolution results={flowResults} />}
+          <SimulationBadHousing horizon={simulation.scenario.projection} results={stockResults} />
+        </div>
       ),
       iconId: 'ri-road-map-line' as RiIconClassName,
       label: epci.name,
@@ -132,9 +106,18 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   })
   const bassinTab = {
     content: (
-      <div>
-        <SimulationNeedsSummary projection={simulation.scenario.projection} id={simulation.id} results={results} />
-        <EpcisDetailsTable simulation={simulation} />
+      <div className="fr-container fr-flex fr-direction-column fr-flex-gap-4v">
+        <SimulationSettingsDropdown simulation={simulation} />
+        <SimulationNeedsSummary projection={simulation.scenario.projection} results={results} epcis={simulation.epcis} />
+
+        <SimulationDemographicBadHousingSummary
+          simulationId={simulation.id}
+          totalFlux={results.totalFlux}
+          totalStock={results.totalStock}
+        />
+
+        {results.totalFlux > 0 && <SimulationSecondaryVacantsAccommodationsSummary results={results} />}
+        <SimulationEpcisDetails simulation={simulation} />
       </div>
     ),
     iconId: 'ri-home-line' as RiIconClassName,
@@ -143,10 +126,22 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   }
   const tabs = [bassinTab, ...epciTabs]
 
+  const segments = Object.values(groupedSimulations).map((simulation) => ({
+    id: simulation.id,
+    name: simulation.name,
+  }))
+
   return (
     <>
-      <div className={styles.headerContainer}>
-        <ExportExcelSimulation id={params.id} />
+      <div className="fr-container fr-direction-column fr-flex fr-flex-gap-8v">
+        <SimulationHeaderTitle name={name} projection={simulation.scenario.projection} />
+        <div className="fr-flex fr-justify-content-space-between fr-mb-4w">
+          <SimulationHeaderSegmentedControls segments={segments} activeId={params.id} />
+          <div className="fr-flex fr-flex-gap-2v">
+            <Button priority="secondary">Élaborer un autre scénario</Button>
+            <ExportExcelSimulationButton id={params.id} />
+          </div>
+        </div>
       </div>
       <SimulationResultsTabs tabs={tabs} />
     </>

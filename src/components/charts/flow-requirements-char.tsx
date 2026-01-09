@@ -1,13 +1,11 @@
 'use client'
-
-import { fr } from '@codegouvfr/react-dsfr'
 import { FC } from 'react'
 import { Bar, Legend, Tooltip, XAxis, YAxis } from 'recharts'
 import { CartesianGrid } from 'recharts'
 import { BarChart } from 'recharts'
 import { ResponsiveContainer } from 'recharts'
 import { tss } from 'tss-react'
-
+import { getChartColor } from '~/components/charts/data-visualisation/colors'
 interface CustomXAxisTickProps {
   x?: number
   y?: number
@@ -46,9 +44,6 @@ const CustomXAxisTick = (props: CustomXAxisTickProps) => {
     </g>
   )
 }
-import { getChartColor } from '~/components/charts/data-visualisation/colors'
-import { DemographicEvolutionResultsTable } from '~/components/simulations/results/demographic-evolution-results-table'
-import { formatNumber } from '~/utils/format-numbers'
 
 interface FlowRequirementsChartProps {
   results: {
@@ -68,7 +63,6 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     renewalNeeds,
     secondaryResidenceAccomodationEvolution,
     totalFlux,
-    vacantAccomodationEvolution,
     shortTermVacantAccomodation,
     longTermVacantAccomodation,
   } = results
@@ -107,112 +101,43 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
   const { classes } = useStyles()
 
   return (
-    <div className={classes.rowContainer}>
-      <div className={classes.chartContainer}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            width={500}
-            height={300}
-            data={chartData}
-            margin={{
-              bottom: 60,
-              left: 20,
-              right: 30,
-              top: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" tick={<CustomXAxisTick />} interval={0} height={60} />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill={getChartColor('demographicEvolution')} />
-            <Bar
-              dataKey="secondaryResidenceAccomodationEvolution"
-              name="Résidences secondaires"
-              stackId="a"
-              fill={getChartColor('secondaryResidenceAccomodationEvolution')}
-            />
-            <Bar
-              dataKey="longTermVacantAccomodation"
-              name="Logements vacants de longue durée"
-              stackId="a"
-              fill={getChartColor('longTermVacantAccomodation')}
-            />
-            <Bar
-              dataKey="shortTermVacantAccomodation"
-              name="Logements vacants de courte durée"
-              stackId="a"
-              fill={getChartColor('shortTermVacantAccomodation')}
-            />
-            <Bar dataKey="renewalNeeds" name="Renouvellement" stackId="a" fill={getChartColor('renewalNeeds')} />
-            <Bar dataKey="totalFlux" name="Demande potentielle" stackId="a" fill={getChartColor('totalFlux')} />
-            <Legend
-              content={
-                <p style={{ color: 'rgb(136, 132, 216)', margin: 0 }}>
-                  Évolution du besoin liés à la démographie et à l'évolution du parc détaillé
-                </p>
-              }
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <div>
-        <p className={fr.cx('fr-mb-0')}>
-          <span className={fr.cx('fr-text--bold')}>Clé de lecture</span> : Le graphique et le tableau représentent l'influence de la
-          démographie et de l'évolution du parc sur le besoin en constructions neuves. Par exemple :
-        </p>
-        <ul>
-          <li>
-            L'évolution du nombre de ménages à loger dans le territoire contribue pour {formatNumber(Math.abs(demographicEvolution))} au
-            besoin en logements.
-          </li>
-          <li>
-            Pour garder de la fluidité dans le parc de logement, il est nécessaire de produire {formatNumber(shortTermVacantAccomodation)}{' '}
-            logements.
-          </li>
-          <li>
-            {secondaryResidenceAccomodationEvolution > 0 && (
-              <>
-                L'évolution du nombre de résidences secondaires contribue à hauteur de&nbsp;
-                {formatNumber(secondaryResidenceAccomodationEvolution)} dans les besoins en constructions neuves, leur nombre augmentant au
-                cours de la période de projection.
-              </>
-            )}
-            {secondaryResidenceAccomodationEvolution < 0 && (
-              <>
-                L'hypothèse choisie sur les résidences secondaires implique une remobilisation de&nbsp;
-                {formatNumber(Math.abs(secondaryResidenceAccomodationEvolution))} résidences secondaires.
-              </>
-            )}
-
-            {secondaryResidenceAccomodationEvolution === 0 && (
-              <>L'hypothèse choisie sur les résidences secondaires n'implique pas de remobilisation de résidences secondaires.</>
-            )}
-          </li>
-          <li>
-            {vacantAccomodationEvolution > 0 ? (
-              <>
-                L'hypothèse retenue concernant le taux de vacance induit une augmentation du nombre de logements vacants de&nbsp;
-                {formatNumber(vacantAccomodationEvolution)} au cours de la période de projection, qui se répercute sur le besoin en
-                constructions neuves.
-              </>
-            ) : (
-              <>
-                L'hypothèse retenu de baisse de la part des logements vacants de longue durée (&gt;2ans) dans le parc implique la
-                remobilisation de {formatNumber(Math.abs(longTermVacantAccomodation))} logements.
-              </>
-            )}
-          </li>
-          <li>
-            Le renouvellement du parc contribue à hauteur de {formatNumber(Math.abs(renewalNeeds))} aux besoins en logements, les&nbsp;
-            {renewalNeeds > 0 ? 'disparitions de logements' : 'restructurations de logements'} au sein du parc excédant les&nbsp;
-            {renewalNeeds > 0 ? 'restructurations de logements' : 'disparitions de logements'}.
-          </li>
-        </ul>
-      </div>
-      <div className={classes.tableContainer}>
-        <DemographicEvolutionResultsTable results={results} />
-      </div>
+    <div className={classes.chartContainer}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart width={500} height={300} data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" tick={<CustomXAxisTick />} interval={0} height={60} />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill={getChartColor('demographicEvolution')} />
+          <Bar
+            dataKey="secondaryResidenceAccomodationEvolution"
+            name="Résidences secondaires"
+            stackId="a"
+            fill={getChartColor('secondaryResidenceAccomodationEvolution')}
+          />
+          <Bar
+            dataKey="longTermVacantAccomodation"
+            name="Logements vacants de longue durée"
+            stackId="a"
+            fill={getChartColor('longTermVacantAccomodation')}
+          />
+          <Bar
+            dataKey="shortTermVacantAccomodation"
+            name="Logements vacants de courte durée"
+            stackId="a"
+            fill={getChartColor('shortTermVacantAccomodation')}
+          />
+          <Bar dataKey="renewalNeeds" name="Renouvellement" stackId="a" fill={getChartColor('renewalNeeds')} />
+          <Bar dataKey="totalFlux" name="Demande potentielle" stackId="a" fill={getChartColor('totalFlux')} />
+          <Legend
+            content={
+              <p style={{ color: 'rgb(136, 132, 216)', margin: 0 }}>
+                Évolution du besoin liés à la démographie et à l'évolution du parc détaillé
+              </p>
+            }
+          />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   )
 }
@@ -220,19 +145,6 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
 const useStyles = tss.create({
   chartContainer: {
     height: '600px',
-    marginBottom: '2rem',
-    paddingLeft: '2rem',
-    paddingTop: '2rem',
-    width: '100%',
-  },
-  rowContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  tableContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
     width: '100%',
   },
 })

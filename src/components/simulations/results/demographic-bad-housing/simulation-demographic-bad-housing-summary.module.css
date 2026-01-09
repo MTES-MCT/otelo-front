@@ -1,0 +1,38 @@
+.arrowIcon::before {
+  --icon-size: 1rem;
+}
+
+.chevronContainer {
+  display: flex;
+  gap: 2rem;
+}
+
+.chevronWrapper {
+  flex: 1;
+  display: flex;
+}
+
+.chevronWrapperLeft {
+  justify-content: flex-start;
+  padding-left: 2rem;
+}
+
+.chevronWrapperRight {
+  justify-content: flex-end;
+  padding-right: 2rem;
+}
+
+.chevron {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+}
+
+.chevronDemography {
+  border-bottom: 14px solid var(--blue-france-sun-113-625);
+}
+
+.chevronBadHousing {
+  border-bottom: 14px solid var(--blue-france-925-125);
+}

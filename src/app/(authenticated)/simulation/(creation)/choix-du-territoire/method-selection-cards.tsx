@@ -1,6 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { FC } from 'react'
 import { tss } from 'tss-react'
+import { sPluriel } from '~/utils/sPluriel'
 
 export type SelectionMethod = 'existing-group' | 'custom-selection' | 'bassin-habitat' | null
 
@@ -35,8 +36,8 @@ export const MethodSelectionCards: FC<MethodSelectionCardsProps> = ({ selectedMe
             <div className={classes.cardContent}>
               <h4 className={classes.cardTitle}>Utiliser des territoires étudiés</h4>
               <p className={classes.cardDescription}>
-                Sélectionnez parmi vos {existingGroupsCount} groupe{existingGroupsCount > 1 ? 's' : ''} d'EPCI existant
-                {existingGroupsCount > 1 ? 's' : ''}
+                Sélectionnez parmi vos {existingGroupsCount} groupe{sPluriel(existingGroupsCount)} d'EPCI existant
+                {sPluriel(existingGroupsCount)}
               </p>
             </div>
             {selectedMethod === 'existing-group' && (

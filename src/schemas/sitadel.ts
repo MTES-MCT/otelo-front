@@ -8,6 +8,7 @@ const ZSitadelDataItem = z.object({
 })
 
 export const ZSitadel = z.record(
+  z.string(),
   z.object({
     name: z.string(),
     data: z.array(ZSitadelDataItem),

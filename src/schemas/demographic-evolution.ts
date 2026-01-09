@@ -38,6 +38,7 @@ export const ZPopulationEvolution = z.object({
 export type TPopulationEvolution = z.infer<typeof ZPopulationEvolution>
 
 export const ZPopulationDemographicEvolution = z.record(
+  z.string(),
   z.object({
     data: z.array(ZPopulationEvolution),
     metadata: ZMetadata,

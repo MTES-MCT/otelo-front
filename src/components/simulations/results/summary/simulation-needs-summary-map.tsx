@@ -121,7 +121,7 @@ export const SimulationNeedsSummaryMap = ({
         properties: {
           code: epci.code,
           nom: epci.nom,
-          color: epci.color,
+          color: epci.color as string | undefined,
         },
         geometry: epci.contour,
       }))
@@ -130,7 +130,11 @@ export const SimulationNeedsSummaryMap = ({
       return [
         {
           type: 'Feature' as const,
-          properties: { code: epciData.code, nom: epciData.nom },
+          properties: {
+            code: epciData.code,
+            nom: epciData.nom,
+            color: undefined as string | undefined,
+          },
           geometry: epciData.contour,
         },
       ]

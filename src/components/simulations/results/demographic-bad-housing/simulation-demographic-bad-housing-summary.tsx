@@ -44,7 +44,7 @@ export const SimulationDemographicBadHousingSummary = ({
         </div>
       )}
 
-      <div className="fr-flex fr-justify-content-space-between fr-flex-gap-8v">
+      <div className="fr-flex fr-direction-column fr-direction-sm-row fr-justify-content-space-between fr-flex-gap-8v">
         {hasNewHousingNeeds && (
           <div className="fr-border fr-p-4w fr-flex fr-direction-column fr-width-full">
             <span className="fr-text--medium fr-text--lg fr-mb-0">Démographie et évolution du parc</span>
@@ -55,7 +55,7 @@ export const SimulationDemographicBadHousingSummary = ({
                 Minim enim aliquip eu ut qui exercitation est eu commodo ut proident ad. Eu labore eiusmod aliqua cillum exercitation.
               </SimulationResultPresentationHighlight>
             </div>
-            <div className="fr-flex fr-justify-content-space-between fr-align-items-center">
+            <div className="fr-flex fr-direction-column fr-direction-sm-row fr-flex-gap-2v fr-justify-content-space-between fr-align-items-center">
               <Button priority="secondary" linkProps={{ href: `/simulation/${simulationId}/modifier/cadrage-temporel` }} size="small">
                 Modifier les hypothèses
               </Button>
@@ -79,7 +79,7 @@ export const SimulationDemographicBadHousingSummary = ({
               Minim enim aliquip eu ut qui exercitation est eu commodo ut proident ad. Eu labore eiusmod aliqua cillum exercitation.
             </SimulationResultPresentationHighlight>
           </div>
-          <div className="fr-flex fr-justify-content-space-between fr-align-items-center">
+          <div className="fr-flex fr-direction-column fr-flex-gap-2v fr-direction-sm-row fr-justify-content-space-between fr-align-items-center">
             <Button
               priority="secondary"
               linkProps={{ href: `/simulation/${simulationId}/modifier/mal-logement/horizon-de-resorption` }}

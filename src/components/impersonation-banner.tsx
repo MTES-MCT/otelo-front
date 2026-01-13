@@ -2,12 +2,14 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
+import { useRouter } from 'next/navigation'
 import { FC } from 'react'
 import { tss } from 'tss-react'
 import { useStopImpersonation } from '~/hooks/use-impersonation'
 import { useImpersonationStatus } from '~/hooks/use-impersonation-status'
 
 export const ImpersonationBanner: FC = () => {
+  const router = useRouter()
   const { data: impersonationStatus } = useImpersonationStatus()
   const { mutateAsync: stopImpersonation, isPending } = useStopImpersonation()
   const { classes } = useStyles()
@@ -16,7 +18,10 @@ export const ImpersonationBanner: FC = () => {
     return null
   }
 
-  const handleStopImpersonation = async () => await stopImpersonation()
+  const handleStopImpersonation = async () => {
+    await stopImpersonation()
+    router.push('/admin/gestion-des-utilisateurs')
+  }
 
   return (
     <div className={classes.banner}>

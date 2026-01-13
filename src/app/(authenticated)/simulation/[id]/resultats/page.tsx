@@ -106,7 +106,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
   })
   const bassinTab = {
     content: (
-      <div className="fr-container fr-flex fr-direction-column fr-flex-gap-4v">
+      <div className="fr-container-md fr-flex fr-direction-column fr-flex-gap-4v">
         <SimulationSettingsDropdown simulation={simulation} />
         <SimulationNeedsSummary projection={simulation.scenario.projection} results={results} epcis={simulation.epcis} />
 
@@ -135,11 +135,17 @@ export default async function Resultats({ params }: { params: { id: string } }) 
     <>
       <div className="fr-container fr-direction-column fr-flex fr-flex-gap-8v">
         <SimulationHeaderTitle name={name} projection={simulation.scenario.projection} />
-        <div className="fr-flex fr-justify-content-space-between fr-mb-4w">
-          <SimulationHeaderSegmentedControls segments={segments} activeId={params.id} />
-          <div className="fr-flex fr-flex-gap-2v">
-            <Button priority="secondary">Élaborer un autre scénario</Button>
-            <ExportExcelSimulationButton id={params.id} />
+        <div className="fr-col-md-12 fr-flex fr-direction-column fr-direction-sm-row fr-align-items-center fr-mb-4w">
+          <div className="fr-col-md-8 fr-mb-2w fr-mb-md-0">
+            <SimulationHeaderSegmentedControls segments={segments} activeId={params.id} />
+          </div>
+          <div className="fr-col-md-4">
+            <div className="fr-flex fr-flex-gap-2v fr-align-items-center">
+              <Button priority="secondary" linkProps={{ href: '/simulation/choix-du-territoire' }}>
+                Élaborer un autre scénario
+              </Button>
+              <ExportExcelSimulationButton id={params.id} />
+            </div>
           </div>
         </div>
       </div>

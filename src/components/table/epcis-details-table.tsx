@@ -10,20 +10,23 @@ type EpcisDetailsTableProps = {
 
 export const EpcisDetailsTable = ({ simulation }: EpcisDetailsTableProps) => {
   const tableData = simulation.epcis.map((epci) => {
-    const total = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).total
-    const totalFlux = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalFlux
-    const totalStock = (simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult).totalStock
+    const epciFlowRequirement = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
+    const epciTotalResults = simulation.results.epcisTotals.find((e) => e.epciCode === epci.code) as TEpciTotalCalculationResult
+    const total = epciTotalResults.total
+    const totalFlux = epciTotalResults.totalFlux
+    const totalStock = epciFlowRequirement.data.peakYear === 2021 ? epciTotalResults.totalStock : epciTotalResults.prepeakTotalStock
+
     const flowRequirementsEpci = simulation.results.flowRequirement.epcis.find((e) => e.code === epci.code) as TFlowRequirementChartData
     const flowResults = calculateFlowResultsForEpci(flowRequirementsEpci, totalFlux)
     return [
       epci.name,
       formatNumber(flowResults.totalFlux),
-      formatNumber(totalStock), // Mal-logement - needs to be calculated
+      formatNumber(totalStock),
       formatNumber(total),
       flowResults.longTermVacantAccomodation < 0 ? formatNumber(Math.abs(flowResults.longTermVacantAccomodation)) : 0, // Logements vacants à remobiliser
       flowResults.secondaryResidenceAccomodationEvolution < 0
         ? formatNumber(Math.abs(flowResults.secondaryResidenceAccomodationEvolution))
-        : 0, // résidences secondaires à remobiliser
+        : 0,
       `2021 - ${flowRequirementsEpci.data.peakYear === 2021 ? simulation.scenario.b1_horizon_resorption : flowRequirementsEpci.data.peakYear !== 2050 ? flowRequirementsEpci.data.peakYear : simulation.scenario.projection}`,
     ]
   })

@@ -91,7 +91,9 @@ export const SimulationNeedsSummary = async ({ projection, results, epci, epcis 
                 </p>
               )}
               <span className="fr-text--sm">
-                Sur la période {epci.peakYear + 1} à {projection}, il restera{' '}
+                {epci.peakYear + 1 === projection
+                  ? `En ${projection}, il restera `
+                  : `Sur la période ${epci.peakYear + 1} à ${projection}, il restera `}
                 <span className="fr-text--bold">{formatNumber(postpeakTotalStock)}</span> logements à trouver pour résorber le mal-logement.
               </span>
             </div>

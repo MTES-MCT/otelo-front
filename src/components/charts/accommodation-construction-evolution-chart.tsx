@@ -6,6 +6,63 @@ import { dsfrRealColors, getChartColor } from '~/components/charts/data-visualis
 import { TFlowRequirementChartData, TSitadelData } from '~/schemas/results'
 import styles from './accommodation-construction-evolution-chart.module.css'
 
+interface TooltipPayloadItem {
+  name: string
+  value: number
+  color: string
+  dataKey: string
+}
+
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: TooltipPayloadItem[]
+  label?: string | number
+}
+
+const CustomTooltip: FC<CustomTooltipProps> = ({ active, payload, label }) => {
+  if (!active || !payload || payload.length === 0) return null
+
+  return (
+    <div className={styles.tooltip}>
+      <p className={styles.tooltipYear}>{label}</p>
+      <ul className={styles.tooltipList}>
+        {payload.map((entry, index) => (
+          <li key={index} className={styles.tooltipItem}>
+            <span className={styles.tooltipColorBox} style={{ backgroundColor: entry.color }} />
+            <span className={styles.tooltipLabel}>{entry.name}</span>
+            <span className={styles.tooltipValue}>{entry.value?.toLocaleString('fr-FR') ?? '-'}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+interface LegendPayloadItem {
+  value: string
+  color: string
+  dataKey: string
+}
+
+interface CustomLegendProps {
+  payload?: LegendPayloadItem[]
+}
+
+const CustomLegend: FC<CustomLegendProps> = ({ payload }) => {
+  if (!payload) return null
+
+  return (
+    <div className={styles.legend}>
+      {payload.map((entry, index) => (
+        <div key={index} className={styles.legendItem}>
+          <span className={styles.legendColorBox} style={{ backgroundColor: entry.color }} />
+          <span className={styles.legendLabel}>{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 interface AccommodationContructionEvolutionChartProps {
   newConstructionsResults: TFlowRequirementChartData
   sitadelResults: TSitadelData
@@ -88,8 +145,9 @@ export const AccommodationContructionEvolutionChart: FC<AccommodationContruction
               <Bar name="Logements excédentaires" dataKey="surplusHousing" fill={getChartColor('surplusHousing')} barSize={8} />
             )}
 
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Legend
+              content={<CustomLegend />}
               itemSorter={(item) => {
                 const order = ['authorizedHousing', 'startedHousing', 'housingNeeds', 'surplusHousing']
                 return order.indexOf(item.dataKey as string)

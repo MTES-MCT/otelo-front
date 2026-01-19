@@ -1,48 +1,15 @@
 'use client'
-import { FC } from 'react'
-import { Bar, Legend, Tooltip, XAxis, YAxis } from 'recharts'
-import { CartesianGrid } from 'recharts'
-import { BarChart } from 'recharts'
-import { ResponsiveContainer } from 'recharts'
+
+import { FC, ReactNode, useState } from 'react'
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { tss } from 'tss-react'
 import { getChartColor } from '~/components/charts/data-visualisation/colors'
-interface CustomXAxisTickProps {
-  x?: number
-  y?: number
-  payload?: {
-    value: string
-  }
-}
 
-const CustomXAxisTick = (props: CustomXAxisTickProps) => {
-  const { x, y, payload } = props
-
-  if (!payload) return null
-
-  const { value } = payload
-
-  if (value.includes('démographique')) {
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="middle" fill="#666" fontSize="12">
-          <tspan x={0} dy="16">
-            Besoin en logements liés à l'évolution
-          </tspan>
-          <tspan x={0} dy="16">
-            démographique et évolution du parc
-          </tspan>
-        </text>
-      </g>
-    )
-  }
-
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={16} textAnchor="middle" fill="#666" fontSize="12">
-        {value}
-      </text>
-    </g>
-  )
+interface DonutDataItem {
+  name: string
+  value: number
+  color: string
+  description: (value: string) => ReactNode
 }
 
 interface FlowRequirementsChartProps {
@@ -55,9 +22,87 @@ interface FlowRequirementsChartProps {
     shortTermVacantAccomodation: number
     longTermVacantAccomodation: number
   }
+  horizon: number
 }
 
-export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results }) => {
+const formatNumber = (value: number): string => {
+  return Math.abs(value).toLocaleString('fr-FR')
+}
+
+interface DonutChartProps {
+  title: string
+  data: DonutDataItem[]
+  centerContent: ReactNode
+  onHover: (index: number | null) => void
+  activeIndex: number | null
+  legendItems: LegendItem[]
+}
+
+const DonutChart: FC<DonutChartProps> = ({ title, data, centerContent, onHover, activeIndex, legendItems }) => {
+  const { classes } = useStyles()
+
+  const onPieEnter = (_: unknown, index: number) => {
+    onHover(index)
+  }
+
+  const onPieLeave = () => {
+    onHover(null)
+  }
+
+  return (
+    <div className={classes.chartWithLegend}>
+      <div className={classes.chartWrapper}>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={155}
+              outerRadius={185}
+              dataKey="value"
+              onMouseEnter={onPieEnter}
+              onMouseLeave={onPieLeave}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  stroke={index === activeIndex ? entry.color : 'transparent'}
+                  strokeWidth={index === activeIndex ? 6 : 0}
+                  style={{
+                    filter: index === activeIndex ? 'brightness(1.1)' : 'none',
+                    cursor: 'pointer',
+                  }}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <div className={classes.centerContent}>{centerContent || <div className={classes.defaultTitle}>{title}</div>}</div>
+      </div>
+      <div className={classes.legend}>
+        {legendItems.map((item, index) => (
+          <div key={index} className={classes.legendItem}>
+            <span className={classes.legendColorBox} style={{ backgroundColor: item.color }} />
+            <span className={classes.legendLabel}>{item.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+interface LegendItem {
+  name: string
+  color: string
+}
+
+export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results, horizon }) => {
+  const { classes } = useStyles()
+  const [needsActiveIndex, setNeedsActiveIndex] = useState<number | null>(null)
+  const [supplyActiveIndex, setSupplyActiveIndex] = useState<number | null>(null)
+
   const {
     demographicEvolution,
     renewalNeeds,
@@ -67,84 +112,221 @@ export const FlowRequirementsChart: FC<FlowRequirementsChartProps> = ({ results 
     longTermVacantAccomodation,
   } = results
 
-  const positiveData = {
-    name: "Besoin en logements liés à l'évolution démographique et à l'évolution du parc",
-    ...(demographicEvolution > 0 && { demographicEvolution }),
-    ...(renewalNeeds > 0 && { renewalNeeds }),
-    ...(secondaryResidenceAccomodationEvolution > 0 && { secondaryResidenceAccomodationEvolution }),
-    ...(longTermVacantAccomodation > 0 && { longTermVacantAccomodation }),
-    ...(shortTermVacantAccomodation > 0 && { shortTermVacantAccomodation }),
-  }
-
-  const negativeData = {
-    name: 'Mobilisation du parc existant',
-    ...(longTermVacantAccomodation < 0 && {
-      longTermVacantAccomodation: Math.abs(longTermVacantAccomodation),
-    }),
-    ...(secondaryResidenceAccomodationEvolution < 0 && {
-      secondaryResidenceAccomodationEvolution: Math.abs(secondaryResidenceAccomodationEvolution),
-    }),
-    ...(renewalNeeds < 0 && { renewalNeeds: Math.abs(renewalNeeds) }),
-  }
-
-  const hasNegativeValues = Object.keys(negativeData).length > 1 // > 1 because it always has 'name'
-
-  const chartData = [
-    positiveData,
-    ...(hasNegativeValues ? [negativeData] : []),
+  const needsData: DonutDataItem[] = [
     {
-      name: 'Construction neuves supplémentaires',
-      totalFlux,
+      name: 'Évolution démographique',
+      value: Math.max(0, demographicEvolution),
+      color: getChartColor('evolutionDemographiqueDonut'),
+      description: (val: string) => (
+        <>
+          L'évolution du nombre de ménages à loger dans le territoire contribuera pour <strong>{val}</strong> au besoin en logements.
+        </>
+      ),
     },
-  ]
+    {
+      name: 'Résidences secondaires',
+      value: Math.max(0, secondaryResidenceAccomodationEvolution),
+      color: getChartColor('residencesSecondairesDonut'),
+      description: (val: string) => (
+        <>
+          L'augmentation du nombre de résidences secondaires contribuera à hauteur de <strong>{val}</strong> dans les besoins en
+          constructions neuves.
+        </>
+      ),
+    },
+    {
+      name: 'Fluidité du parc',
+      value: Math.max(0, shortTermVacantAccomodation),
+      color: getChartColor('fluiditeDuParc'),
+      description: (val: string) => (
+        <>
+          Pour garder de la fluidité dans le parc de logement, il sera nécessaire de produire <strong>{val} logements</strong>.
+        </>
+      ),
+    },
+  ].filter((item) => item.value > 0)
 
-  const { classes } = useStyles()
+  const supplyData: DonutDataItem[] = [
+    {
+      name: 'Remobilisation de logements vacants',
+      value: Math.abs(Math.min(0, longTermVacantAccomodation)),
+      color: getChartColor('remobilisationVacants'),
+      description: (val: string) => (
+        <>
+          L'hypothèse retenue concernant le taux de vacance entraînera la remise sur le marché de <strong>{val} logements vacants</strong>.
+        </>
+      ),
+    },
+    {
+      name: 'Renouvellement urbain',
+      value: Math.abs(Math.min(0, renewalNeeds)),
+      color: getChartColor('renouvellementUrbain'),
+      description: (val: string) => (
+        <>
+          Le renouvellement urbain contribuera à la création de <strong>{val} logements</strong>, les restructurations excédant les
+          disparitions de logements.
+        </>
+      ),
+    },
+    {
+      name: 'Logements supplémentaires à construire',
+      value: Math.max(0, totalFlux),
+      color: getChartColor('logementsSupplementaires'),
+      description: (val: string) => (
+        <>
+          Pour couvrir le reste des besoins liés à la démographie et à l'évolution du parc, il faudra construire{' '}
+          <strong>{val} logements</strong> supplémentaires.
+        </>
+      ),
+    },
+  ].filter((item) => item.value > 0)
+
+  const needsLegendItems: LegendItem[] = needsData.map((item) => ({
+    name: item.name,
+    color: item.color,
+  }))
+
+  const supplyLegendItems: LegendItem[] = supplyData.map((item) => ({
+    name: item.name,
+    color: item.color,
+  }))
+
+  const needsCenterContent =
+    needsActiveIndex !== null && needsData[needsActiveIndex] ? (
+      <div className={classes.tooltipContent}>
+        <div className={classes.tooltipHeader}>
+          <span className={classes.tooltipColorBox} style={{ backgroundColor: needsData[needsActiveIndex].color }} />
+          <span className={classes.tooltipTitle}>{needsData[needsActiveIndex].name}</span>
+        </div>
+        <p className={classes.tooltipDescription}>
+          {needsData[needsActiveIndex].description(formatNumber(needsData[needsActiveIndex].value))}
+        </p>
+      </div>
+    ) : null
+
+  const supplyCenterContent =
+    supplyActiveIndex !== null && supplyData[supplyActiveIndex] ? (
+      <div className={classes.tooltipContent}>
+        <div className={classes.tooltipHeader}>
+          <span className={classes.tooltipColorBox} style={{ backgroundColor: supplyData[supplyActiveIndex].color }} />
+          <span className={classes.tooltipTitle}>{supplyData[supplyActiveIndex].name}</span>
+        </div>
+        <p className={classes.tooltipDescription}>
+          {supplyData[supplyActiveIndex].description(formatNumber(supplyData[supplyActiveIndex].value))}
+        </p>
+      </div>
+    ) : null
+
+  const needsTitle = `Les besoins en logements\nen ${horizon}`
+  const supplyTitle = `L'offre du parc de logement\nen ${horizon}`
 
   return (
-    <div className={classes.chartContainer}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={500} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" tick={<CustomXAxisTick />} interval={0} height={60} />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="demographicEvolution" name="Démographie" stackId="a" fill={getChartColor('demographicEvolution')} />
-          <Bar
-            dataKey="secondaryResidenceAccomodationEvolution"
-            name="Résidences secondaires"
-            stackId="a"
-            fill={getChartColor('secondaryResidenceAccomodationEvolution')}
-          />
-          <Bar
-            dataKey="longTermVacantAccomodation"
-            name="Logements vacants de longue durée"
-            stackId="a"
-            fill={getChartColor('longTermVacantAccomodation')}
-          />
-          <Bar
-            dataKey="shortTermVacantAccomodation"
-            name="Logements vacants de courte durée"
-            stackId="a"
-            fill={getChartColor('shortTermVacantAccomodation')}
-          />
-          <Bar dataKey="renewalNeeds" name="Renouvellement" stackId="a" fill={getChartColor('renewalNeeds')} />
-          <Bar dataKey="totalFlux" name="Demande potentielle" stackId="a" fill={getChartColor('totalFlux')} />
-          <Legend
-            content={
-              <p style={{ color: 'rgb(136, 132, 216)', margin: 0 }}>
-                Évolution du besoin liés à la démographie et à l'évolution du parc détaillé
-              </p>
-            }
-          />
-        </BarChart>
-      </ResponsiveContainer>
+    <div className={classes.container}>
+      <div className={classes.chartsRow}>
+        <DonutChart
+          title={needsTitle}
+          data={needsData}
+          centerContent={needsCenterContent}
+          onHover={setNeedsActiveIndex}
+          activeIndex={needsActiveIndex}
+          legendItems={needsLegendItems}
+        />
+        <DonutChart
+          title={supplyTitle}
+          data={supplyData}
+          centerContent={supplyCenterContent}
+          onHover={setSupplyActiveIndex}
+          activeIndex={supplyActiveIndex}
+          legendItems={supplyLegendItems}
+        />
+      </div>
     </div>
   )
 }
 
 const useStyles = tss.create({
-  chartContainer: {
-    height: '600px',
+  container: {
     width: '100%',
+    padding: '1rem 0',
+  },
+  chartsRow: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  chartWithLegend: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  chartWrapper: {
+    position: 'relative',
+    width: '400px',
+    height: '400px',
+  },
+  centerContent: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+    width: '70%',
+    pointerEvents: 'none',
+  },
+  defaultTitle: {
+    fontSize: '0.9375rem',
+    fontWeight: 500,
+    color: '#161616',
+    whiteSpace: 'pre-line',
+    lineHeight: 1.4,
+  },
+  tooltipContent: {
+    padding: '0.5rem',
+  },
+  tooltipHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginBottom: '0.5rem',
+  },
+  tooltipColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+    marginTop: '3px',
+  },
+  tooltipTitle: {
+    fontWeight: 700,
+    fontSize: '0.8125rem',
+    color: '#161616',
+    textAlign: 'left',
+  },
+  tooltipDescription: {
+    fontSize: '0.75rem',
+    color: '#3a3a3a',
+    lineHeight: 1.5,
+    margin: 0,
+    textAlign: 'left',
+  },
+  legend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    justifyContent: 'center',
+    maxWidth: '400px',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.8125rem',
+  },
+  legendColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  legendLabel: {
+    fontSize: '0.8125rem',
   },
 })

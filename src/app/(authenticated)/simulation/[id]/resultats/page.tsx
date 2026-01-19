@@ -95,7 +95,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
             horizon={simulation.scenario.projection}
             hasSurplusHousing={hasSurplusHousing}
           />
-          {hasNewHousingNeeds && <SimulationDemographicParcEvolution results={flowResults} />}
+          {hasNewHousingNeeds && <SimulationDemographicParcEvolution results={flowResults} horizon={simulation.scenario.projection} />}
           <SimulationBadHousing horizon={simulation.scenario.projection} results={stockResults} />
         </div>
       ),

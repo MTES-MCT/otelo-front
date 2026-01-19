@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { SimulationDemographicParcEvolutionProps } from '~/components/simulations/results/demographic-parc-evolution/simulation-demographic-parc-evolution'
 import { formatNumber } from '~/utils/format-numbers'
 
-export const SimulationDemographicParcEvolutionDropdown = ({ results }: SimulationDemographicParcEvolutionProps) => {
+export const SimulationDemographicParcEvolutionDropdown = ({ results, horizon: _ }: SimulationDemographicParcEvolutionProps) => {
   const {
     demographicEvolution,
     longTermVacantAccomodation,

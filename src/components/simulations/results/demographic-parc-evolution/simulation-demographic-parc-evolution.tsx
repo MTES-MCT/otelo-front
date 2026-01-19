@@ -12,9 +12,10 @@ export type SimulationDemographicParcEvolutionProps = {
     shortTermVacantAccomodation: number
     longTermVacantAccomodation: number
   }
+  horizon: number
 }
 
-export const SimulationDemographicParcEvolution = ({ results }: SimulationDemographicParcEvolutionProps) => {
+export const SimulationDemographicParcEvolution = ({ results, horizon }: SimulationDemographicParcEvolutionProps) => {
   return (
     <div className="fr-background-default--grey shadow" id="demographie-parc">
       <div className="fr-py-8w fr-px-5w">
@@ -25,9 +26,9 @@ export const SimulationDemographicParcEvolution = ({ results }: SimulationDemogr
         <p className="fr-mt-2w">
           Le graphique représente l'influence de la démographie et de l'évolution du parc sur le besoin en constructions neuves.
         </p>
-        <SimulationParcEvolutionDataWrapper results={results} />
+        <SimulationParcEvolutionDataWrapper results={results} horizon={horizon} />
       </div>
-      <SimulationDemographicParcEvolutionDropdown results={results} />
+      <SimulationDemographicParcEvolutionDropdown results={results} horizon={horizon} />
     </div>
   )
 }

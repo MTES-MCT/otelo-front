@@ -5,11 +5,11 @@ import { FlowRequirementsChart } from '~/components/charts/flow-requirements-cha
 import { DemographicEvolutionResultsTable } from '~/components/simulations/results/demographic-evolution-results-table'
 import { SimulationDemographicParcEvolutionProps } from '~/components/simulations/results/demographic-parc-evolution/simulation-demographic-parc-evolution'
 
-export const SimulationParcEvolutionDataWrapper = ({ results }: SimulationDemographicParcEvolutionProps) => {
+export const SimulationParcEvolutionDataWrapper = ({ results, horizon }: SimulationDemographicParcEvolutionProps) => {
   const [queryState] = useQueryState('demographie', parseAsString.withDefault('graphique'))
 
   if (queryState === 'graphique') {
-    return <FlowRequirementsChart results={results} />
+    return <FlowRequirementsChart results={results} horizon={horizon} />
   }
 
   if (queryState === 'tableau') {

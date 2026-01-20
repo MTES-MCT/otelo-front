@@ -1,4 +1,5 @@
 import { getServerSession } from 'next-auth'
+import { notFound } from 'next/navigation'
 import { authOptions } from '~/lib/auth/auth.config'
 import { TGroupedSimulationWithResults } from '~/schemas/simulation'
 
@@ -18,7 +19,7 @@ export const getGroupedSimulationWithResults = async (id: string) => {
   })
 
   if (!res.ok) {
-    throw new Error('Failed to get grouped simulation with results')
+    notFound()
   }
   return res.json() as Promise<TGroupedSimulationWithResults>
 }

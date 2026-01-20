@@ -7,7 +7,7 @@ import { useState } from 'react'
 export const SimulationVacantsDropdownSummary = () => {
   const [isShown, setIsShown] = useState(false)
   return (
-    <div className="fr-border-top fr-p-2w fr-flex fr-direction-column fr-justify-content-space-between">
+    <div className="fr-border-top fr-p-3v fr-flex fr-direction-column fr-justify-content-space-between">
       <Button
         onClick={() => setIsShown(!isShown)}
         priority="tertiary no outline"
@@ -22,7 +22,7 @@ export const SimulationVacantsDropdownSummary = () => {
         />
       </Button>
       {isShown && (
-        <p className="fr-mt-2w fr-px-2w">
+        <p className="fr-mb-2w fr-mt-3v fr-px-2w">
           La remobilisation des logements vacants et des résidences secondaires permet de répondre aux besoins en logement tout en limitant
           la construction neuve. Cette démarche contribue directement à l'objectif de sobriété foncière en préservant les terres agricoles
           et naturelles. En valorisant le parc existant, le territoire réduit son artificialisation des sols et s'inscrit dans une logique

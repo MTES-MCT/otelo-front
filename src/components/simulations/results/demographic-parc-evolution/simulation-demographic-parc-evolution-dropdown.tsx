@@ -17,7 +17,7 @@ export const SimulationDemographicParcEvolutionDropdown = ({ results, horizon: _
   } = results
   const [isShown, setIsShown] = useState(false)
   return (
-    <div className="fr-border-top fr-p-2w fr-flex fr-direction-column fr-justify-content-space-between">
+    <div className="fr-border-top fr-p-3v fr-flex fr-direction-column fr-justify-content-space-between">
       <Button
         onClick={() => setIsShown(!isShown)}
         priority="tertiary no outline"
@@ -32,7 +32,7 @@ export const SimulationDemographicParcEvolutionDropdown = ({ results, horizon: _
         />
       </Button>
       {isShown && (
-        <p className="fr-mt-2w fr-px-2w">
+        <p className="fr-mb-2w fr-mt-3v fr-px-2w">
           <div>
             <p className="fr-mb-0">
               Le graphique et le tableau représentent l'influence de la démographie et de l'évolution du parc sur le besoin en constructions

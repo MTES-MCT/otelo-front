@@ -273,7 +273,7 @@ const useStyles = tss.create({
     pointerEvents: 'none',
   },
   defaultTitle: {
-    fontSize: '0.9375rem',
+    fontSize: '16px',
     fontWeight: 500,
     color: '#161616',
     whiteSpace: 'pre-line',
@@ -281,10 +281,13 @@ const useStyles = tss.create({
   },
   tooltipContent: {
     padding: '0.5rem',
+    textAlign: 'center',
   },
   tooltipHeader: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: '0.5rem',
     marginBottom: '0.5rem',
   },
@@ -296,16 +299,19 @@ const useStyles = tss.create({
   },
   tooltipTitle: {
     fontWeight: 700,
-    fontSize: '0.8125rem',
+    fontSize: '16px',
     color: '#161616',
-    textAlign: 'left',
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tooltipDescription: {
-    fontSize: '0.75rem',
+    fontSize: '14px',
     color: '#3a3a3a',
     lineHeight: 1.5,
     margin: 0,
-    textAlign: 'left',
+    textAlign: 'center',
   },
   legend: {
     display: 'flex',

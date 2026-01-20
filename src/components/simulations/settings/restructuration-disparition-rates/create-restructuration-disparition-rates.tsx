@@ -22,7 +22,7 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 
   return (
     <div className="fr-flex fr-direction-column fr-flex-gap-2v fr-justify-content-space-between">
-      <span className="fr-text-mention--grey">
+      <span className="fr-text-mention--grey fr-mb-5v">
         Par défaut, Otelo vous propose de reconduire les taux annuels mesurés entre 2015 et 2021.
       </span>
       <CreateRestructurationDisparitionRatesInput epci={epci} />

@@ -1,5 +1,4 @@
 import { SimulationParcEvolutionDataWrapper } from '~/components/simulations/results/demographic-parc-evolution/simulation-demographic-parc-evolution-data-wrapper'
-import { SimulationDemographicParcEvolutionDropdown } from '~/components/simulations/results/demographic-parc-evolution/simulation-demographic-parc-evolution-dropdown'
 import { SimulationChartTableSwitch } from '~/components/simulations/results/simulation-chart-table-switch'
 
 export type SimulationDemographicParcEvolutionProps = {
@@ -28,7 +27,7 @@ export const SimulationDemographicParcEvolution = ({ results, horizon }: Simulat
         </p>
         <SimulationParcEvolutionDataWrapper results={results} horizon={horizon} />
       </div>
-      <SimulationDemographicParcEvolutionDropdown results={results} horizon={horizon} />
+      {/* <SimulationDemographicParcEvolutionDropdown results={results} horizon={horizon} /> */}
     </div>
   )
 }

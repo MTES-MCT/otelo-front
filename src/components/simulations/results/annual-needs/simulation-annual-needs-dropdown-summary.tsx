@@ -7,7 +7,7 @@ import { useState } from 'react'
 export const SimulationAnnualsNeedsDropdownSummary = ({ horizon, hasSurplusHousing }: { horizon: number; hasSurplusHousing: boolean }) => {
   const [isShown, setIsShown] = useState(false)
   return (
-    <div className="fr-border-top fr-p-2w fr-flex fr-direction-column fr-justify-content-space-between">
+    <div className="fr-border-top fr-p-3v fr-flex fr-direction-column fr-justify-content-space-between">
       <Button
         onClick={() => setIsShown(!isShown)}
         priority="tertiary no outline"
@@ -22,7 +22,7 @@ export const SimulationAnnualsNeedsDropdownSummary = ({ horizon, hasSurplusHousi
         />
       </Button>
       {isShown && (
-        <p className="fr-mt-2w fr-px-2w">
+        <p className="fr-mb-2w fr-mt-3v fr-px-2w">
           <div>
             <ul>
               <li>

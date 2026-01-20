@@ -7,9 +7,11 @@ import { formatNumber } from '~/utils/format-numbers'
 
 export const SimulationBadHousingDataWrapper = ({
   chartData,
+  horizon,
   results,
 }: {
   chartData: { name: string; value: number }[]
+  horizon: number
   results: {
     badQuality: number
     financialInadequation: number
@@ -22,7 +24,7 @@ export const SimulationBadHousingDataWrapper = ({
   const [queryState] = useQueryState('mal-logement', parseAsString.withDefault('graphique'))
 
   if (queryState === 'graphique') {
-    return <StockEvolutionChart chartData={chartData} />
+    return <StockEvolutionChart chartData={chartData} horizon={horizon} />
   }
 
   if (queryState === 'tableau') {

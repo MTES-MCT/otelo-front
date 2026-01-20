@@ -3,15 +3,72 @@ import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { Payload } from 'recharts/types/component/DefaultTooltipContent'
-import { tss } from 'tss-react'
 import { getChartColor } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TAccommodationLovacEvolution } from '~/schemas/accommodation-evolution'
-import styles from './accommodation-evolution-charts.module.css'
+import headerStyles from './accommodation-evolution-charts.module.css'
+import styles from './lovac-evolution-charts.module.css'
 
 export type LovacAccommodationEvolutionChart = {
   data: TAccommodationLovacEvolution
+}
+
+interface TooltipPayloadItem {
+  name: string
+  value: number
+  color: string
+  dataKey: string
+  payload?: Record<string, unknown>
+}
+
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: TooltipPayloadItem[]
+  label?: string | number
+}
+
+const CustomTooltip: FC<CustomTooltipProps> = ({ active, payload, label }) => {
+  if (!active || !payload || payload.length === 0) return null
+
+  return (
+    <div className={styles.tooltip}>
+      <p className={styles.tooltipYear}>{label}</p>
+      <ul className={styles.tooltipList}>
+        {payload.map((entry, index) => (
+          <li key={index} className={styles.tooltipItem}>
+            <span className={styles.tooltipColorBox} style={{ backgroundColor: entry.color }} />
+            <span className={styles.tooltipLabel}>{entry.name}</span>
+            <span className={styles.tooltipValue}>{entry.value?.toLocaleString('fr-FR') ?? '-'}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+interface LegendPayloadItem {
+  value: string
+  color: string
+  dataKey: string
+}
+
+interface CustomLegendProps {
+  payload?: LegendPayloadItem[]
+}
+
+const CustomLegend: FC<CustomLegendProps> = ({ payload }) => {
+  if (!payload) return null
+
+  return (
+    <div className={styles.legend}>
+      {payload.map((entry, index) => (
+        <div key={index} className={styles.legendItem}>
+          <span className={styles.legendColorBox} style={{ backgroundColor: entry.color }} />
+          <span className={styles.legendLabel}>{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionChart> = ({ data: chartData }) => {
@@ -24,7 +81,6 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
     { label: 'RP (INSEE)', value: 'rp' },
     { label: 'Fichiers Fonciers', value: 'lovac' },
   ]
-  const { classes } = useStyles()
 
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
   const epciName = chartData.tableData[queryStates.epcis[0] as string]?.name
@@ -66,7 +122,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
 
   return (
     <>
-      <div className={styles.headerContainer}>
+      <div className={headerStyles.headerContainer}>
         <h2 className={fr.cx('fr-h5')}>
           {title} - {epciName}
         </h2>
@@ -84,7 +140,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
           ))}
         </Select>
       </div>
-      <div className={classes.chartContainer}>
+      <div className={styles.chartContainer}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             width={500}
@@ -118,8 +174,8 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
               <Label value="Nombre de logements vacants par durée de vacance" offset={-10} position="insideBottom" />
             </XAxis>
             <YAxis />
-            <Tooltip />
-            <Legend align="right" verticalAlign="top" />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend content={<CustomLegend />} />
             {epcisLinearChart.map((epci, index) => [
               <Bar
                 key={`${epci}-nbLogVac2Less`}
@@ -141,7 +197,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
         <ResponsiveContainer width="100%" height="100%">
           <BarChart width={730} height={600} data={barChartData} margin={{ left: 20, bottom: 30 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <Legend align="right" verticalAlign="top" />
+            <Legend content={<CustomLegend />} />
             <XAxis dataKey="period" ticks={['2014-2019', '2019-2024']}>
               <Label value="Évolution annuelle moyenne du nombre de logements vacants" offset={-10} position="insideBottom" />
             </XAxis>
@@ -159,16 +215,7 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
                 return [min, max]
               })()}
             />
-            <Tooltip
-              formatter={(value: number, name: string) => [`${value}`, `${name}`]}
-              labelFormatter={(label: string, payload: readonly Payload<number, string>[]) => {
-                // Show both period and EPCI name
-                if (payload && payload.length > 0) {
-                  return `${payload[0].payload.name} - ${label}`
-                }
-                return label
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="nbLogVac2Less" name="Logements vacants < 2 ans" fill={getChartColor('nbLogVac2Less')} key="nbLogVac2Less" />
             <Bar dataKey="nbLogVac2More" name="Logements vacants longue durée" fill={getChartColor('nbLogVac2More')} key="nbLogVac2More" />
           </BarChart>
@@ -177,12 +224,3 @@ export const LovacAccommodationEvolutionChart: FC<LovacAccommodationEvolutionCha
     </>
   )
 }
-
-const useStyles = tss.create({
-  chartContainer: {
-    display: 'flex',
-    gap: '2rem',
-    height: '700px',
-    width: '100%',
-  },
-})

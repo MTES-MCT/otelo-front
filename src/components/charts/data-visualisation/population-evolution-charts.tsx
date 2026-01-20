@@ -1,11 +1,12 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
 import { TRPPopulationEvolution } from '~/schemas/population-evolution'
+import { formatNumber } from '~/utils/format-numbers'
 
 export type PopulationEvolutionChartProps = {
   data: TRPPopulationEvolution
@@ -18,6 +19,67 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
     epci: parseAsString.withDefault(''),
   })
   const { classes } = useStyles()
+
+  const customLineTooltip = (props: {
+    active?: boolean
+    payload?: Array<{ name: string; value: number; stroke: string }>
+    label?: string | number
+  }) => {
+    const { active, payload, label } = props
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltip}>
+          <p className={classes.tooltipTitle}>Année {label}</p>
+          {payload.map((entry, index) => (
+            <div key={index} className={classes.tooltipRow}>
+              <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.stroke }} />
+              <span className={classes.tooltipLabel}>
+                {entry.name}: <strong>{formatNumber(entry.value)}</strong>
+              </span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    return null
+  }
+
+  const customBarTooltip = (props: {
+    active?: boolean
+    payload?: Array<{ dataKey: string; name: string; value: number; fill: string }>
+    label?: string | number
+  }) => {
+    const { active, payload, label } = props
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltip}>
+          <p className={classes.tooltipTitle}>{label}</p>
+          {payload.map((entry, index) => (
+            <div key={index} className={classes.tooltipRow}>
+              <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.fill }} />
+              <span className={classes.tooltipLabel}>
+                {entry.name}: <strong>{formatNumber(entry.value)}</strong>
+              </span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    return null
+  }
+
+  const customLegend = (items: Array<{ name: string; color: string }>) => {
+    return (
+      <div className={classes.legend}>
+        {items.map((item, index) => (
+          <div key={index} className={classes.legendItem}>
+            <span className={classes.legendColorBox} style={{ backgroundColor: item.color }} />
+            <span className={classes.legendLabel}>{item.name}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
   const epcisLinearChart = Object.keys(chartData.linearChart).filter((epci) => queryStates.epcis.includes(epci))
   const linearDataKey = type?.split('-')[0]
   const epciName = chartData.tableData[queryStates.epci as string]?.name
@@ -70,7 +132,7 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
                   })()}
                 />
               )}
-              <Tooltip />
+              <Tooltip content={customLineTooltip} />
               {epcisLinearChart.map((epci, index) => {
                 const data = chartData.linearChart[epci].data
                 return (
@@ -85,21 +147,30 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
               })}
             </LineChart>
           </ResponsiveContainer>
-          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>{lineChartTitle}</div>
+          <div className={classes.chartTitle}>{lineChartTitle}</div>
+          {customLegend(
+            epcisLinearChart.map((epci, index) => ({
+              name: chartData.linearChart[epci].epci.name,
+              color: barChartColors[index],
+            })),
+          )}
         </div>
         <div className={classes.chartLabelContainer}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart width={730} height={600} data={barChartData} margin={{ bottom: 130, left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <Legend align="right" verticalAlign="top" />
               <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} tick={{ fontSize: 12 }} />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={customBarTooltip} />
               <Bar dataKey="2010-2015" name="2010-2015" fill={barChartColors[0]} key="2010-2015" />
               <Bar dataKey="2015-2021" name="2015-2021" fill={barChartColors[1]} key="2015-2021" />
             </BarChart>
           </ResponsiveContainer>
-          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>{barChartTitle}</div>
+          <div className={classes.chartTitle}>{barChartTitle}</div>
+          {customLegend([
+            { name: '2010-2015', color: barChartColors[0] },
+            { name: '2015-2021', color: barChartColors[1] },
+          ])}
         </div>
       </div>
     </>
@@ -116,5 +187,62 @@ const useStyles = tss.create({
   chartLabelContainer: {
     width: '100%',
     marginBottom: '2rem',
+  },
+  chartTitle: {
+    textAlign: 'center',
+    marginTop: '1rem',
+    fontSize: '16px',
+    fontWeight: 500,
+    color: '#161616',
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    border: '1px solid #e5e5e5',
+    borderRadius: '4px',
+    padding: '0.75rem',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  },
+  tooltipTitle: {
+    margin: '0 0 0.5rem 0',
+    fontWeight: 700,
+    fontSize: '14px',
+    color: '#161616',
+  },
+  tooltipRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  tooltipLabel: {
+    fontSize: '13px',
+    color: '#3a3a3a',
+  },
+  legend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    justifyContent: 'center',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.8125rem',
+  },
+  legendColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  legendLabel: {
+    fontSize: '0.8125rem',
+    color: '#161616',
   },
 })

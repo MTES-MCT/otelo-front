@@ -96,24 +96,24 @@ export const CustomTooltip = ({
     <div className={classes.tooltipContainer}>
       <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
       {Object.entries(grouped).map(([epciName, items]) => (
-        <div key={epciName} style={{ marginBottom: 8 }}>
+        <div key={epciName} className={classes.tooltipGroup}>
           <div className={classes.bold}>{epciName}</div>
-          <ul style={{ margin: 0, paddingLeft: 16 }}>
+          <div className={classes.tooltipList}>
             {items.map((item: TooltipPayload<ValueType, NameType>) => {
               if (!item.dataKey || typeof item.dataKey !== 'string') return null
               const scenario = SCENARIOS.find((s) => s.dataKey === item.dataKey)
               const label = scenario ? scenario.name : item.dataKey
               const value = typeof item.value === 'number' ? formatNumber(item.value) : '-'
               return (
-                <li key={item.dataKey} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span className={classes.tooltipDot} style={{ backgroundColor: item.stroke, marginRight: 6 }} />
-                  <span>
-                    {label}: {value}
+                <div key={item.dataKey} className={classes.tooltipRow}>
+                  <span className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
+                  <span className={classes.tooltipItemLabel}>
+                    {label}: <strong>{value}</strong>
                   </span>
-                </li>
+                </div>
               )
             })}
-          </ul>
+          </div>
         </div>
       ))}
     </div>
@@ -211,6 +211,16 @@ export const HouseholdSizesChart: FC<HouseholdSizesChartProps> = ({ data: chartD
           </LineChart>
         </ResponsiveContainer>
         <span className={classes.title}>Évolution de la taille moyenne des ménages</span>
+        <div className={classes.legend}>
+          {displayedScenarios
+            .filter((scenario) => scenario.id === queryStates.populationType)
+            .map((scenario) => (
+              <div key={scenario.dataKey} className={classes.legendItem}>
+                <span className={classes.legendColorBox} style={{ backgroundColor: scenario.stroke }} />
+                <span className={classes.legendLabel}>{scenario.name}</span>
+              </div>
+            ))}
+        </div>
       </div>
     </>
   )
@@ -227,23 +237,72 @@ const useStyles = tss.create({
   title: {
     textAlign: 'center',
     marginTop: '1rem',
+    fontSize: '16px',
+    fontWeight: 500,
+    color: '#161616',
   },
   tooltipContainer: {
     backgroundColor: 'white',
-    border: '1px solid var(--border-default-grey)',
+    border: '1px solid #e5e5e5',
     borderRadius: '4px',
-    padding: '1rem',
+    padding: '0.75rem',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   },
   tooltipTitle: {
-    fontWeight: 'bold',
+    fontWeight: 700,
+    marginBottom: '0.5rem',
+    fontSize: '14px',
+    color: '#161616',
+    margin: '0 0 0.5rem 0',
+  },
+  tooltipGroup: {
     marginBottom: '0.5rem',
   },
+  tooltipList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+    marginTop: '0.25rem',
+  },
+  tooltipRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
   tooltipDot: {
-    borderRadius: '50%',
-    height: '8px',
-    width: '8px',
+    height: '12px',
+    width: '12px',
+    flexShrink: 0,
+  },
+  tooltipItemLabel: {
+    fontSize: '13px',
+    color: '#3a3a3a',
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: 700,
+    fontSize: '13px',
+    color: '#161616',
+  },
+  legend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    justifyContent: 'center',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.8125rem',
+  },
+  legendColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  legendLabel: {
+    fontSize: '0.8125rem',
+    color: '#161616',
   },
 })

@@ -12,20 +12,21 @@ export const PopulationScenariosCustomTooltip = ({
   const { classes } = useStyles()
   if (!active || !payload?.length) return null
   return (
-    <div className={classes.tooltipContainer}>
+    <div className={classes.tooltip}>
       <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
       {/* biome-ignore lint/suspicious/noExplicitAny: TODO */}
       {payload.map((item: any) => {
         const evol = item.value - basePopulation[item.dataKey as keyof typeof basePopulation]
         return (
-          <div key={item.dataKey} className={classes.tooltipItem}>
-            <div className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
-            <span>{item.name}:</span>
-            <span>
-              <span className={classes.bold}>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</span> habitants par rapport à{' '}
-              <span className={classes.bold}>2021</span>
-            </span>
-            <span className={classes.smallText}>({formatNumber(item.value)} habitants)</span>
+          <div key={item.dataKey} className={classes.tooltipRow}>
+            <span className={classes.tooltipColorBox} style={{ backgroundColor: item.stroke }} />
+            <div className={classes.tooltipContent}>
+              <span className={classes.tooltipLabel}>
+                {item.name}: <strong>{evol > 0 ? `+${formatNumber(evol)}` : formatNumber(evol)}</strong> habitants par rapport à{' '}
+                <strong>2021</strong>
+              </span>
+              <span className={classes.tooltipSmallText}>({formatNumber(item.value)} habitants)</span>
+            </div>
           </div>
         )
       })}
@@ -34,15 +35,50 @@ export const PopulationScenariosCustomTooltip = ({
 }
 
 const useStyles = tss.create({
+  tooltip: {
+    backgroundColor: 'white',
+    border: '1px solid #e5e5e5',
+    borderRadius: '4px',
+    padding: '0.75rem',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  },
+  tooltipTitle: {
+    margin: '0 0 0.5rem 0',
+    fontWeight: 700,
+    fontSize: '14px',
+    color: '#161616',
+  },
+  tooltipRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+    marginTop: '4px',
+  },
+  tooltipContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.125rem',
+  },
+  tooltipLabel: {
+    fontSize: '13px',
+    color: '#3a3a3a',
+  },
+  tooltipSmallText: {
+    fontSize: '11px',
+    color: '#666',
+  },
+  // Legacy styles kept for compatibility
   tooltipContainer: {
     backgroundColor: 'white',
     border: '1px solid var(--border-default-grey)',
     borderRadius: '4px',
     padding: '1rem',
-  },
-  tooltipTitle: {
-    fontWeight: 'bold',
-    marginBottom: '0.5rem',
   },
   tooltipItem: {
     alignItems: 'center',

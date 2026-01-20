@@ -2,6 +2,7 @@
 
 import Button from '@codegouvfr/react-dsfr/Button'
 import { FC } from 'react'
+import { PreviousStepLink } from '~/components/simulations/settings/previous-step-link'
 import { ScenarioNamingModal, useScenarioNamingModal } from '~/components/simulations/settings/scenario-naming-modal'
 
 export const RestructurationDisparitionFooter: FC = () => {
@@ -10,10 +11,7 @@ export const RestructurationDisparitionFooter: FC = () => {
   return (
     <>
       <div className="fr-flex fr-flex-gap-6v fr-justify-content-end fr-py-4w fr-px-2w">
-        {/* todo: extract to a component and set preivous url href*/}
-        <Button priority="secondary" size="large">
-          Précédent
-        </Button>
+        <PreviousStepLink />
         <Button size="large" onClick={() => modal.open()}>
           Suivant
         </Button>

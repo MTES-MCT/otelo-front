@@ -1,13 +1,11 @@
 'use client'
 
-import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
+import { FrIconClassName, RiIconClassName, fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useQueryState } from 'nuqs'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { tss } from 'tss-react'
-import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
-import { useEpcis } from '~/hooks/use-epcis'
 import { formatDecohabitation, formatScenario } from '~/utils/omphale-label'
 
 interface CreationGuideTagProps {
@@ -20,51 +18,36 @@ interface CreationGuideTagProps {
   }
 }
 
-const STEP_ORDER = {
-  modifier: {
-    'cadrage-temporel': 1,
-    'parametrages-demographique': 2,
-    'taux-cibles-logements-vacants': 3,
-    'taux-cibles-residences-secondaires': 4,
-    'taux-restructuration-disparition': 5,
-  },
-  creation: {
-    'choix-du-territoire': 1,
-    'cadrage-temporel': 2,
-    'parametrages-demographique': 3,
-    'taux-cibles-logements-vacants': 4,
-    'taux-cibles-residences-secondaires': 5,
-    'taux-restructuration-disparition': 6,
-  },
+interface CreationGuideTargetTagProps {
+  step: {
+    value: string
+    path: string
+    disabled?: boolean
+    iconId: RiIconClassName | FrIconClassName
+  }
+}
+
+export const DemographicTargetTag: FC<CreationGuideTargetTagProps> = ({ step }) => {
+  const { path, iconId, value } = step
+  const searchParams = useSearchParams()
+  const newSearchParams = new URLSearchParams(searchParams.toString())
+  const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
+
+  return (
+    <Tag iconId={iconId} linkProps={{ href }}>
+      {value}
+    </Tag>
+  )
 }
 
 export const DemographicSettingsGuideTag: FC<CreationGuideTagProps> = ({ step }) => {
   const { data, disabled = false, path, queryKeys, iconId = 'fr-icon-checkbox-circle-line' } = step
   const [value] = useQueryState(queryKeys[0])
-  const { rates } = useEpcisRates()
-  const { data: epcis } = useEpcis(Object.keys(rates))
 
   const { classes } = useStyles({ disabled, value, queryKeys })
   const searchParams = useSearchParams()
-  const currentPathname = usePathname()
-  const [showAllVacancy, setShowAllVacancy] = useState(false)
-  const [showAllSecondary, setShowAllSecondary] = useState(false)
-  const [showAllRestructuration, setShowAllRestructuration] = useState(false)
   const newSearchParams = new URLSearchParams(searchParams.toString())
   const href = `${path}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`
-
-  // Determine if we're in creation or modification mode and current step
-  const isModifierPath = currentPathname.includes('modifier')
-  const currentStepName = currentPathname.split('/').pop()
-  const configKey = isModifierPath ? 'modifier' : 'creation'
-  const currentStepOrder = STEP_ORDER[configKey][currentStepName as keyof (typeof STEP_ORDER)[typeof configKey]] || 0
-
-  // Helper function to check if current step is after the given step
-  const isAfterStep = (stepPath: string) => {
-    const stepName = stepPath.split('/').pop()
-    const stepOrder = STEP_ORDER[configKey][stepName as keyof (typeof STEP_ORDER)[typeof configKey]] || 0
-    return currentStepOrder > stepOrder
-  }
 
   // Handle horizon de temps display
   if (path === '/simulation/cadrage-temporel' && value) {
@@ -96,139 +79,6 @@ export const DemographicSettingsGuideTag: FC<CreationGuideTagProps> = ({ step })
     }
   }
 
-  if (path === '/simulation/taux-cibles-logements-vacants') {
-    if (isAfterStep(path) && rates && Object.keys(rates).length > 0) {
-      const epciCodes = Object.keys(rates)
-
-      const displayedCodes = showAllVacancy ? epciCodes : epciCodes.slice(0, 4)
-      const hasMoreThanFour = epciCodes.length > 4
-
-      return (
-        <>
-          {displayedCodes.map((epciCode) => {
-            const epciRates = rates[epciCode]
-            const epciName = epcis?.find((epci) => epci.code === epciCode)?.name
-            if (epciRates) {
-              const longTermVacancyPercent = (epciRates.longTermVacancyRate * 100).toFixed(2)
-              return (
-                <Tag key={epciCode} className={classes.tag} iconId="ri-checkbox-circle-line" linkProps={{ href }}>
-                  <span className="fr-ml-1w">
-                    {epciName} <br /> Taux cible : {longTermVacancyPercent} %{' '}
-                  </span>
-                </Tag>
-              )
-            }
-            return null
-          })}
-          {hasMoreThanFour && (
-            <Tag
-              key="voir-plus-vacancy"
-              className={classes.tag}
-              iconId={showAllVacancy ? 'ri-arrow-up-line' : 'ri-arrow-down-line'}
-              onClick={() => setShowAllVacancy(!showAllVacancy)}
-            >
-              {showAllVacancy ? 'Voir moins' : 'Voir plus'}
-            </Tag>
-          )}
-        </>
-      )
-    }
-  }
-
-  if (path === '/simulation/taux-cibles-residences-secondaires') {
-    if (isAfterStep(path) && rates && Object.keys(rates).length > 0) {
-      const epciCodes = Object.keys(rates)
-
-      const displayedCodes = showAllSecondary ? epciCodes : epciCodes.slice(0, 4)
-      const hasMoreThanFour = epciCodes.length > 4
-
-      return (
-        <>
-          {displayedCodes.map((epciCode) => {
-            const epciRates = rates[epciCode]
-            const epciName = epcis?.find((epci) => epci.code === epciCode)?.name
-            if (epciRates) {
-              const secondaryResidencePercent = (epciRates.txRS * 100).toFixed(2)
-              return (
-                <Tag key={epciCode} className={classes.tag} iconId="ri-checkbox-circle-line" linkProps={{ href }}>
-                  <span className="fr-ml-1w">
-                    {epciName}
-                    <br />
-                    Taux cible : {secondaryResidencePercent} %
-                  </span>
-                </Tag>
-              )
-            }
-            return null
-          })}
-          {hasMoreThanFour && (
-            <Tag
-              key="voir-plus-secondary"
-              className={classes.tag}
-              iconId={showAllSecondary ? 'ri-arrow-up-line' : 'ri-arrow-down-line'}
-              onClick={() => setShowAllSecondary(!showAllSecondary)}
-            >
-              {showAllSecondary ? 'Voir moins' : 'Voir plus'}
-            </Tag>
-          )}
-        </>
-      )
-    }
-  }
-
-  // Handle rates display for taux-restructuration-disparition step
-  if (path === '/simulation/taux-restructuration-disparition' && currentPathname === '/simulation/taux-restructuration-disparition') {
-    if (rates && Object.keys(rates).length > 0) {
-      const epciCodes = Object.keys(rates)
-      const displayedCodes = showAllRestructuration ? epciCodes : epciCodes.slice(0, 4)
-      const hasMoreThanTwo = epciCodes.length > 2
-
-      return (
-        <>
-          {displayedCodes.map((epciCode) => {
-            const epciRates = rates[epciCode]
-            const epciName = epcis?.find((epci) => epci.code === epciCode)?.name
-
-            if (epciRates) {
-              const restructuringPercent = (epciRates.restructuringRate * 100).toFixed(2)
-              const disappearancePercent = (epciRates.disappearanceRate * 100).toFixed(2)
-
-              return (
-                <div className="fr-flex fr-direction-column fr-flex-gap-2v" key={epciCode}>
-                  <Tag className={classes.tag} iconId="ri-link" linkProps={{ href }}>
-                    <span className="fr-ml-1w">
-                      {epciName}
-                      <br />
-                      Restructuration: {restructuringPercent}%
-                    </span>
-                  </Tag>
-                  <Tag className={classes.tag} iconId="ri-link-unlink" linkProps={{ href }}>
-                    <span className="fr-ml-1w">
-                      {epciName}
-                      <br />
-                      Disparition: {disappearancePercent}%
-                    </span>
-                  </Tag>
-                </div>
-              )
-            }
-            return null
-          })}
-          {hasMoreThanTwo && (
-            <Tag
-              key="voir-plus-restructuration"
-              className={classes.tag}
-              iconId={showAllRestructuration ? 'ri-arrow-up-line' : 'ri-arrow-down-line'}
-              onClick={() => setShowAllRestructuration(!showAllRestructuration)}
-            >
-              {showAllRestructuration ? 'Voir moins' : 'Voir plus'}
-            </Tag>
-          )}
-        </>
-      )
-    }
-  }
-
   let formattedValue = value && Number(value) < 1 ? (Number(value) * 100).toFixed(2) : value
   if (data && typeof data === 'string') {
     formattedValue = data
@@ -254,7 +104,7 @@ export const DemographicSettingsGuideTag: FC<CreationGuideTagProps> = ({ step })
       </Tag>
     ))
   }
-  if (!data && !!formattedValue) {
+  if (formattedValue && !Array.isArray(data)) {
     return (
       <Tag className={classes.tag} {...tagProps}>
         {formattedValue}

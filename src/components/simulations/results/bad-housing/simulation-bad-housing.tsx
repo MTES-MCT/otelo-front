@@ -35,7 +35,7 @@ export const SimulationBadHousing = ({ horizon, results }: SimulationAnnualsNeed
           <SimulationChartTableSwitch queryState="mal-logement" />
         </div>
         <SimulationBadHousingDescription horizon={horizon} totalStock={totalStock} maxValue={maxValue} maxValueName={maxValueName} />
-        <SimulationBadHousingDataWrapper chartData={chartData} results={results} />
+        <SimulationBadHousingDataWrapper chartData={chartData} results={results} horizon={horizon} />
       </div>
     </div>
   )

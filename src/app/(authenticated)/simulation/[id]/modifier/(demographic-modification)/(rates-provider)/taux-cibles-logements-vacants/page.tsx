@@ -1,6 +1,6 @@
-import Button from '@codegouvfr/react-dsfr/Button'
 import { ModifyEpcisAccommodationRates } from '~/components/simulations/settings/epcis-accommodation-rates/modify-epcis-accomodation-rates'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import { PreviousStepLink } from '~/components/simulations/settings/previous-step-link'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
 
 type PageProps = {
@@ -20,10 +20,7 @@ export default async function TauxCiblesLogementsPage({ params }: PageProps) {
         <ModifyEpcisAccommodationRates epcis={simulation.epcis} />
       </div>
       <div className="fr-flex fr-flex-gap-6v fr-justify-content-end fr-py-4w fr-px-2w">
-        {/* todo: extract to a component and set preivous url href*/}
-        <Button priority="secondary" size="large">
-          Précédent
-        </Button>
+        <PreviousStepLink />
         <NextStepLinkWithoutValidation href={href} />
       </div>
     </>

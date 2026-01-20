@@ -3,23 +3,13 @@
 }
 
 .chevronContainer {
-  display: flex;
-  gap: 2rem;
+  position: relative;
+  height: 14px;
 }
 
 .chevronWrapper {
-  flex: 1;
-  display: flex;
-}
-
-.chevronWrapperLeft {
-  justify-content: flex-start;
-  padding-left: 2rem;
-}
-
-.chevronWrapperRight {
-  justify-content: flex-end;
-  padding-right: 2rem;
+  position: absolute;
+  transform: translateX(-50%);
 }
 
 .chevron {

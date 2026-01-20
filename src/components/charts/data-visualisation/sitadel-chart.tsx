@@ -39,34 +39,44 @@ export const SitadelChart: FC<SitadelChartProps> = ({ data }) => {
 
   const maxValue = Math.max(...chartData.map((d) => Math.max(d.authorizedHousing, d.startedHousing)))
 
+  const legendOrder = [
+    { dataKey: 'authorizedHousing', name: 'Permis de construire autorisés', color: getChartColor('authorizedHousing') },
+    { dataKey: 'startedHousing', name: 'Logements commencés', color: getChartColor('startedHousing') },
+  ]
+
+  const customLegend = () => {
+    return (
+      <div className={classes.legend}>
+        {legendOrder.map((entry) => (
+          <div key={entry.dataKey} className={classes.legendItem}>
+            <span className={classes.legendColorBox} style={{ backgroundColor: entry.color }} />
+            <span className={classes.legendLabel}>{entry.name}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   const customTooltip = (props: { active?: boolean; payload?: Array<{ dataKey: string; value: number }>; label?: string | number }) => {
     const { active, payload, label } = props
     if (active && payload && payload.length) {
       return (
-        <div style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '10px', borderRadius: '4px' }}>
-          <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>{label}</p>
-          {payload.map((entry) => (
-            <p key={entry.dataKey} style={{ margin: '5px 0', display: 'flex', alignItems: 'center' }}>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '12px',
-                  height: '12px',
-                  backgroundColor:
-                    entry.dataKey === 'authorizedHousing' ? getChartColor('authorizedHousing') : getChartColor('startedHousing'),
-                  marginRight: '8px',
-                }}
-              />
-              <span
-                style={{
-                  color: entry.dataKey === 'authorizedHousing' ? getChartColor('authorizedHousing') : getChartColor('startedHousing'),
-                }}
-              >
-                {entry.dataKey === 'authorizedHousing' ? 'Permis de construire autorisés' : 'Logements commencés'}:{' '}
-                {formatNumber(entry.value)}
-              </span>
-            </p>
-          ))}
+        <div className={classes.tooltip}>
+          <p className={classes.tooltipTitle}>{label}</p>
+          {legendOrder.map((entry) => {
+            const payloadItem = payload.find((p) => p.dataKey === entry.dataKey)
+            if (payloadItem && payloadItem.value > 0) {
+              return (
+                <div key={entry.dataKey} className={classes.tooltipRow}>
+                  <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.color }} />
+                  <span className={classes.tooltipLabel}>
+                    {entry.name}: <strong>{formatNumber(payloadItem.value)}</strong>
+                  </span>
+                </div>
+              )
+            }
+            return null
+          })}
         </div>
       )
     }
@@ -123,12 +133,7 @@ export const SitadelChart: FC<SitadelChartProps> = ({ data }) => {
             <Bar name="Logements commencés" dataKey="startedHousing" fill={getChartColor('startedHousing')} />
             <XAxis dataKey="year" />
             <Tooltip content={customTooltip} />
-            <Legend
-              itemSorter={(item) => {
-                const order = ['authorizedHousing', 'startedHousing']
-                return order.indexOf(item.dataKey as string)
-              }}
-            />
+            <Legend content={customLegend} />
             <YAxis domain={[0, maxValue]} allowDecimals={false} includeHidden={true} />
           </ComposedChart>
         </ResponsiveContainer>
@@ -156,5 +161,55 @@ const useStyles = tss.create({
     display: 'flex',
     justifyContent: 'center',
     marginTop: '1rem',
+  },
+  legend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    justifyContent: 'center',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.8125rem',
+  },
+  legendColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  legendLabel: {
+    fontSize: '0.8125rem',
+    color: '#161616',
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    border: '1px solid #e5e5e5',
+    borderRadius: '4px',
+    padding: '0.75rem',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  },
+  tooltipTitle: {
+    margin: '0 0 0.5rem 0',
+    fontWeight: 700,
+    fontSize: '14px',
+    color: '#161616',
+  },
+  tooltipRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+  },
+  tooltipColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  tooltipLabel: {
+    fontSize: '13px',
+    color: '#3a3a3a',
   },
 })

@@ -68,7 +68,10 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
           <p className={classes.tooltipTitle}>Année {label}</p>
           {payload.map((entry) => (
             <div key={entry.dataKey} className={classes.tooltipRow}>
-              <span className={classes.tooltipColorBox} style={{ backgroundColor: getChartColor(entry.dataKey) }} />
+              <span
+                className={classes.tooltipColorBox}
+                style={{ backgroundColor: getChartColor(entry.dataKey as Parameters<typeof getChartColor>[0]) }}
+              />
               <span className={classes.tooltipLabel}>
                 {entry.name}: <strong>{formatNumber(entry.value)}</strong>
               </span>
@@ -93,7 +96,10 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
           <p className={classes.tooltipTitle}>{label}</p>
           {payload.map((entry) => (
             <div key={entry.dataKey} className={classes.tooltipRow}>
-              <span className={classes.tooltipColorBox} style={{ backgroundColor: getChartColor(entry.dataKey) }} />
+              <span
+                className={classes.tooltipColorBox}
+                style={{ backgroundColor: getChartColor(entry.dataKey as Parameters<typeof getChartColor>[0]) }}
+              />
               <span className={classes.tooltipLabel}>
                 {entry.name}: <strong>{formatNumber(entry.value)}</strong>
               </span>

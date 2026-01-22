@@ -1,4 +1,8 @@
+'use client'
+
+import Button from '@codegouvfr/react-dsfr/Button'
 import classNames from 'classnames'
+import { parseAsBoolean, useQueryState } from 'nuqs'
 import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
 import styles from './parc-comparison-charts.module.css'
@@ -27,6 +31,7 @@ const ModifyParcsComparisonCharts = ({
 }: { epci: string; withSecondaryAccommodation?: boolean }) => {
   const { defaultRates } = useEpcisRates()
   const { simulationSettings } = useSimulationSettings()
+  const [isShown, setIsShown] = useQueryState('parcEvolutionShown', parseAsBoolean.withDefault(false))
 
   const defaultRatesByEpci = defaultRates[epci]
   const simulationRatesByEpci = simulationSettings.epciScenarios[epci]
@@ -41,9 +46,10 @@ const ModifyParcsComparisonCharts = ({
   const computedSecondaryAccommodationRate = Number(simulationRatesByEpci.txRs * 100)
 
   // Calculate dynamic scale with round numbers and unified scale
+  // Always include secondary accommodation in scale calculation to ensure consistent scale across pages
   const calculateUnifiedScale = () => {
-    const vacancy2021 = shortTermRate + originalLongTermRate + (withSecondaryAccommodation ? originalSecondaryAccommodationRate : 0)
-    const vacancyComputed = shortTermRate + computedLongTermRate + (withSecondaryAccommodation ? computedSecondaryAccommodationRate : 0)
+    const vacancy2021 = shortTermRate + originalLongTermRate + originalSecondaryAccommodationRate
+    const vacancyComputed = shortTermRate + computedLongTermRate + computedSecondaryAccommodationRate
 
     const maxVacancy = Math.max(vacancy2021, vacancyComputed)
 
@@ -98,59 +104,88 @@ const ModifyParcsComparisonCharts = ({
   const computedData = createScaledData(shortTermRate, computedLongTermRate, computedSecondaryAccommodationRate, unifiedScale)
 
   const CustomBar = ({ data, height = 32 }: CustomBarProps) => (
-    <div className="fr-position-relative fr-width-full" style={{ height: `${height}px` }}>
-      <div className="fr-position-absolute fr-flex fr-height-full">
-        {data.map((segment, index) => (
-          <div
-            key={index}
-            style={{
-              width: `${segment.value}%`,
-              backgroundColor: segment.color,
-              height: '100%',
-            }}
-          />
-        ))}
+    <div className="fr-flex fr-direction-column">
+      <div className="fr-position-relative fr-width-full" style={{ height: `${height}px` }}>
+        <div className="fr-position-absolute fr-flex fr-height-full fr-width-full">
+          {data.map((segment, index) => (
+            <div
+              key={index}
+              style={{
+                width: `${segment.value}%`,
+                backgroundColor: segment.color,
+                height: '100%',
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="fr-position-relative fr-width-full" style={{ height: '8px' }}>
+        <div className="fr-position-absolute fr-width-full fr-height-full fr-flex fr-justify-content-space-between">
+          <div style={{ width: '1px', height: '100%', backgroundColor: '#666' }} />
+          <div style={{ width: '1px', height: '100%', backgroundColor: '#666' }} />
+          <div style={{ width: '1px', height: '100%', backgroundColor: '#666' }} />
+          <div style={{ width: '1px', height: '100%', backgroundColor: '#666' }} />
+          <div style={{ width: '1px', height: '100%', backgroundColor: '#666' }} />
+        </div>
+      </div>
+      <div className="fr-flex fr-justify-content-space-between">
+        <span className="fr-text--xs fr-text-mention--grey">0%</span>
+        <span className="fr-text--xs fr-text-mention--grey">{Math.round(unifiedScale * 0.25)}%</span>
+        <span className="fr-text--xs fr-text-mention--grey">{Math.round(unifiedScale * 0.5)}%</span>
+        <span className="fr-text--xs fr-text-mention--grey">{Math.round(unifiedScale * 0.75)}%</span>
+        <span className="fr-text--xs fr-text-mention--grey">{unifiedScale}%</span>
       </div>
     </div>
   )
 
   return (
-    <div className={classNames(styles.chartContainer, 'fr-p-3w')}>
-      <div className="fr-flex fr-direction-column">
-        <div className="fr-flex fr-flex-gap-2v fr-justify-content-end">
-          <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
-            <div style={{ width: '12px', height: '12px', backgroundColor: COLORS.shortTermVacantAccomodation }} />
-            <span className="fr-text--sm fr-mb-0">Vacance courte durée</span>
-          </div>
-          <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
-            <div style={{ width: '12px', height: '12px', backgroundColor: COLORS.longTermVacantAccomodation }} />
-            <span className="fr-text--sm fr-mb-0">Vacance longue durée</span>
-          </div>
-          {!!withSecondaryAccommodation && (
-            <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
-              <div style={{ width: '12px', height: '12px', backgroundColor: COLORS.secondaryAccommodation }} />
-              <span className="fr-text--sm fr-mb-0">Résidences secondaires</span>
-            </div>
+    <div className="fr-border-top fr-p-3v fr-flex fr-direction-column fr-justify-content-space-between">
+      <Button
+        onClick={() => setIsShown(!isShown)}
+        priority="tertiary no outline"
+        className="fr-width-full fr-flex fr-justify-content-space-between"
+      >
+        <span className="fr-text-title--blue-france fr-text--medium">Simuler graphiquement l'évolution du parc</span>
+        <span
+          className={classNames(
+            'fr-text-title--blue-france fr-text--medium',
+            isShown ? 'ri-arrow-drop-up-line' : 'ri-arrow-drop-down-line',
           )}
-        </div>
-        {/* 2021 Section */}
-        <div className="fr-flex fr-direction-column fr-flex-gap-2v fr-mb-3w">
-          <div className="fr-flex fr-justify-content-space-between fr-align-items-center">
-            <span className="fr-text--medium">Le parc en 2021</span>
-            <span className="fr-text--sm fr-text-mention--grey">Échelle: 0-{unifiedScale}%</span>
-          </div>
-          <CustomBar data={data2021} />
-        </div>
+        />
+      </Button>
+      {isShown && (
+        <div className={classNames(styles.chartContainer, 'fr-p-3w', 'fr-mt-3v')}>
+          <div className="fr-flex fr-direction-column">
+            <div className="fr-flex fr-flex-gap-2v fr-justify-content-end">
+              <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
+                <div style={{ width: '12px', height: '12px', backgroundColor: COLORS.shortTermVacantAccomodation }} />
+                <span className="fr-text--sm fr-mb-0">Vacance courte durée</span>
+              </div>
+              <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
+                <div style={{ width: '12px', height: '12px', backgroundColor: COLORS.longTermVacantAccomodation }} />
+                <span className="fr-text--sm fr-mb-0">Vacance longue durée</span>
+              </div>
+              {!!withSecondaryAccommodation && (
+                <div className="fr-flex fr-align-items-center fr-flex-gap-2v">
+                  <div style={{ width: '12px', height: '12px', backgroundColor: COLORS.secondaryAccommodation }} />
+                  <span className="fr-text--sm fr-mb-0">Résidences secondaires</span>
+                </div>
+              )}
+            </div>
+            {/* 2021 Section */}
+            <div className="fr-flex fr-direction-column fr-flex-gap-2v fr-mb-3w">
+              <span className="fr-text--medium">Le parc en 2021</span>
+              <CustomBar data={data2021} />
+            </div>
 
-        {/* projection section */}
-        <div className="fr-flex fr-direction-column fr-flex-gap-2v">
-          <div className="fr-flex fr-justify-content-space-between fr-align-items-center">
-            <span className="fr-text--medium">Le parc en 2050</span>
-            <span className="fr-text--sm fr-text-mention--grey">Échelle: 0-{unifiedScale}%</span>
+            {/* projection section */}
+            <div className="fr-flex fr-direction-column fr-flex-gap-2v">
+              <span className="fr-text--medium">Le parc en 2050</span>
+              <CustomBar data={computedData} />
+            </div>
           </div>
-          <CustomBar data={computedData} />
         </div>
-      </div>
+      )}
     </div>
   )
 }

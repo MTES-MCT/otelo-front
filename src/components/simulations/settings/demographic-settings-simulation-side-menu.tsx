@@ -1,9 +1,10 @@
 'use client'
 
+import Button from '@codegouvfr/react-dsfr/Button'
 import classNames from 'classnames'
 import { usePathname } from 'next/navigation'
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
-import React from 'react'
+import React, { useState } from 'react'
 import { useEpcisRates } from '~/app/(authenticated)/simulation/(creation)/(rates-provider)/rates-provider'
 import {
   DemographicSettingsGuideTag,
@@ -13,6 +14,8 @@ import { useEpcis } from '~/hooks/use-epcis'
 import { DemographicSettingsSimulationSideMenuStepNumber } from './demographic-settings-simulation-side-menu-step-number'
 import { DemographicSettingsSimulationSideMenuTitle } from './demographic-settings-simulation-side-menu-title'
 import styles from './simulation-side-menu.module.css'
+
+const MAX_EPCIS_DISPLAYED = 2
 
 export default function DemographicSettingsSimulationSideMenu() {
   const [epcisParam] = useQueryState('epcis', parseAsArrayOf(parseAsString).withDefault([]))
@@ -44,6 +47,11 @@ export default function DemographicSettingsSimulationSideMenu() {
   }
 
   const currentStepIndex = getCurrentStepIndex()
+
+  // States for "Voir plus" buttons
+  const [showAllVacancy, setShowAllVacancy] = useState(false)
+  const [showAllSecondary, setShowAllSecondary] = useState(false)
+  const [showAllRestructuration, setShowAllRestructuration] = useState(false)
 
   const demographicSteps = [
     {
@@ -110,7 +118,7 @@ export default function DemographicSettingsSimulationSideMenu() {
                 {/* Étape 3: Logements vacants longue durée - Afficher si on est après cette étape */}
                 {index === 3 && currentStepIndex > 3 && epcis && epcis.length > 0 && rates && (
                   <>
-                    {epcis.map((epci) => {
+                    {(showAllVacancy ? epcis : epcis.slice(0, MAX_EPCIS_DISPLAYED)).map((epci) => {
                       const epciRates = rates[epci.code]
                       if (!epciRates) return null
                       return (
@@ -124,12 +132,23 @@ export default function DemographicSettingsSimulationSideMenu() {
                         </div>
                       )
                     })}
+                    {epcis.length > MAX_EPCIS_DISPLAYED && (
+                      <Button
+                        type="button"
+                        priority="secondary"
+                        size="small"
+                        className={styles.seeMore}
+                        onClick={() => setShowAllVacancy(!showAllVacancy)}
+                      >
+                        {showAllVacancy ? 'Voir moins' : `Voir plus (${epcis.length - MAX_EPCIS_DISPLAYED})`}
+                      </Button>
+                    )}
                   </>
                 )}
                 {/* Étape 4: Résidences secondaires - Afficher si on est après cette étape */}
                 {index === 4 && currentStepIndex > 4 && epcis && epcis.length > 0 && rates && (
                   <>
-                    {epcis.map((epci) => {
+                    {(showAllSecondary ? epcis : epcis.slice(0, MAX_EPCIS_DISPLAYED)).map((epci) => {
                       const epciRates = rates[epci.code]
                       if (!epciRates) return null
                       return (
@@ -142,12 +161,23 @@ export default function DemographicSettingsSimulationSideMenu() {
                         </div>
                       )
                     })}
+                    {epcis.length > MAX_EPCIS_DISPLAYED && (
+                      <Button
+                        type="button"
+                        priority="secondary"
+                        size="small"
+                        className={styles.seeMore}
+                        onClick={() => setShowAllSecondary(!showAllSecondary)}
+                      >
+                        {showAllSecondary ? 'Voir moins' : `Voir plus (${epcis.length - MAX_EPCIS_DISPLAYED})`}
+                      </Button>
+                    )}
                   </>
                 )}
                 {/* Étape 5: Renouvellement urbain - Afficher si on est après cette étape */}
                 {index === 5 && currentStepIndex > 5 && epcis && epcis.length > 0 && rates && (
                   <>
-                    {epcis.map((epci) => {
+                    {(showAllRestructuration ? epcis : epcis.slice(0, MAX_EPCIS_DISPLAYED)).map((epci) => {
                       const epciRates = rates[epci.code]
                       if (!epciRates) return null
                       return (
@@ -164,6 +194,16 @@ export default function DemographicSettingsSimulationSideMenu() {
                         </div>
                       )
                     })}
+                    {epcis.length > MAX_EPCIS_DISPLAYED && (
+                      <Button
+                        priority="secondary"
+                        size="small"
+                        type="button"
+                        onClick={() => setShowAllRestructuration(!showAllRestructuration)}
+                      >
+                        {showAllRestructuration ? 'Voir moins' : `Voir plus (${epcis.length - MAX_EPCIS_DISPLAYED})`}
+                      </Button>
+                    )}
                   </>
                 )}
               </div>

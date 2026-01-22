@@ -22,7 +22,6 @@ export const revalidate = 0
 export default async function Resultats({ params }: { params: { id: string } }) {
   const { name, simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
   const simulation = groupedSimulations[params.id]
-  console.log('toto', simulation)
 
   const results = {
     badQuality: simulation.results.badQuality.total,

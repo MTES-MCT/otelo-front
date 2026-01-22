@@ -50,6 +50,7 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
 
   return (
     <Tabs
+      className="fr-mt-2w"
       label="Scénario de projection démographique"
       classes={{ tab: classes.tab, panel: 'fr-background-default--grey' }}
       selectedTabId={selectedTabId}

@@ -116,7 +116,9 @@ export default async function Resultats({ params }: { params: { id: string } }) 
           totalStock={results.totalStock}
         />
 
-        {results.totalFlux > 0 && <SimulationSecondaryVacantsAccommodationsSummary results={results} />}
+        {results.totalFlux > 0 && (
+          <SimulationSecondaryVacantsAccommodationsSummary results={results} projection={simulation.scenario.projection} />
+        )}
         <SimulationEpcisDetails simulation={simulation} />
       </div>
     ),
@@ -141,7 +143,12 @@ export default async function Resultats({ params }: { params: { id: string } }) 
           </div>
           <div className="fr-col-md-4">
             <div className="fr-flex fr-flex-gap-4v fr-align-items-center">
-              <Button priority="secondary" linkProps={{ href: '/simulation/choix-du-territoire' }}>
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: `/simulation/parametrages-demographique?epciGroupId=${simulation.epciGroupId}&epcis=${simulation.epcis.map((epci) => epci.code).join(',')}&projection=${simulation.scenario.projection}`,
+                }}
+              >
                 Élaborer un autre scénario
               </Button>
               <ExportExcelSimulationButton id={params.id} />

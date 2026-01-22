@@ -27,6 +27,15 @@ export const SimulationDemographicBadHousingSummary = ({
   const hasNewHousingNeeds = totalFlux > 0
   const { prepeakTotalStock } = epci ?? {}
 
+  // Calculate chevron positions: centered on their chart section but constrained within their card
+  const badHousingValue = epci && prepeakTotalStock ? prepeakTotalStock : totalStock
+  const demographyPercent = totalFlux > 0 ? ((totalFlux - badHousingValue) / totalFlux) * 100 : 50
+  const badHousingPercent = 100 - demographyPercent
+  // Left chevron: center of demography section, but max 45% (stays under left card)
+  const leftChevronPosition = Math.min(demographyPercent / 2, 45)
+  // Right chevron: center of bad housing section, but min 52% (stays under right card)
+  const rightChevronPosition = Math.max(demographyPercent + badHousingPercent / 2, 52)
+
   return (
     <div className="fr-background-default--grey fr-flex fr-direction-column fr-py-8w fr-px-5w shadow">
       <h3 className="fr-h4">À quels besoins répondront ces logements ?</h3>
@@ -35,10 +44,10 @@ export const SimulationDemographicBadHousingSummary = ({
 
       {hasNewHousingNeeds && (
         <div className={styles.chevronContainer}>
-          <div className={classNames(styles.chevronWrapper, styles.chevronWrapperLeft)}>
+          <div className={styles.chevronWrapper} style={{ left: `${leftChevronPosition}%` }}>
             <div className={classNames(styles.chevron, styles.chevronDemography)} />
           </div>
-          <div className={classNames(styles.chevronWrapper, styles.chevronWrapperRight)}>
+          <div className={styles.chevronWrapper} style={{ left: `${rightChevronPosition}%` }}>
             <div className={classNames(styles.chevron, styles.chevronBadHousing)} />
           </div>
         </div>

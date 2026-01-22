@@ -68,3 +68,46 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
+.epciTag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.5rem;
+  padding: 8px 8px;
+  background-color: white;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  color: var(--text-label-blue-france);
+  margin-left: 2rem;
+  width: fit-content;
+}
+
+.iconEpciTag::before {
+  --icon-size: 1rem;
+  color: var(--text-label-blue-france);
+}
+
+.epciRateContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rateTag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.5rem;
+  padding: 6px 12px;
+  background-color: white;
+  border-radius: 16px;
+  font-size: 0.8125rem;
+  color: var(--text-mention-grey);
+  margin-left: 2.5rem;
+  width: fit-content;
+}
+
+.seeMore {
+  margin-left: 2rem;
+}

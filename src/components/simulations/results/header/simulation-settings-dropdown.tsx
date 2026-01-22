@@ -78,7 +78,7 @@ export const SimulationSettingsDropdown = ({ simulation, epci }: { simulation: T
 
   return (
     <>
-      <div className="fr-flex fr-justify-content-space-between fr-align-items-center fr-flex-gap-2v fr-mb-1w">
+      <div className="fr-flex fr-direction-column fr-flex-gap-4v">
         <div className="fr-flex fr-flex-gap-2v">
           <Button
             priority="tertiary no outline"
@@ -95,30 +95,30 @@ export const SimulationSettingsDropdown = ({ simulation, epci }: { simulation: T
         </div>
         {/* we will reenable it sooner or later */}
         {/* <SimulationSettingsPresentationMode /> */}
-      </div>
-      {showDropdown && (
-        <div className={styles.dropdown}>
-          {categories.map((category, index) => (
-            <div key={index} className={styles.column}>
-              <span className="fr-text--medium fr-text--sm fr-mb-1w">{category.title}</span>
-              <div className="fr-flex fr-direction-column">
-                {category.tags.map((tag, tagIndex) => (
-                  <Tag
-                    key={tagIndex}
-                    iconId={tag.iconId}
-                    className="fr-mt-1w"
-                    linkProps={{
-                      href: category.link,
-                    }}
-                  >
-                    {tag.text}
-                  </Tag>
-                ))}
+        {showDropdown && (
+          <div className={styles.dropdown}>
+            {categories.map((category, index) => (
+              <div key={index} className={styles.column}>
+                <span className="fr-text--medium fr-text--sm fr-mb-1w">{category.title}</span>
+                <div className="fr-flex fr-direction-column">
+                  {category.tags.map((tag, tagIndex) => (
+                    <Tag
+                      key={tagIndex}
+                      iconId={tag.iconId}
+                      className="fr-mt-1w"
+                      linkProps={{
+                        href: category.link,
+                      }}
+                    >
+                      {tag.text}
+                    </Tag>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </>
   )
 }

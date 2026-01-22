@@ -1,7 +1,7 @@
-import Button from '@codegouvfr/react-dsfr/Button'
 import { redirect } from 'next/navigation'
 import { DemographicSettingsFormWrapper } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/parametrages-demographique/demographic-settings-form-wrapper'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import { PreviousStepLink } from '~/components/simulations/settings/previous-step-link'
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
@@ -64,10 +64,7 @@ export default async function ParametragesDemographiquePage({ params, searchPara
         />
       </div>
       <div className="fr-flex fr-flex-gap-6v fr-justify-content-end fr-py-4w fr-px-2w">
-        {/* todo: extract to a component and set preivous url href*/}
-        <Button priority="secondary" size="large">
-          Précédent
-        </Button>
+        <PreviousStepLink />
         <NextStepLinkWithoutValidation href={href} />
       </div>
     </>

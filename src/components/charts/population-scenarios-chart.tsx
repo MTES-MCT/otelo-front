@@ -123,9 +123,18 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
             <Tooltip content={<PopulationScenariosCustomTooltip basePopulation={basePopulation} />} />
           </LineChart>
         </ResponsiveContainer>
+        <div className={classes.legend}>
+          {SCENARIOS.map((scenario) => (
+            <div key={scenario.dataKey} className={classes.legendItem}>
+              <span className={classes.legendColorBox} style={{ backgroundColor: scenario.stroke }} />
+              <span className={classes.legendLabel}>{scenario.name}</span>
+            </div>
+          ))}
+        </div>
       </div>
       {queryStates.population && (
         <CallOut
+          className="fr-py-2w fr-mb-0 fr-mt-4w"
           title={
             <Badge severity="new" noIcon small>
               <span className={classNames(classes.badgeIcon, 'ri-lightbulb-line fr-mr-1v')} />
@@ -133,14 +142,14 @@ export const PopulationScenariosChart: FC<PopulationEvolutionChartProps> = ({ de
             </Badge>
           }
         >
-          <>
+          <span className="fr-text--md">
             <span>
               Ce scénario anticipe une évolution de la population de <strong>{evol > 0 ? `+${evol}` : evol}</strong> habitant
               {sPluriel(evol)} sur la période 2021 - {period}.
             </span>
             <br />
             <span className="fr-text--sm fr-text-mention--grey fr-mb-0">Source des données : INSEE</span>
-          </>
+          </span>
         </CallOut>
       )}
 
@@ -170,6 +179,30 @@ const useStyles = tss.create({
     padding: '1rem',
     width: '100%',
   },
+  legend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    justifyContent: 'center',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.8125rem',
+  },
+  legendColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+    borderRadius: '2px',
+  },
+  legendLabel: {
+    fontSize: '0.8125rem',
+    color: '#161616',
+  },
+  // Legacy styles kept for compatibility
   tooltipContainer: {
     backgroundColor: 'white',
     border: '1px solid var(--border-default-grey)',

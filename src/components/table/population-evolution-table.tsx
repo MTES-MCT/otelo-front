@@ -23,7 +23,7 @@ export const PopulationEvolutionTable: FC<PopulationEvolutionChartProps> = ({ da
       : "Tableau : Evolution du nombre de ménages sur le bassin d'habitat, par moyenne annuelle (en volume et en pourcentage)"
 
   return (
-    <div className={styles.container}>
+    <div className="fr-pt-6w">
       <h2 className={styles.title}>{tableTitle}</h2>
       <table className={styles.table}>
         <thead>

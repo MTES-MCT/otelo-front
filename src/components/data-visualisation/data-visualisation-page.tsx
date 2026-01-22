@@ -1,6 +1,4 @@
 'use client'
-
-import { fr } from '@codegouvfr/react-dsfr'
 import classNames from 'classnames'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
@@ -20,7 +18,7 @@ export const DataVisualisationPage: FC = () => {
   if (isLoading) return <div>Chargement des données en cours...</div>
   const { type, source } = queryStates
   return (
-    <div className={classNames(fr.cx('fr-my-4v'), classes.container)}>
+    <div className={classNames('fr-my-4v', classes.container)}>
       {!!data && (
         <>
           <DataVisualisationChart data={data} type={type} source={source} />

@@ -7,6 +7,7 @@ import { ZScenario } from '~/schemas/scenario'
 export const ZSimulation = ZCommonDateFields.extend({
   datasourceId: z.string(),
   epciCode: z.string(),
+  epciGroupId: z.string(),
   id: z.string(),
   name: z.string(),
   scenarioId: z.string(),
@@ -18,6 +19,7 @@ export type TSimulation = z.infer<typeof ZSimulation>
 export const ZSimulationWithRelations = ZSimulation.pick({
   createdAt: true,
   name: true,
+  epciGroupId: true,
   id: true,
   updatedAt: true,
 }).extend({

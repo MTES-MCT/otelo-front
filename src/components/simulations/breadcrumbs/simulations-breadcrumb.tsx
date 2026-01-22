@@ -1,22 +1,22 @@
 import { Breadcrumb } from '@codegouvfr/react-dsfr/Breadcrumb'
-import dayjs from 'dayjs'
 import { TSimulationWithResults } from '~/schemas/simulation'
 
 type SimulationsBreadcrumbProps = {
   simulation: TSimulationWithResults
+  groupName: string
 }
 
-export const SimulationsBreadcrumb = ({ simulation }: SimulationsBreadcrumbProps) => {
+export const SimulationsBreadcrumb = ({ groupName, simulation }: SimulationsBreadcrumbProps) => {
   return (
     <Breadcrumb
-      currentPageLabel="Résultats"
+      currentPageLabel={`Résultats ${simulation.name}`}
       homeLinkProps={{
         href: '/',
       }}
       segments={[
         {
-          label: `${simulation.name} - ${dayjs(simulation.createdAt).format('DD/MM/YYYY')}`,
-          linkProps: { href: `/simulation/${simulation.id}` },
+          label: groupName,
+          linkProps: { href: `/tableaux-de-bord` },
         },
       ]}
     />

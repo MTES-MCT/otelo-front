@@ -63,20 +63,39 @@ const DonutChart: FC<DonutChartProps> = ({ title, data, centerContent, onHover, 
               dataKey="value"
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
+              stroke="none"
             >
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={entry.color}
-                  stroke={index === activeIndex ? entry.color : 'transparent'}
-                  strokeWidth={index === activeIndex ? 6 : 0}
+                  stroke="none"
                   style={{
-                    filter: index === activeIndex ? 'brightness(1.1)' : 'none',
                     cursor: 'pointer',
                   }}
                 />
               ))}
             </Pie>
+            {activeIndex !== null && activeIndex >= 0 && activeIndex < data.length && (
+              <Pie
+                data={[data[activeIndex]]}
+                cx="50%"
+                cy="50%"
+                innerRadius={152}
+                outerRadius={188}
+                dataKey="value"
+                stroke="none"
+                startAngle={data
+                  .slice(0, activeIndex)
+                  .reduce((acc, item) => acc + (item.value / data.reduce((sum, d) => sum + d.value, 0)) * 360, 0)}
+                endAngle={data
+                  .slice(0, activeIndex + 1)
+                  .reduce((acc, item) => acc + (item.value / data.reduce((sum, d) => sum + d.value, 0)) * 360, 0)}
+                isAnimationActive={false}
+              >
+                <Cell fill={data[activeIndex].color} stroke="none" style={{ pointerEvents: 'none' }} />
+              </Pie>
+            )}
           </PieChart>
         </ResponsiveContainer>
         <div className={classes.centerContent}>{centerContent || <div className={classes.defaultTitle}>{title}</div>}</div>

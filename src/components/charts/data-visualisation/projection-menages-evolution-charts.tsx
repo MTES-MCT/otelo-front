@@ -4,7 +4,7 @@ import { parseAsArrayOf } from 'nuqs'
 import { parseAsString } from 'nuqs'
 import { useQueryStates } from 'nuqs'
 import { FC } from 'react'
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { tss } from 'tss-react'
 import { CustomizedDot } from '~/components/charts/customized-dot'
@@ -96,24 +96,24 @@ export const CustomTooltip = ({
     <div className={classes.tooltipContainer}>
       <p className={classes.tooltipTitle}>{`Année ${label}`}</p>
       {Object.entries(grouped).map(([epciName, items]) => (
-        <div key={epciName} style={{ marginBottom: 8 }}>
+        <div key={epciName} className={classes.tooltipGroup}>
           <div className={classes.bold}>{epciName}</div>
-          <ul style={{ margin: 0, paddingLeft: 16 }}>
+          <div className={classes.tooltipList}>
             {items.map((item: TooltipPayload<ValueType, NameType>) => {
               if (!item.dataKey || typeof item.dataKey !== 'string') return null
               const scenario = SCENARIOS.find((s) => s.dataKey === item.dataKey)
               const label = scenario ? scenario.name : item.dataKey
               const value = typeof item.value === 'number' ? formatNumber(item.value) : '-'
               return (
-                <li key={item.dataKey} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span className={classes.tooltipDot} style={{ backgroundColor: item.stroke, marginRight: 6 }} />
-                  <span>
-                    {label}: {value} habitants
+                <div key={item.dataKey} className={classes.tooltipRow}>
+                  <span className={classes.tooltipDot} style={{ backgroundColor: item.stroke }} />
+                  <span className={classes.tooltipItemLabel}>
+                    {label}: <strong>{value}</strong> habitants
                   </span>
-                </li>
+                </div>
               )
             })}
-          </ul>
+          </div>
         </div>
       ))}
     </div>
@@ -243,44 +243,45 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
             </LineChart>
           </ResponsiveContainer>
           <span className={classes.title}>Évolution du nombre de ménages, en fonction des scénarios de décohabitation</span>
+          <div className={classes.legend}>
+            {displayedScenarios
+              .filter((scenario) => scenario.id === queryStates.populationType)
+              .map((scenario) => (
+                <div key={scenario.dataKey} className={classes.legendItem}>
+                  <span className={classes.legendColorBox} style={{ backgroundColor: scenario.stroke }} />
+                  <span className={classes.legendLabel}>{scenario.name}</span>
+                </div>
+              ))}
+          </div>
         </div>
         <div className={classes.chartContainer}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart width={730} height={600} data={barChartData} margin={{ left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <Legend
-                align="right"
-                verticalAlign="top"
-                content={() => (
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('haute') }} />
-                      <span>Décohabitation haute</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('central') }} />
-                      <span>Décohabitation tendanciel</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '12px', height: '12px', backgroundColor: getChartColor('basse') }} />
-                      <span>Décohabitation basse</span>
-                    </div>
-                  </div>
-                )}
-              />
               <XAxis dataKey="period" ticks={['2021-2030', '2030-2040', '2040-2050']} />
               <YAxis />
               <Tooltip
-                formatter={(value: number, name: string) => {
-                  // Format the value and include the population type
-                  return [`${value}`, `${name}`]
-                }}
-                labelFormatter={(label: string, payload: readonly { payload?: { name: string } }[]) => {
-                  // Show both period and EPCI name
-                  if (payload && payload.length > 0 && payload[0].payload?.name) {
-                    return `${payload[0].payload.name} - ${label}`
+                content={(props) => {
+                  const { active, payload, label } = props
+                  if (active && payload && payload.length) {
+                    const epciName = payload[0]?.payload?.name
+                    return (
+                      <div className={classes.tooltipContainer}>
+                        <p className={classes.tooltipTitle}>
+                          {epciName} - {label}
+                        </p>
+                        {payload.map((entry, index) => (
+                          <div key={index} className={classes.tooltipRow}>
+                            <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.fill }} />
+                            <span className={classes.tooltipItemLabel}>
+                              {entry.name}: <strong>{formatNumber(Number(entry.value))}</strong>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )
                   }
-                  return label
+                  return null
                 }}
               />
               <Bar dataKey="haute" name="Décohabitation haute" fill={getChartColor('haute')} />
@@ -289,6 +290,20 @@ export const ProjectionMenagesEvolutionChart: FC<ProjectionMenagesEvolutionChart
             </BarChart>
           </ResponsiveContainer>
           <span className={classes.title}>Évolution décennal du nombre de ménages, par scénario de décohabitation</span>
+          <div className={classes.legend}>
+            <div className={classes.legendItem}>
+              <span className={classes.legendColorBox} style={{ backgroundColor: getChartColor('haute') }} />
+              <span className={classes.legendLabel}>Décohabitation haute</span>
+            </div>
+            <div className={classes.legendItem}>
+              <span className={classes.legendColorBox} style={{ backgroundColor: getChartColor('central') }} />
+              <span className={classes.legendLabel}>Décohabitation tendanciel</span>
+            </div>
+            <div className={classes.legendItem}>
+              <span className={classes.legendColorBox} style={{ backgroundColor: getChartColor('basse') }} />
+              <span className={classes.legendLabel}>Décohabitation basse</span>
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -310,29 +325,77 @@ const useStyles = tss.create({
   title: {
     textAlign: 'center',
     marginTop: '1rem',
+    fontSize: '16px',
+    fontWeight: 500,
+    color: '#161616',
   },
   tooltipContainer: {
     backgroundColor: 'white',
-    border: '1px solid var(--border-default-grey)',
+    border: '1px solid #e5e5e5',
     borderRadius: '4px',
-    padding: '1rem',
+    padding: '0.75rem',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   },
   tooltipTitle: {
-    fontWeight: 'bold',
+    fontWeight: 700,
+    marginBottom: '0.5rem',
+    fontSize: '14px',
+    color: '#161616',
+    margin: '0 0 0.5rem 0',
+  },
+  tooltipGroup: {
     marginBottom: '0.5rem',
   },
-  tooltipItem: {
-    alignItems: 'center',
+  tooltipList: {
     display: 'flex',
-    gap: '0.5rem',
+    flexDirection: 'column',
+    gap: '0.25rem',
     marginTop: '0.25rem',
   },
+  tooltipRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
   tooltipDot: {
-    borderRadius: '50%',
-    height: '8px',
-    width: '8px',
+    height: '12px',
+    width: '12px',
+    flexShrink: 0,
+  },
+  tooltipColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  tooltipItemLabel: {
+    fontSize: '13px',
+    color: '#3a3a3a',
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: 700,
+    fontSize: '13px',
+    color: '#161616',
+  },
+  legend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    justifyContent: 'center',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.8125rem',
+  },
+  legendColorBox: {
+    width: '12px',
+    height: '12px',
+    flexShrink: 0,
+  },
+  legendLabel: {
+    fontSize: '0.8125rem',
+    color: '#161616',
   },
 })

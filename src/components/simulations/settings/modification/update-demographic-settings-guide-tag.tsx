@@ -47,57 +47,18 @@ export const UpdateDemographicSettingsGuideTag: FC<UpdateGuideTagProps> = ({ ste
     )
   }
 
-  // Handle rates display for taux-cibles-logements-vacants step
+  // Handle rates display for taux-cibles steps
+  // Don't render anything here - handled by update-demographic-settings-simulation-side-menu.tsx
   if (path.includes('taux-cibles-logements-vacants')) {
-    const firstEpciId = Object.keys(simulationSettings.epciScenarios)[0]
-    const epciRates = simulationSettings.epciScenarios[firstEpciId]
-
-    if (epciRates) {
-      const longTermVacancyPercent = (epciRates.longTermVacancyRate * 100).toFixed(2)
-
-      return (
-        <Tag className={classes.tag} iconId="ri-home-4-line" linkProps={{ href }}>
-          Taux cible : {longTermVacancyPercent}%
-        </Tag>
-      )
-    }
+    return null
   }
 
   if (path.includes('taux-cibles-residences-secondaires')) {
-    const firstEpciId = Object.keys(simulationSettings.epciScenarios)[0]
-    const epciRates = simulationSettings.epciScenarios[firstEpciId]
-
-    if (epciRates) {
-      const secondaryResidencePercent = (epciRates.txRs * 100).toFixed(2)
-
-      return (
-        <Tag className={classes.tag} iconId="ri-home-line" linkProps={{ href }}>
-          Taux cible : {secondaryResidencePercent}%
-        </Tag>
-      )
-    }
+    return null
   }
 
-  // Handle rates display for taux-restructuration-disparition step
   if (path.includes('taux-restructuration-disparition')) {
-    const firstEpciId = Object.keys(simulationSettings.epciScenarios)[0]
-    const epciRates = simulationSettings.epciScenarios[firstEpciId]
-
-    if (epciRates) {
-      const restructuringPercent = (epciRates.restructuringRate * 100).toFixed(2)
-      const disappearancePercent = (epciRates.disappearanceRate * 100).toFixed(2)
-
-      return (
-        <>
-          <Tag className={classes.tag} iconId="ri-link" linkProps={{ href }}>
-            Restructuration: {restructuringPercent}%
-          </Tag>
-          <Tag className={classes.tag} iconId="ri-link-unlink" linkProps={{ href }}>
-            Disparition: {disappearancePercent}%
-          </Tag>
-        </>
-      )
-    }
+    return null
   }
 
   // Handle projection data

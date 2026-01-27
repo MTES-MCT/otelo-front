@@ -22,6 +22,7 @@ interface SimulationSettingsState {
   simulationSettings: SimulationSettings
   setSimulationSettings: (settings: SimulationSettings) => void
   updateRates: (epciId: string, newRates: Partial<TEpcisAccommodationRates[string]>) => void
+  updateAllRates: (newRatesPerEpci: Record<string, Partial<TEpcisAccommodationRates[string]>>) => void
 }
 
 export const SimulationSettingsContext = createContext<SimulationSettingsState | undefined>(undefined)
@@ -73,8 +74,21 @@ export const SimulationSettingsProvider = ({
     }))
   }
 
+  const updateAllRates = (newRatesPerEpci: Record<string, Partial<TEpcisAccommodationRates[string]>>) => {
+    setSimulationSettings((prevSettings) => {
+      const updatedScenarios = { ...prevSettings.epciScenarios }
+      for (const [epciId, newRates] of Object.entries(newRatesPerEpci)) {
+        updatedScenarios[epciId] = { ...updatedScenarios[epciId], ...newRates }
+      }
+      return {
+        ...prevSettings,
+        epciScenarios: updatedScenarios,
+      }
+    })
+  }
+
   return (
-    <SimulationSettingsContext.Provider value={{ simulationSettings, setSimulationSettings, updateRates }}>
+    <SimulationSettingsContext.Provider value={{ simulationSettings, setSimulationSettings, updateRates, updateAllRates }}>
       {children}
     </SimulationSettingsContext.Provider>
   )

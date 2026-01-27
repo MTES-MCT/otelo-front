@@ -3,20 +3,27 @@
 import Button from '@codegouvfr/react-dsfr/Button'
 import { RadioButtons } from '@codegouvfr/react-dsfr/RadioButtons'
 import classNames from 'classnames'
-import { parseAsString, useQueryState } from 'nuqs'
+import { parseAsString, useQueryStates } from 'nuqs'
 import { FC, useState } from 'react'
 import styles from './charts.module.css'
 
 export const PopulationScenariosSelection: FC = () => {
-  const [population, setPopulation] = useQueryState('population', parseAsString)
+  const [queryState, setQueryState] = useQueryStates({
+    population: parseAsString,
+    populationTouched: parseAsString,
+  })
   const [knowMore, setKnowMore] = useState(false)
+
+  const setPopulation = (value: string) => {
+    setQueryState({ population: value, populationTouched: null })
+  }
 
   const RADIO_OPTIONS = [
     {
       label: 'Basse',
       nativeInputProps: {
         value: 'basse',
-        checked: population === 'basse',
+        checked: queryState.population === 'basse',
         onChange: () => setPopulation('basse'),
       },
     },
@@ -24,7 +31,7 @@ export const PopulationScenariosSelection: FC = () => {
       label: 'Centrale',
       nativeInputProps: {
         value: 'central',
-        checked: population === 'central',
+        checked: queryState.population === 'central',
         onChange: () => setPopulation('central'),
       },
     },
@@ -32,19 +39,24 @@ export const PopulationScenariosSelection: FC = () => {
       label: 'Haute',
       nativeInputProps: {
         value: 'haute',
-        checked: population === 'haute',
+        checked: queryState.population === 'haute',
         onChange: () => setPopulation('haute'),
       },
     },
   ]
 
+  const hasError = !queryState.population && queryState.populationTouched === 'true'
+
   return (
     <div className={styles.compactRadio}>
       <RadioButtons
+        key={`population-${queryState.population || 'none'}`}
         legend="Choisissez une projection d'évolution de la population"
         orientation="horizontal"
         options={RADIO_OPTIONS}
         name="population-scenario"
+        state={hasError ? 'error' : 'default'}
+        stateRelatedMessage={hasError ? 'Veuillez sélectionner une projection de population pour continuer' : undefined}
         classes={{
           inputGroup: 'fr-radio-rich fr-width-full fr-height-full',
           content: classNames('fr-justify-content-space-between fr-flex', styles.noWrap),

@@ -33,7 +33,7 @@ export default async function DemographicSettingsPage({ searchParams }: PageProp
       </div>
       <div className="fr-flex fr-flex-gap-6v fr-justify-content-end fr-py-4w fr-px-2w">
         <PreviousStepLink />
-        <NextStepLink href={href} query="projection" defaultValue="2030" />
+        <NextStepLink href={href} query="omphale" touchedQueryParam="omphaleTouched" />
       </div>
     </>
   )

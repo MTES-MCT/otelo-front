@@ -3,11 +3,16 @@
 import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import Badge from '@codegouvfr/react-dsfr/Badge'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
+import classNames from 'classnames'
+import { parseAsString, useQueryState } from 'nuqs'
 import { FC } from 'react'
+import { ModifyAllEpcisRatesView } from '~/components/simulations/settings/epcis-accommodation-rates/modify-all-epcis-rates-view'
 import ModifyParcsComparisonCharts from '~/components/simulations/settings/epcis-accommodation-rates/modify-parc-comparison-charts'
+import { RatesToggleSwitch } from '~/components/simulations/settings/epcis-accommodation-rates/rates-toggle-switch'
 import { ModifyVacancyAccommodationRatesInput } from '~/components/simulations/settings/modify-vacancy-accommodation-rates-input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
+import styles from './epcis-accommodation-rates.module.css'
 
 interface ModifyEpcisAccomodationRatesProps {
   epcis: Array<{ code: string; name: string; region: string }>
@@ -57,8 +62,11 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 export const ModifyEpcisAccommodationRates: FC<ModifyEpcisAccomodationRatesProps> = ({ epcis }) => {
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
+  const [ratesMode] = useQueryState('vacantRates', parseAsString)
 
   if (!rates) return null
+
+  const isAllMode = ratesMode === 'all'
 
   const tabs = epcis.map((epci) => ({
     content: <TabChildren epci={epci.code} rates={rates} />,
@@ -66,5 +74,12 @@ export const ModifyEpcisAccommodationRates: FC<ModifyEpcisAccomodationRatesProps
     label: epci.name,
   }))
 
-  return <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />
+  return (
+    <>
+      <div className={classNames('fr-px-md-4w fr-flex fr-pb-5w', styles.shadow, isAllMode && 'fr-border-bottom')}>
+        <RatesToggleSwitch />
+      </div>
+      {isAllMode ? <ModifyAllEpcisRatesView /> : <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />}
+    </>
+  )
 }

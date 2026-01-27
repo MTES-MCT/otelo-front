@@ -2,6 +2,7 @@
 
 import { fr } from '@codegouvfr/react-dsfr'
 import Stepper from '@codegouvfr/react-dsfr/Stepper'
+import classNames from 'classnames'
 import { usePathname } from 'next/navigation'
 import { FC, useMemo } from 'react'
 
@@ -91,6 +92,7 @@ const DEFAULT_CONFIG = {
 export const DemographicSettingsSimulationStepper: FC = () => {
   const pathname = usePathname()
   const isModifierPath = pathname.includes('modifier')
+  const isRatesPath = pathname.includes('taux')
 
   const config = useMemo(() => {
     const dynamicPathname = pathname.split('/').pop()
@@ -101,7 +103,7 @@ export const DemographicSettingsSimulationStepper: FC = () => {
 
   return (
     <div
-      className="fr-px-2w fr-py-0-5v fr-px-md-4w fr-pt-md-4w fr-pb-5w shadow"
+      className={classNames('fr-px-2w fr-py-0-5v fr-px-md-4w fr-pt-md-4w shadow', !isRatesPath && 'fr-pb-5w')}
       style={{ background: fr.colors.decisions.background.default.grey.default }}
     >
       <Stepper {...config} />

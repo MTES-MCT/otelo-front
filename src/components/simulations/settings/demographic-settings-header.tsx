@@ -19,7 +19,7 @@ export const DemographicSettingsSelectEpci = ({ epcis }: { epcis?: string[] }) =
   const [displayedEpci, setDisplayedEpci] = useQueryState('epciChart', parseAsString)
   return (
     <div className="fr-flex fr-justify-content-end fr-align-items-end fr-flex-gap-2v">
-      <span className="fr-text--sm fr-mb-0">EPCI affiché :</span>
+      <span className="fr-text--sm fr-mb-0">Territoire affiché :</span>
       <Select
         label={undefined}
         nativeSelectProps={{
@@ -27,6 +27,7 @@ export const DemographicSettingsSelectEpci = ({ epcis }: { epcis?: string[] }) =
           onChange: (event) => setDisplayedEpci(event.target.value),
         }}
       >
+        <option value="all">Ensemble du territoire</option>
         {(options || []).map((option) => (
           <option key={option?.code} value={option?.code}>
             {option?.name}
@@ -41,12 +42,22 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
   const [queryState, setQueryState] = useQueryStates({
     population: parseAsString,
     scenario: parseAsString.withDefault('population'),
+    populationTouched: parseAsString,
   })
 
   const { classes } = useStyles({ population: queryState.population })
   const selectedTabId = queryState.scenario ?? 'population'
 
   const content = selectedTabId === 'population' ? children[0] : children[1]
+  const isPopulationSelected = !!queryState.population
+
+  const handleTabChange = (tabId: string) => {
+    if (tabId === 'menages' && !isPopulationSelected) {
+      setQueryState({ populationTouched: 'true' })
+      return
+    }
+    setQueryState({ scenario: tabId === 'population' ? 'population' : 'menages' })
+  }
 
   return (
     <Tabs
@@ -54,7 +65,7 @@ export const DemographicSettingsHeader = ({ children }: DemographicSettingsHeade
       label="Scénario de projection démographique"
       classes={{ tab: classes.tab, panel: 'fr-background-default--grey' }}
       selectedTabId={selectedTabId}
-      onTabChange={(tabId: string) => setQueryState({ scenario: tabId === 'population' ? 'population' : 'menages' })}
+      onTabChange={handleTabChange}
       tabs={[
         {
           label: 'Projection de population',
@@ -86,10 +97,9 @@ const useStyles = tss.withParams<{ population: string | null }>().create(({ popu
     justifyContent: 'space-between',
   },
   tab: {
-    '&[class*="ri-home-2-line"]': {
+    '&:nth-of-type(2)': {
       cursor: !population ? 'not-allowed' : 'pointer',
       opacity: !population ? 0.5 : 1,
-      pointerEvents: !population ? 'none' : 'auto',
     },
   },
 }))

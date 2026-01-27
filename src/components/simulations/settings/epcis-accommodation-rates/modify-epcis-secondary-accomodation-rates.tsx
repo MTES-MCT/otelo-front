@@ -2,12 +2,17 @@
 
 import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
+import classNames from 'classnames'
+import { parseAsString, useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { useSimulationSettings } from '~/app/(authenticated)/simulation/[id]/modifier/(demographic-modification)/simulation-scenario-modification-provider'
+import { ModifyAllEpcisSecondaryRatesView } from '~/components/simulations/settings/epcis-accommodation-rates/modify-all-epcis-secondary-rates-view'
 import ModifyParcsComparisonCharts from '~/components/simulations/settings/epcis-accommodation-rates/modify-parc-comparison-charts'
+import { SecondaryRatesToggleSwitch } from '~/components/simulations/settings/epcis-accommodation-rates/secondary-rates-toggle-switch'
 import { ModifySecondaryAccommodationRateInput } from '~/components/simulations/settings/modify-accommodation-rate-input'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
+import styles from './epcis-accommodation-rates.module.css'
 
 interface ModifyEpcisSecondaryAccomodationRatesProps {
   epcis: Array<{ code: string; name: string; region: string }>
@@ -43,8 +48,11 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 export const ModifyEpcisSecondaryAccommodationRates: FC<ModifyEpcisSecondaryAccomodationRatesProps> = ({ epcis }) => {
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
+  const [ratesMode] = useQueryState('secondaryRates', parseAsString)
 
   if (!rates) return null
+
+  const isAllMode = ratesMode === 'all'
 
   const tabs = epcis.map((epci) => ({
     content: <TabChildren epci={epci.code} rates={rates} />,
@@ -52,5 +60,12 @@ export const ModifyEpcisSecondaryAccommodationRates: FC<ModifyEpcisSecondaryAcco
     label: epci.name,
   }))
 
-  return <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />
+  return (
+    <>
+      <div className={classNames('fr-px-md-4w fr-flex fr-pb-5w', styles.shadow, isAllMode && 'fr-border-bottom')}>
+        <SecondaryRatesToggleSwitch />
+      </div>
+      {isAllMode ? <ModifyAllEpcisSecondaryRatesView /> : <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />}
+    </>
+  )
 }

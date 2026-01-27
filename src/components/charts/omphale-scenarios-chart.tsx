@@ -162,7 +162,6 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     demographicEvolutionOmphaleCustomIds: parseAsArrayOf(parseAsString).withDefault([]),
   })
   const currentEpci = queryStates.epciChart || queryStates.epcis[0]
-
   const evolution = demographicEvolution[currentEpci]
   const [chartData, setChartData] = useState<TOmphaleEvolutionWithCustom[]>(evolution?.data ?? [])
   const [isUsingCustomData, setIsUsingCustomData] = useState(false)
@@ -228,7 +227,6 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
     if (!customDataEpci?.id) return
 
     try {
-      // Call the delete API
       const response = await fetch(`/api/demographic-evolution-custom/${customDataEpci.id}`, {
         method: 'DELETE',
       })
@@ -237,7 +235,6 @@ export const OmphaleScenariosChart: FC<DemographicEvolutionChartProps> = ({ demo
         throw new Error('Failed to delete custom demographic data')
       }
 
-      // Remove the deleted ID from search params
       const remainingIds = queryStates.demographicEvolutionOmphaleCustomIds.filter((id) => id !== customDataEpci.id)
       await setQueryStates({ demographicEvolutionOmphaleCustomIds: remainingIds })
     } catch (error) {

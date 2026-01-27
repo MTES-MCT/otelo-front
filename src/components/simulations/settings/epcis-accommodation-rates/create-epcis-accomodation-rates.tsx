@@ -3,11 +3,16 @@
 import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import Badge from '@codegouvfr/react-dsfr/Badge'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
+import classNames from 'classnames'
+import { parseAsString, useQueryState } from 'nuqs'
 import { FC } from 'react'
 import { CreateVacancyAccommodationRatesInput } from '~/components/simulations/settings/create-vacancy-accommodation-rates-input'
+import { AllEpcisRatesView } from '~/components/simulations/settings/epcis-accommodation-rates/all-epcis-rates-view'
 import ParcsComparisonCharts from '~/components/simulations/settings/epcis-accommodation-rates/parc-comparison-charts'
+import { RatesToggleSwitch } from '~/components/simulations/settings/epcis-accommodation-rates/rates-toggle-switch'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
+import styles from './epcis-accommodation-rates.module.css'
 
 interface CreateEpcisAccomodationRatesProps {
   epcis: Array<{ code: string; name: string; region: string }>
@@ -58,7 +63,11 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 export const CreateEpcisAccommodationRates: FC<CreateEpcisAccomodationRatesProps> = ({ epcis }) => {
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
+  const [ratesMode] = useQueryState('vacantRates', parseAsString)
+
   if (!rates) return null
+
+  const isAllMode = ratesMode === 'all'
 
   const tabs = epcis.map((epci) => ({
     content: <TabChildren epci={epci.code} rates={rates} />,
@@ -66,5 +75,12 @@ export const CreateEpcisAccommodationRates: FC<CreateEpcisAccomodationRatesProps
     label: epci.name,
   }))
 
-  return <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />
+  return (
+    <>
+      <div className={classNames('fr-px-md-4w fr-flex fr-pb-5w', styles.shadow, isAllMode && 'fr-border-bottom')}>
+        <RatesToggleSwitch />
+      </div>
+      {isAllMode ? <AllEpcisRatesView /> : <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />}
+    </>
+  )
 }

@@ -2,8 +2,13 @@
 
 import { RiIconClassName } from '@codegouvfr/react-dsfr'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
+import classNames from 'classnames'
+import { parseAsString, useQueryState } from 'nuqs'
 import { FC } from 'react'
+import styles from '~/components/simulations/settings/epcis-accommodation-rates/epcis-accommodation-rates.module.css'
+import { AllEpcisRestructurationRatesView } from '~/components/simulations/settings/restructuration-disparition-rates/all-epcis-restructuration-rates-view'
 import { CreateRestructurationDisparitionRatesInput } from '~/components/simulations/settings/restructuration-disparition-rates/create-restructuration-disparition-rates.input'
+import { RestructurationRatesToggleSwitch } from '~/components/simulations/settings/restructuration-disparition-rates/restructuration-rates-toggle-switch'
 import { useAccommodationRatesByEpci } from '~/hooks/use-accommodation-rate-epci'
 import { TEpcisAccommodationRates } from '~/schemas/accommodations-rates'
 
@@ -33,7 +38,11 @@ const TabChildren: FC<TabChildrenProps> = ({ epci, rates }) => {
 export const CreateRestructurationDisparitionRates: FC<CreateRestructurationDisparitionRatesProps> = ({ epcis }) => {
   const epcisCodes = epcis.map((epci) => epci.code)
   const { data: rates } = useAccommodationRatesByEpci(epcisCodes)
+  const [ratesMode] = useQueryState('restructurationRates', parseAsString)
+
   if (!rates) return null
+
+  const isAllMode = ratesMode === 'all'
 
   const tabs = epcis.map((epci) => ({
     content: <TabChildren epci={epci.code} rates={rates} />,
@@ -41,5 +50,12 @@ export const CreateRestructurationDisparitionRates: FC<CreateRestructurationDisp
     label: epci.name,
   }))
 
-  return <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />
+  return (
+    <>
+      <div className={classNames('fr-px-md-4w fr-flex fr-pb-5w', styles.shadow, isAllMode && 'fr-border-bottom')}>
+        <RestructurationRatesToggleSwitch />
+      </div>
+      {isAllMode ? <AllEpcisRestructurationRatesView /> : <Tabs classes={{ panel: 'fr-background-default--grey' }} tabs={tabs} />}
+    </>
+  )
 }

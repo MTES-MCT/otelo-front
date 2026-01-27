@@ -14,6 +14,7 @@ interface RatesState {
   rates: Record<string, RateSettings>
   defaultRates: Record<string, RateSettings>
   updateRates: (epciId: string, newRates: Partial<RateSettings>) => void
+  updateAllRates: (newRatesPerEpci: Record<string, Partial<RateSettings>>) => void
 }
 
 export const RatesSettingsContext = createContext<RatesState | undefined>(undefined)
@@ -72,11 +73,22 @@ export const RatesProvider = ({ children, initialRates }: RatesProviderProps) =>
     }))
   }
 
+  const updateAllRates = (newRatesPerEpci: Record<string, Partial<RateSettings>>) => {
+    setRates((prevRates) => {
+      const updated = { ...prevRates }
+      for (const [epciId, newRates] of Object.entries(newRatesPerEpci)) {
+        updated[epciId] = { ...updated[epciId], ...newRates }
+      }
+      return updated
+    })
+  }
+
   return (
     <RatesSettingsContext.Provider
       value={{
         rates,
         updateRates,
+        updateAllRates,
         defaultRates,
       }}
     >

@@ -2,17 +2,13 @@ import { ModifyEpcisAccommodationRates } from '~/components/simulations/settings
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import { PreviousStepLink } from '~/components/simulations/settings/previous-step-link'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 
-type PageProps = {
-  params: {
-    id: string
-  }
-}
-
-export default async function TauxCiblesLogementsPage({ params }: PageProps) {
-  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
-  const simulation = groupedSimulations[params.id]
-  const href = `/simulation/${params.id}/modifier/taux-cibles-residences-secondaires`
+export default async function TauxCiblesLogementsPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(id)
+  const simulation = groupedSimulations[id]
+  const href = `/simulation/${id}/modifier/taux-cibles-residences-secondaires`
 
   return (
     <>

@@ -1,6 +1,6 @@
 'use client'
 
-import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
+import { fr, RiIconClassName } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
 import { useSearchParams } from 'next/navigation'
 import { FC } from 'react'

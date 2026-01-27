@@ -1,16 +1,18 @@
-import { getServerSession } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
 import { authOptions } from '~/lib/auth/auth.config'
+import type { IdRouteParams } from '~/types/simulation-page-props'
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_: NextRequest, { params }: IdRouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/demographic-evolution-custom/${params.id}`, {
+    const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/demographic-evolution-custom/${id}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -30,15 +32,16 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_: NextRequest, { params }: IdRouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/demographic-evolution-custom/${params.id}`, {
+    const response = await fetch(`${process.env.NEXT_OTELO_API_URL}/demographic-evolution-custom/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${session.accessToken}`,

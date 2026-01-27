@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
 import { useParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { TSimulationWithResults } from '~/schemas/simulation'
 
 export const useSimulation = (initialData?: TSimulationWithResults) => {

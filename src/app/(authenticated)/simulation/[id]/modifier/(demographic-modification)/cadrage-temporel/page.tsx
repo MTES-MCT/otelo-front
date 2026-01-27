@@ -1,9 +1,11 @@
 import { UpdateProjectionPeriod } from '~/components/simulations/settings/modification/update-projection-period'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
 import { PreviousStepLink } from '~/components/simulations/settings/previous-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 
-export default async function CadrageTemporelPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/parametrages-demographique`
+export default async function CadrageTemporelPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/parametrages-demographique`
 
   return (
     <>

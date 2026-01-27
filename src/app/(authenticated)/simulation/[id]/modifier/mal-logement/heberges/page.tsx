@@ -4,9 +4,12 @@ import { SelectHebergesAccommodationTypes } from '~/components/simulations/setti
 import { SelectHebergesPart } from '~/components/simulations/settings/modification/mal-logement/heberges/select-heberges-part'
 import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import styles from './heberges.module.css'
-export default async function HebergesPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/mal-logement/inadequation-financiere`
+
+export default async function HebergesPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/mal-logement/inadequation-financiere`
 
   return (
     <div className={styles.container}>

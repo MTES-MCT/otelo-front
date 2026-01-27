@@ -4,11 +4,13 @@ import { UpdateSimulationForm } from '~/components/simulations/settings/update-s
 import { ModifyValidationAccommodationsSettingsRates } from '~/components/simulations/validation-settings/modify-validation-accommodation-rates'
 import { ModifyValidationRestructurationDisparitionRates } from '~/components/simulations/validation-settings/modify-validation-restructuration-disparition-rates'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import styles from './validation-parametrage.module.css'
 
-export default async function ValidationParametrage({ params }: { params: { id: string } }) {
-  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
-  const simulation = groupedSimulations[params.id]
+export default async function ValidationParametrage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(id)
+  const simulation = groupedSimulations[id]
   const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
 
   return (
@@ -26,7 +28,7 @@ export default async function ValidationParametrage({ params }: { params: { id: 
       </div>
       <ModifyValidationAccommodationsSettingsRates epcis={epcisCodes} />
       <ModifyValidationRestructurationDisparitionRates epcis={epcisCodes} />
-      <UpdateSimulationForm id={params.id} />
+      <UpdateSimulationForm id={id} />
     </div>
   )
 }

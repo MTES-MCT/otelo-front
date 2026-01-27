@@ -1,15 +1,12 @@
-import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import { TableauDeBord } from '~/components/tableau-de-bord/tableau-de-bord'
 import { authOptions } from '~/lib/auth/auth.config'
 import { getDashboardList } from '~/server-only/simulation/get-dashboard-list'
+import type { GroupIdRouteParams } from '~/types/simulation-page-props'
 
-interface PageProps {
-  params: { groupId: string }
-}
-
-export default async function TableauDeBordPage({ params }: PageProps) {
-  const { groupId } = params
+export default async function TableauDeBordPage({ params }: GroupIdRouteParams) {
+  const { groupId } = await params
 
   // Redirect if no groupId is provided
   if (!groupId) {

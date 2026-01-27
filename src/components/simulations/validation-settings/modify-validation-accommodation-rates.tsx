@@ -1,6 +1,6 @@
 'use client'
 
-import { RiIconClassName, fr } from '@codegouvfr/react-dsfr'
+import { fr, RiIconClassName } from '@codegouvfr/react-dsfr'
 import Input from '@codegouvfr/react-dsfr/Input'
 import Tabs from '@codegouvfr/react-dsfr/Tabs'
 import { parseAsString, useQueryStates } from 'nuqs'

@@ -4,19 +4,13 @@ import { SimulationSettingsFormContextWrapper } from '~/components/simulations/s
 import UpdateDemographicSettingsSimulationSideMenu from '~/components/simulations/settings/modification/update-demographic-settings-simulation-side-menu'
 import { SimulationFormRatesProviderContextWrapper } from '~/components/simulations/settings/simulation-form-context-wrapper'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
+import type { SimulationLayoutProps } from '~/types/simulation-page-props'
 
-type PageProps = {
-  children: React.ReactNode
-  params: {
-    id: string
-  }
-}
+export default async function ModifySimulationLayout({ children, params }: SimulationLayoutProps) {
+  const { id } = await params
 
-export default async function ModifySimulationLayout({ children, params }: PageProps) {
-  const { id } = params
-
-  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
-  const simulation = groupedSimulations[params.id]
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(id)
+  const simulation = groupedSimulations[id]
   const epcis = simulation.scenario.epciScenarios.map((e) => e.epciCode)
 
   return (

@@ -5,10 +5,12 @@ import { SelectInadequationFinancierePart } from '~/components/simulations/setti
 import { SelectMaxEffortPart } from '~/components/simulations/settings/modification/mal-logement/inadequation-financiere/select-max-effort-part'
 import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import styles from './inadequation-financiere.module.css'
 
-export default async function FinancialInadequationPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/mal-logement/mauvaise-qualite`
+export default async function FinancialInadequationPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/mal-logement/mauvaise-qualite`
 
   return (
     <div className={styles.container}>

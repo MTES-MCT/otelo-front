@@ -16,6 +16,7 @@ import { DemographicSettingsSelectEpci } from '~/components/simulations/settings
 import { TPopulationDemographicEvolution, TPopulationEvolution } from '~/schemas/demographic-evolution'
 import { roundPopulation } from '~/utils/round-chart-axis'
 import { sPluriel } from '~/utils/sPluriel'
+
 interface PopulationEvolutionChartProps {
   demographicEvolution: TPopulationDemographicEvolution
   modification?: boolean

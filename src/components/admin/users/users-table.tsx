@@ -68,8 +68,8 @@ export const UsersTable: FC = () => {
           <tbody>
             {userModals.map(({ modalActions, user, handleImpersonateUser }) => (
               <tr key={user.id}>
-                <td>{`${user.firstname} ${user.lastname}`}</td>
-                <td>{user.email}</td>
+                <td className={classes.nameCell}>{`${user.firstname} ${user.lastname}`}</td>
+                <td className={classes.emailCell}>{user.email}</td>
                 <td>
                   <div className={cx(fr.cx('fr-badge'), user.role === 'ADMIN' ? classes.adminBadge : classes.userBadge)}>{user.role}</div>
                 </td>
@@ -145,6 +145,12 @@ export const UsersTable: FC = () => {
 }
 
 const useStyles = tss.create({
+  nameCell: {
+    maxWidth: '180px',
+  },
+  emailCell: {
+    maxWidth: '250px',
+  },
   accessSelect: {
     marginBottom: '0 !important',
     minWidth: '160px',

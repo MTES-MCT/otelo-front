@@ -3,8 +3,8 @@ import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
 import { Footer } from '@codegouvfr/react-dsfr/Footer'
 import { StartDsfrOnHydration } from '@codegouvfr/react-dsfr/next-app-router'
 import type { Metadata } from 'next'
-import { getServerSession } from 'next-auth'
 import Link from 'next/link'
+import { getServerSession } from 'next-auth'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import { NextAppDirEmotionCacheProvider } from 'tss-react/next/appDir'
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({ children }: { children: JSX.Element }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const lang = 'fr'
   const session = await getServerSession(authOptions)
 

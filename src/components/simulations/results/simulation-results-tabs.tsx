@@ -9,7 +9,7 @@ export const SimulationResultsTabs = ({
   tabs,
 }: {
   tabs: {
-    content: JSX.Element
+    content: React.ReactElement
     iconId: RiIconClassName
     label: string
     tabId: string

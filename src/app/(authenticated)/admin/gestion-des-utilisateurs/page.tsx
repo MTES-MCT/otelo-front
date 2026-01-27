@@ -1,5 +1,5 @@
-import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import { UsersTable } from '~/components/admin/users/users-table'
 import { UsersTableHeader } from '~/components/admin/users/users-table-header'
 import { authOptions } from '~/lib/auth/auth.config'

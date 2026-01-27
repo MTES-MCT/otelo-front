@@ -9,7 +9,7 @@ type BreadcrumbPaths = 'admin' | 'simulation' | 'modifier'
 
 export const AuthenticatedBreadcrumb = () => {
   const pathname = usePathname()
-  const breadcrumbComponents: Record<BreadcrumbPaths, JSX.Element | null> = {
+  const breadcrumbComponents: Record<BreadcrumbPaths, React.ReactElement | null> = {
     admin: <AdminBreadcrumb />,
     simulation: <CreateSimulationBreadcrumb />,
     modifier: <UpdateSimulationBreadcrumb />,

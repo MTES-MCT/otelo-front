@@ -511,24 +511,9 @@ export function TableauDeBord({ simulations, groupName, userEmail }: TableauDeBo
           {isPending && (
             <Alert
               description={
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div
-                    style={{
-                      width: '1rem',
-                      height: '1rem',
-                      border: '2px solid #f3f3f3',
-                      borderTop: '2px solid #3498db',
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite',
-                    }}
-                  />
+                <div className={styles.spinnerContainer}>
+                  <div className={styles.spinner} />
                   <span>{progressMessage || 'Traitement en cours...'}</span>
-                  <style jsx>{`
-                    @keyframes spin {
-                      0% { transform: rotate(0deg); }
-                      100% { transform: rotate(360deg); }
-                    }
-                  `}</style>
                 </div>
               }
               severity="info"

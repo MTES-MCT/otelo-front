@@ -8,7 +8,12 @@ export const PopulationScenariosCustomTooltip = ({
   basePopulation,
   label,
   payload,
-}: { active?: boolean; label?: string; payload?: TooltipPayload<ValueType, NameType>[]; basePopulation: TPopulationEvolution }) => {
+}: {
+  active?: boolean
+  label?: string
+  payload?: TooltipPayload<ValueType, NameType>[]
+  basePopulation: TPopulationEvolution
+}) => {
   const { classes } = useStyles()
   if (!active || !payload?.length) return null
   return (

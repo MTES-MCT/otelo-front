@@ -5,6 +5,7 @@ import Checkbox from '@codegouvfr/react-dsfr/Checkbox'
 import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { FC, useState } from 'react'
+import type { TooltipContentProps } from 'recharts'
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { DATA_TYPE_OPTIONS } from '~/components/data-visualisation/select-data-type'
@@ -128,15 +129,14 @@ export const BadHousingChart: FC<BadHousingChartProps> = ({ data }) => {
     )
   }
 
-  const customTooltip = (props: { active?: boolean; payload?: Array<{ dataKey: string; value: number }>; label?: string | number }) => {
-    const { active, payload, label } = props
+  const customTooltip = ({ active, payload, label }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltip}>
           <p className={classes.tooltipTitle}>{label}</p>
           {legendOrder.map((entry) => {
             const payloadItem = payload.find((p) => p.dataKey === entry.dataKey)
-            if (payloadItem && payloadItem.value > 0) {
+            if (payloadItem && payloadItem.value && payloadItem.value > 0) {
               return (
                 <div key={entry.dataKey} className={classes.tooltipRow}>
                   <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.color }} />

@@ -2,6 +2,7 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Select from '@codegouvfr/react-dsfr/Select'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
+import type { TooltipContentProps } from 'recharts'
 import { Bar, BarChart, CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { getChartColor } from '~/components/charts/data-visualisation/colors'
@@ -56,12 +57,7 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
       : 'Évolution du nombre de logements vacants en volume'
 
   // Custom tooltip for LineChart
-  const customLineTooltip = (props: {
-    active?: boolean
-    payload?: Array<{ name: string; value: number; dataKey: string }>
-    label?: string | number
-  }) => {
-    const { active, payload, label } = props
+  const customLineTooltip = ({ active, payload, label }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltip}>
@@ -73,7 +69,7 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
                 style={{ backgroundColor: getChartColor(entry.dataKey as Parameters<typeof getChartColor>[0]) }}
               />
               <span className={classes.tooltipLabel}>
-                {entry.name}: <strong>{formatNumber(entry.value)}</strong>
+                {entry.name}: <strong>{formatNumber(entry.value ?? 0)}</strong>
               </span>
             </div>
           ))}
@@ -84,12 +80,7 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
   }
 
   // Custom tooltip for BarChart
-  const customBarTooltip = (props: {
-    active?: boolean
-    payload?: Array<{ dataKey: string; value: number; name: string }>
-    label?: string | number
-  }) => {
-    const { active, payload, label } = props
+  const customBarTooltip = ({ active, payload, label }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltip}>
@@ -101,7 +92,7 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
                 style={{ backgroundColor: getChartColor(entry.dataKey as Parameters<typeof getChartColor>[0]) }}
               />
               <span className={classes.tooltipLabel}>
-                {entry.name}: <strong>{formatNumber(entry.value)}</strong>
+                {entry.name}: <strong>{formatNumber(entry.value ?? 0)}</strong>
               </span>
             </div>
           ))}
@@ -111,7 +102,6 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
     return null
   }
 
-  // Custom legend for LineChart
   const customLineLegend = () => {
     const legendItems = epcisLinearChart.map((epci) => ({
       name: chartData.linearChart[epci].epci.name,
@@ -130,7 +120,6 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
     )
   }
 
-  // Custom legend for BarChart
   const customBarLegend = () => {
     const legendItems = [
       { dataKey: '2010-2015', name: '2010-2015', color: getChartColor('2010-2015') },
@@ -212,10 +201,10 @@ export const RPAccommodationEvolutionChart: FC<RPAccommodationEvolutionChart> = 
         </div>
         <div className={classes.chartContainer}>
           <ResponsiveContainer width="100%" height="90%">
-            <BarChart width={730} height={600} data={barChartData} margin={{ bottom: 100, left: 20 }}>
+            <BarChart width={730} height={600} data={barChartData} margin={{ bottom: 30, left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} tick={{ fontSize: 12 }}>
-                <Label value={barChartTitle} offset={80} position="bottom" />
+              <XAxis dataKey="name" textAnchor="end" interval={0} tick={{ fontSize: 12 }}>
+                <Label value={barChartTitle} position="bottom" />
               </XAxis>
               <YAxis />
               <Tooltip content={customBarTooltip} />

@@ -6,10 +6,12 @@ import { SelectSuroccupationPart } from '~/components/simulations/settings/modif
 import { SelectSuroccupationSource } from '~/components/simulations/settings/modification/mal-logement/suroccupation /select-suroccupation-source'
 import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import styles from './suroccupation.module.css'
 
-export default async function SuroccupationPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/mal-logement/validation-parametrage`
+export default async function SuroccupationPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/mal-logement/validation-parametrage`
 
   return (
     <div className={styles.container}>

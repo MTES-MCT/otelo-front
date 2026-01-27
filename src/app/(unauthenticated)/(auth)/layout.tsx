@@ -1,6 +1,6 @@
 import { fr } from '@codegouvfr/react-dsfr'
-import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import { UnauthenticatedBreadcrumb } from '~/components/breadcrumbs/unauthenticated-breadcrumb'
 import { authOptions } from '~/lib/auth/auth.config'
 

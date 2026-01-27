@@ -3,10 +3,12 @@ import Alert from '@codegouvfr/react-dsfr/Alert'
 import { SelectResorptionHorizonPeriod } from '~/components/simulations/settings/modification/mal-logement/horizon/select-horizon-resorption-period'
 import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import classes from './horizon-de-resorption.module.css'
 
-export default async function ResorptionHorizonPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/mal-logement/hors-logement`
+export default async function ResorptionHorizonPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/mal-logement/hors-logement`
 
   return (
     <div className={classes.container}>

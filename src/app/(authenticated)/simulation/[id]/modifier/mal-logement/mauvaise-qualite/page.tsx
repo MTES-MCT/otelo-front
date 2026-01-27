@@ -6,9 +6,12 @@ import { SelectConfortSource } from '~/components/simulations/settings/modificat
 import { SelectOccupationSource } from '~/components/simulations/settings/modification/mal-logement/bad-quality/select-occupation-source'
 import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import styles from './mauvaise-qualite.module.css'
-export default async function BadQualityPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/mal-logement/suroccupation`
+
+export default async function BadQualityPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/mal-logement/suroccupation`
 
   return (
     <div className={styles.container}>

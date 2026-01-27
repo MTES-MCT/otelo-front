@@ -5,10 +5,12 @@ import { SelectNoAccomodationPart } from '~/components/simulations/settings/modi
 import { SelectNoAccommodationSource } from '~/components/simulations/settings/modification/mal-logement/hors-logement/select-no-accommodation-source'
 import { UpdateBadHousingSimulationForm } from '~/components/simulations/settings/modification/mal-logement/update-bad-housing-simulation-form'
 import { NextStepLinkWithoutValidation } from '~/components/simulations/settings/next-step-link'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import styles from './hors-logement.module.css'
 
-export default async function HorsLogementPage({ params }: { params: { id: string } }) {
-  const href = `/simulation/${params.id}/modifier/mal-logement/heberges`
+export default async function HorsLogementPage({ params }: SimulationPageProps) {
+  const { id } = await params
+  const href = `/simulation/${id}/modifier/mal-logement/heberges`
 
   return (
     <div className={styles.container}>

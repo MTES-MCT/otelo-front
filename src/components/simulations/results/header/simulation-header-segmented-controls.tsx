@@ -6,7 +6,10 @@ import { useSearchParams } from 'next/navigation'
 export const SimulationHeaderSegmentedControls = ({
   segments,
   activeId,
-}: { segments: Array<{ id: string; name: string }>; activeId: string }) => {
+}: {
+  segments: Array<{ id: string; name: string }>
+  activeId: string
+}) => {
   const searchParams = useSearchParams()
 
   return (

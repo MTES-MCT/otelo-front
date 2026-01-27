@@ -1,7 +1,5 @@
 import { fr } from '@codegouvfr/react-dsfr'
-import { parseAsArrayOf } from 'nuqs'
-import { parseAsString } from 'nuqs'
-import { useQueryStates } from 'nuqs'
+import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts'
 import { NameType, Payload as TooltipPayload, ValueType } from 'recharts/types/component/DefaultTooltipContent'

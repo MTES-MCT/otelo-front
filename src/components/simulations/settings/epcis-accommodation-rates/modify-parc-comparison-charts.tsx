@@ -28,7 +28,10 @@ const COLORS = {
 const ModifyParcsComparisonCharts = ({
   epci,
   withSecondaryAccommodation = true,
-}: { epci: string; withSecondaryAccommodation?: boolean }) => {
+}: {
+  epci: string
+  withSecondaryAccommodation?: boolean
+}) => {
   const { defaultRates } = useEpcisRates()
   const { simulationSettings } = useSimulationSettings()
   const [isShown, setIsShown] = useQueryState('parcEvolutionShown', parseAsBoolean.withDefault(false))

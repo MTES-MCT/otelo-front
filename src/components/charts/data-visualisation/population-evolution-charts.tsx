@@ -1,6 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import { parseAsArrayOf, parseAsString, useQueryStates } from 'nuqs'
 import { FC } from 'react'
+import type { TooltipContentProps } from 'recharts'
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { tss } from 'tss-react'
 import { barChartColors } from '~/components/charts/data-visualisation/colors'
@@ -20,12 +21,7 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
   })
   const { classes } = useStyles()
 
-  const customLineTooltip = (props: {
-    active?: boolean
-    payload?: Array<{ name: string; value: number; stroke: string }>
-    label?: string | number
-  }) => {
-    const { active, payload, label } = props
+  const customLineTooltip = ({ active, payload, label }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltip}>
@@ -34,7 +30,7 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
             <div key={index} className={classes.tooltipRow}>
               <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.stroke }} />
               <span className={classes.tooltipLabel}>
-                {entry.name}: <strong>{formatNumber(entry.value)}</strong>
+                {entry.name}: <strong>{formatNumber(entry.value ?? 0)}</strong>
               </span>
             </div>
           ))}
@@ -44,21 +40,16 @@ export const PopulationEvolutionChart: FC<PopulationEvolutionChartProps> = ({ da
     return null
   }
 
-  const customBarTooltip = (props: {
-    active?: boolean
-    payload?: Array<{ dataKey: string; name: string; value: number; fill: string }>
-    label?: string | number
-  }) => {
-    const { active, payload, label } = props
+  const customBarTooltip = ({ active, payload, label }: TooltipContentProps<number, string>) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltip}>
           <p className={classes.tooltipTitle}>{label}</p>
           {payload.map((entry, index) => (
             <div key={index} className={classes.tooltipRow}>
-              <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.fill }} />
+              <span className={classes.tooltipColorBox} style={{ backgroundColor: entry.color }} />
               <span className={classes.tooltipLabel}>
-                {entry.name}: <strong>{formatNumber(entry.value)}</strong>
+                {entry.name}: <strong>{formatNumber(entry.value ?? 0)}</strong>
               </span>
             </div>
           ))}

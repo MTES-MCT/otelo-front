@@ -1,7 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
-import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import { authOptions } from '~/lib/auth/auth.config'
 import { TSession } from '~/types/next-auth'
 

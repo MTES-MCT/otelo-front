@@ -1,8 +1,8 @@
 'use client'
 
 import { MainNavigation, MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation'
-import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { FC } from 'react'
 import { TSession } from '~/types/next-auth'
 

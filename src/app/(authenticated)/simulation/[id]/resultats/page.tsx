@@ -14,14 +14,16 @@ import { SimulationResultsTabs } from '~/components/simulations/results/simulati
 import { SimulationNeedsSummary } from '~/components/simulations/results/summary/simulation-needs-summary'
 import { TEpciCalculationResult, TEpciTotalCalculationResult, TFlowRequirementChartData, TSitadelData } from '~/schemas/results'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
+import type { SimulationPageProps } from '~/types/simulation-page-props'
 import { calculateFlowResultsForEpci } from '~/utils/calculation-helpers'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default async function Resultats({ params }: { params: { id: string } }) {
-  const { name, simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
-  const simulation = groupedSimulations[params.id]
+export default async function Resultats({ params }: SimulationPageProps) {
+  const { id } = await params
+  const { name, simulations: groupedSimulations } = await getGroupedSimulationWithResults(id)
+  const simulation = groupedSimulations[id]
 
   const results = {
     badQuality: simulation.results.badQuality.total,
@@ -139,7 +141,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
         <SimulationHeaderTitle name={name} projection={simulation.scenario.projection} />
         <div className="fr-col-md-12 fr-flex fr-direction-column fr-direction-sm-row fr-align-items-center fr-mb-4w">
           <div className="fr-col-md-8 fr-mb-2w fr-mb-md-0">
-            <SimulationHeaderSegmentedControls segments={segments} activeId={params.id} />
+            <SimulationHeaderSegmentedControls segments={segments} activeId={id} />
           </div>
           <div className="fr-col-md-4">
             <div className="fr-flex fr-flex-gap-4v fr-align-items-center">
@@ -151,7 +153,7 @@ export default async function Resultats({ params }: { params: { id: string } }) 
               >
                 Élaborer un autre scénario
               </Button>
-              <ExportExcelSimulationButton id={params.id} />
+              <ExportExcelSimulationButton id={id} />
             </div>
           </div>
         </div>

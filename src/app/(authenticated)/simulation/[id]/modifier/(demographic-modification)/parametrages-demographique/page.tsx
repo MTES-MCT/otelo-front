@@ -5,23 +5,24 @@ import { PreviousStepLink } from '~/components/simulations/settings/previous-ste
 import { getOmphaleDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-omphale-evolution-by-epci'
 import { getPopulationDemographicEvolutionByEpci } from '~/server-only/demographic-evolution/get-population-evolution-by-epci'
 import { getGroupedSimulationWithResults } from '~/server-only/simulation/get-grouped-simulations-with-results'
+import type { SimulationPageParams } from '~/types/simulation-page-props'
 
 type PageProps = {
-  params: {
-    id: string
-  }
-  searchParams: {
+  params: SimulationPageParams
+  searchParams: Promise<{
     demographicEvolutionOmphaleCustomIds?: string | string[]
-  }
+  }>
 }
 
 export default async function ParametragesDemographiquePage({ params, searchParams }: PageProps) {
-  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(params.id)
-  const simulation = groupedSimulations[params.id]
+  const { id } = await params
+  const awaitedSearchParams = await searchParams
+  const { simulations: groupedSimulations } = await getGroupedSimulationWithResults(id)
+  const simulation = groupedSimulations[id]
   const epcisCodes = simulation.scenario.epciScenarios.map((e) => e.epciCode)
 
   // Check if demographicEvolutionOmphaleCustomIds is already in search params
-  const hasCustomIdsParam = searchParams.demographicEvolutionOmphaleCustomIds !== undefined
+  const hasCustomIdsParam = awaitedSearchParams.demographicEvolutionOmphaleCustomIds !== undefined
 
   // If not present and scenario has custom demographic evolution data, redirect with IDs
   if (
@@ -35,7 +36,7 @@ export default async function ParametragesDemographiquePage({ params, searchPara
     const searchParamsObj = new URLSearchParams()
 
     // Copy all existing search params
-    Object.entries(searchParams).forEach(([key, value]) => {
+    Object.entries(awaitedSearchParams).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach((v) => searchParamsObj.append(key, v))
       } else if (value) {
@@ -46,10 +47,10 @@ export default async function ParametragesDemographiquePage({ params, searchPara
     // Add the custom IDs
     searchParamsObj.append('demographicEvolutionOmphaleCustomIds', customIds.join(','))
 
-    redirect(`/simulation/${params.id}/modifier/parametrages-demographique?${searchParamsObj.toString()}`)
+    redirect(`/simulation/${id}/modifier/parametrages-demographique?${searchParamsObj.toString()}`)
   }
 
-  const href = `/simulation/${params.id}/modifier/taux-cibles-logements-vacants`
+  const href = `/simulation/${id}/modifier/taux-cibles-logements-vacants`
   const omphaleEvolution = await getOmphaleDemographicEvolutionByEpci(epcisCodes)
   const populationEvolution = await getPopulationDemographicEvolutionByEpci(epcisCodes)
 

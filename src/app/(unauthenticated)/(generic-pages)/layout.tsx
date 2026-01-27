@@ -5,13 +5,7 @@ import classNames from 'classnames'
 import { CONTACT_EMAIL, QUIZ_URL, WEBINAIRE_URL } from '~/utils/resources'
 import styles from './layout.module.css'
 
-export default function GenericPagesLayout({
-  children,
-  summary,
-}: {
-  children: React.ReactNode
-  summary: React.ReactNode
-}) {
+export default function GenericPagesLayout({ children, summary }: { children: React.ReactNode; summary: React.ReactNode }) {
   return (
     <div className={fr.cx('fr-container')}>
       <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>

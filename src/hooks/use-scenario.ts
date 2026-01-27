@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
 import { useParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { TScenarioWithSimulationId } from '~/schemas/scenario'
 
 export const useScenario = () => {

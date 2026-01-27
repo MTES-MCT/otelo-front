@@ -2,7 +2,7 @@ import { Button } from '@codegouvfr/react-dsfr/Button'
 import Link from 'next/link'
 import { ForgotPasswordForm } from '~/components/auth/forgot-password-form'
 
-export default function ForgotPasswordPage(): JSX.Element {
+export default function ForgotPasswordPage() {
   return (
     <div className="fr-container">
       <div className="fr-grid-row fr-grid-row--center">
